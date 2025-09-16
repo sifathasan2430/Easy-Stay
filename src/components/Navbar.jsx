@@ -38,7 +38,7 @@ export default function Navbar() {
                 </nav>
 
                 {/* Right side buttons */}
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center gap-4">
                     <ModeToggle />
 
                     <Button
