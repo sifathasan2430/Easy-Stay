@@ -25,7 +25,10 @@ import { useState } from "react";
 
 
 import { useRouter } from "next/navigation";
-import { loginSchema } from "@/zodSchema/userSchema";
+import { userData } from '@/zodSchema/userSchema';
+
+
+
 
 
 
@@ -33,10 +36,10 @@ export default function SignupForm() {
  
   const [isSignupLoading,setIsSignupLoading]=useState(false)
     const router = useRouter()
-  const form = useForm({
-    resolver: zodResolver(loginSchema),
+   const form = useForm({
+    resolver: zodResolver(userData),
     defaultValues: {
-      
+      username: "",
       password: "",
       email: "",
     },
@@ -45,55 +48,58 @@ export default function SignupForm() {
   });
  
   const onSubmit = async (data) => {
+    console.log(data)
                     
-  
+//   try {
+//       setIsSignupLoading(true)
+//      const response=await axios.post('/api/user/signup', data)
+   
+//           router.replace(`/verify/${username}`);
+//    } catch (error) {
+//      console.error('Error during sign-up:', error);
+    
+    
+//    }finally{
+//     setIsSignupLoading(false)
+//    }
+//   };
  
-   
-   try {
-      setIsSignupLoading(true)
-      const response=await signIn("credentials",{
-    redirect:false,
-    email:data?.email,
-    password:data?.password
-   })
-   
-   if (response?.error){
-    
   
-   console.log(response?.error)
-   }
-   if (response?.url){
- router.replace(`/`);
-}
-   } catch (error) {
-     console.error('Error during login:', error);
-   
-    
-   }finally{
-    setIsSignupLoading(false)
-   }
-  };
-
-  
+  }
 
   
 
   return (
-    <div className=" shadow-input mx-auto w-full max-w-md rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-black">
+    <div className=" my-10  shadow-input mx-auto w-full max-w-md rounded-none bg-white  md:rounded-2xl  dark:bg-black">
       
         <h2 className="text-xl text-center font-bold text-neutral-800 dark:text-neutral-200">
-          Login Here
+          Signup Here
         </h2>
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
            
+   <FormField
+              control={form.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Username</FormLabel>
+                <FormControl>
+                    <Input placeholder="jhon" {...field} />
+                  </FormControl>
+            
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <FormField
               control={form.control}
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className='my-1'>Email</FormLabel>
+                  <FormLabel>Email</FormLabel>
                   <FormControl>
                     <Input placeholder="jhon@gmail.com" {...field} />
                   </FormControl>
@@ -107,7 +113,7 @@ export default function SignupForm() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className={'mt-4'}>Password</FormLabel>
+                  <FormLabel>Password</FormLabel>
                   <FormControl>
                     <Input placeholder="*****" {...field} />
                   </FormControl>
