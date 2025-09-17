@@ -1,16 +1,16 @@
 "use client";
 
-import {signIn} from 'next-auth/react'
+import { signIn } from "next-auth/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { loginSchema } from "@/zodSchema/userSchema";
 
+import { cn } from "@/lib/utils";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -18,32 +18,19 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-
-import { Label } from "@/components/ui/label";
-import { useState } from "react";
-
-
-
-import { useRouter } from "next/navigation";
-import { loginSchema } from "@/zodSchema/userSchema";
-
-
-
 export default function SignupForm() {
- 
-  const [isSignupLoading,setIsSignupLoading]=useState(false)
-    const router = useRouter()
+  const [isSignupLoading, setIsSignupLoading] = useState(false);
+  const router = useRouter();
+
   const form = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      
-      password: "",
       email: "",
+      password: "",
     },
-    mode:'onChange'
-    
+    mode: "onChange",
   });
- 
+
   const onSubmit = async (data) => {
                     
   
@@ -74,20 +61,21 @@ export default function SignupForm() {
    }
   };
 
-  
-
-  
-
   return (
-    <div className=" shadow-input mx-auto w-full max-w-md rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-black">
-      
-        <h2 className="text-xl text-center font-bold text-neutral-800 dark:text-neutral-200">
+    <div className="flex justify-center items-center min-h-screen px-4">
+      <div className="w-full max-w-md bg-white dark:bg-black shadow-lg rounded-xl p-6 md:p-8">
+        {/* Title */}
+        <h2 className="text-center text-2xl md:text-3xl font-bold text-neutral-800 dark:text-neutral-200 mb-6">
           Login Here
         </h2>
 
+        {/* Form */}
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-           
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-6 md:space-y-8"
+          >
+            {/* Email Field */}
             <FormField
               control={form.control}
               name="email"
@@ -95,13 +83,18 @@ export default function SignupForm() {
                 <FormItem>
                   <FormLabel className='my-1'>Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="jhon@gmail.com" {...field} />
+                    <Input
+                      placeholder="jhon@gmail.com"
+                      {...field}
+                      className="w-full"
+                    />
                   </FormControl>
-
                   <FormMessage />
                 </FormItem>
               )}
             />
+
+            {/* Password Field */}
             <FormField
               control={form.control}
               name="password"
@@ -109,29 +102,29 @@ export default function SignupForm() {
                 <FormItem>
                   <FormLabel className={'mt-4'}>Password</FormLabel>
                   <FormControl>
-                    <Input placeholder="*****" {...field} />
+                    <Input
+                      type="password"
+                      placeholder="*****"
+                      {...field}
+                      className="w-full"
+                    />
                   </FormControl>
-
                   <FormMessage />
                 </FormItem>
               )}
             />
-              
+
+            {/* Submit Button */}
             <button
-              className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-black to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset]"
+              className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-black to-neutral-600 text-white font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset] transition-all duration-300 hover:scale-[1.02]"
               type="submit"
             >
-              {
-                isSignupLoading ? <span>Loading</span> :<span>Login</span>
-              }
+              {isSignupLoading ? <span>Loading...</span> : <span>Login</span>}
               <BottomGradient />
             </button>
           </form>
         </Form>
-
-        
-     
-     
+      </div>
     </div>
   );
 }
