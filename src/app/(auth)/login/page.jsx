@@ -17,6 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import Link from "next/link";
 
 export default function SignupForm() {
   const [isSignupLoading, setIsSignupLoading] = useState(false);
@@ -32,56 +33,45 @@ export default function SignupForm() {
   });
 
   const onSubmit = async (data) => {
-                    
-  
- 
-   
-   try {
-      setIsSignupLoading(true)
-      const response=await signIn("credentials",{
-    redirect:false,
-    email:data?.email,
-    password:data?.password
-   })
-   
-   if (response?.error){
-    
-  
-   console.log(response?.error)
-   }
-   if (response?.url){
- router.replace(`/`);
-}
-   } catch (error) {
-     console.error('Error during login:', error);
-   
-    
-   }finally{
-    setIsSignupLoading(false)
-   }
+    try {
+      setIsSignupLoading(true);
+      const response = await signIn("credentials", {
+        redirect: false,
+        email: data?.email,
+        password: data?.password,
+      });
+
+      if (response?.error) {
+        console.log(response?.error);
+      }
+      if (response?.url) {
+        router.replace(`/`);
+      }
+    } catch (error) {
+      console.error("Error during login:", error);
+    } finally {
+      setIsSignupLoading(false);
+    }
   };
 
   return (
     <div className="flex justify-center items-center min-h-screen px-4">
       <div className="w-full max-w-md bg-white dark:bg-black shadow-lg rounded-xl p-6 md:p-8">
-        {/* Title */}
-        <h2 className="text-center text-2xl md:text-3xl font-bold text-neutral-800 dark:text-neutral-200 mb-6">
-          Login Here
+        <h2 className="text-center text-3xl sm:text-4xl font-bold text-neutral-800 dark:text-neutral-200 mb-6">
+          Login
         </h2>
 
-        {/* Form */}
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
             className="space-y-6 md:space-y-8"
           >
-            {/* Email Field */}
             <FormField
               control={form.control}
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className='my-1'>Email</FormLabel>
+                  <FormLabel className="my-1">Email</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="jhon@gmail.com"
@@ -94,13 +84,12 @@ export default function SignupForm() {
               )}
             />
 
-            {/* Password Field */}
             <FormField
               control={form.control}
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className={'mt-4'}>Password</FormLabel>
+                  <FormLabel className="mt-4">Password</FormLabel>
                   <FormControl>
                     <Input
                       type="password"
@@ -114,7 +103,6 @@ export default function SignupForm() {
               )}
             />
 
-            {/* Submit Button */}
             <button
               className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-black to-neutral-600 text-white font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset] transition-all duration-300 hover:scale-[1.02]"
               type="submit"
@@ -124,6 +112,17 @@ export default function SignupForm() {
             </button>
           </form>
         </Form>
+
+        {/* Signup Link */}
+        <p className="text-center text-sm text-neutral-600 dark:text-neutral-400 mt-6">
+          Don&apos;t have an account?{" "}
+          <Link
+            href="/signup"
+            className="font-medium text-indigo-600 dark:text-indigo-400 hover:underline"
+          >
+            Sign up
+          </Link>
+        </p>
       </div>
     </div>
   );
