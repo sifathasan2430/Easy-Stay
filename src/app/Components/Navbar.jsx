@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ModeToggle } from "./ModeToggle";
+
 import { useState } from "react";
 import { Menu } from "lucide-react";
+import { ModeToggle } from "./ModeToggle";
 
 export default function Navbar() {
     const [mobileOpen, setMobileOpen] = useState(false);
