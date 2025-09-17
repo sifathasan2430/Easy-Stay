@@ -32,25 +32,33 @@ export default function SignupForm() {
   });
 
   const onSubmit = async (data) => {
-    try {
-      setIsSignupLoading(true);
-      const response = await signIn("credentials", {
-        redirect: false,
-        email: data?.email,
-        password: data?.password,
-      });
-
-      if (response?.error) {
-        console.log(response?.error);
-      }
-      if (response?.url) {
-        router.replace(`/`);
-      }
-    } catch (error) {
-      console.error("Error during login:", error);
-    } finally {
-      setIsSignupLoading(false);
-    }
+                    
+  
+ 
+   
+   try {
+      setIsSignupLoading(true)
+      const response=await signIn("credentials",{
+    redirect:false,
+    email:data?.email,
+    password:data?.password
+   })
+   
+   if (response?.error){
+    
+  
+   console.log(response?.error)
+   }
+   if (response?.url){
+ router.replace(`/`);
+}
+   } catch (error) {
+     console.error('Error during login:', error);
+   
+    
+   }finally{
+    setIsSignupLoading(false)
+   }
   };
 
   return (
@@ -73,7 +81,7 @@ export default function SignupForm() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel className='my-1'>Email</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="jhon@gmail.com"
@@ -92,7 +100,7 @@ export default function SignupForm() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel className={'mt-4'}>Password</FormLabel>
                   <FormControl>
                     <Input
                       type="password"
