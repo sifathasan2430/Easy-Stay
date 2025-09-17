@@ -1,4 +1,5 @@
 import { Resend } from "resend";
+import AWSVerifyEmail from "../../emailtemplate/AWSVerifyEmail";
 
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -8,7 +9,7 @@ try {
     from: 'Acme <onboarding@resend.dev>',
     to: ['sifatshasan@gmail.com'],
     subject: 'Verify code from Linkup',
-    react: "",
+    react:  AWSVerifyEmail({ verifyCode}),
   });
   return {success:true,message:'email send successfully'}
 } catch (error) {
