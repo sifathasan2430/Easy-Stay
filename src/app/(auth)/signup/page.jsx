@@ -18,6 +18,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import axios from "axios";
 
 export default function SignupForm() {
   const [isSignupLoading, setIsSignupLoading] = useState(false);
@@ -33,15 +34,15 @@ export default function SignupForm() {
   });
 
   const onSubmit = async (data) => {
-    // try {
-    //   setIsSignupLoading(true);
-    //   const response = await axios.post("/api/user/signup", data);
-    //   router.replace(`/verify/${username}`);
-    // } catch (error) {
-    //   console.error("Error during sign-up:", error);
-    // } finally {
-    //   setIsSignupLoading(false);
-    // }
+    try {
+      setIsSignupLoading(true);
+      const response = await axios.post("/api/user/signup", data);
+      router.replace(`/verify/${'username'}`);
+    } catch (error) {
+      console.error("Error during sign-up:", error);
+    } finally {
+      setIsSignupLoading(false);
+    }
   };
 
   return (
