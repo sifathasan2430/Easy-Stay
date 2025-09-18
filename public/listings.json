@@ -1,25 +1,6 @@
 [
   {
     "id": 1,
-    "title": "Cozy entire home in Los Angeles",
-    "city": "New York",
-    "price_per_night": 359,
-    "room_type": "Entire home",
-    "amenities": [
-      "Gym",
-      "Pool",
-      "WiFi",
-      "Pet friendly",
-      "Kitchen",
-      "TV"
-    ],
-    "available_from": "2025-11-07",
-    "available_to": "2025-11-30",
-    "image_url": "https://images.unsplash.com/photo-1558618047-3c8c76ca6e94?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
-    "description": "A beautiful entire home perfect for your stay in Miami. Enjoy modern amenities and comfort."
-  },
-  {
-    "id": 2,
     "title": "Cozy entire home in New York",
     "city": "Los Angeles",
     "price_per_night": 87,
@@ -31,11 +12,11 @@
     ],
     "available_from": "2025-12-06",
     "available_to": "2025-12-18",
-    "image_url": "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+    "image_url": "https://images.unsplash.com/photo-1600210492493-0946911123ea?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
     "description": "A beautiful private room perfect for your stay in Miami. Enjoy modern amenities and comfort."
   },
   {
-    "id": 3,
+    "id": 2,
     "title": "Cozy shared room in Austin",
     "city": "New York",
     "price_per_night": 71,
@@ -54,7 +35,7 @@
     "description": "A beautiful entire home perfect for your stay in Miami. Enjoy modern amenities and comfort."
   },
   {
-    "id": 4,
+    "id": 3,
     "title": "Cozy entire home in Los Angeles",
     "city": "Austin",
     "price_per_night": 123,
@@ -73,7 +54,7 @@
     "description": "A beautiful entire home perfect for your stay in Miami. Enjoy modern amenities and comfort."
   },
   {
-    "id": 5,
+    "id": 4,
     "title": "Cozy private room in Los Angeles",
     "city": "Austin",
     "price_per_night": 56,
@@ -86,11 +67,11 @@
     ],
     "available_from": "2025-10-17",
     "available_to": "2025-11-09",
-    "image_url": "https://images.unsplash.com/photo-1618221203304-0b0d8b5c0b3e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+    "image_url": "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
     "description": "A beautiful shared room perfect for your stay in San Francisco. Enjoy modern amenities and comfort."
   },
   {
-    "id": 6,
+    "id": 5,
     "title": "Cozy private room in Los Angeles",
     "city": "New York",
     "price_per_night": 85,
@@ -108,7 +89,7 @@
     "description": "A beautiful private room perfect for your stay in Miami. Enjoy modern amenities and comfort."
   },
   {
-    "id": 7,
+    "id": 6,
     "title": "Cozy private room in New York",
     "city": "San Francisco",
     "price_per_night": 244,
@@ -124,7 +105,7 @@
     "description": "A beautiful private room perfect for your stay in Austin. Enjoy modern amenities and comfort."
   },
   {
-    "id": 8,
+    "id": 7,
     "title": "Cozy private room in San Francisco",
     "city": "San Francisco",
     "price_per_night": 111,
@@ -136,11 +117,11 @@
     ],
     "available_from": "2025-09-25",
     "available_to": "2025-10-21",
-    "image_url": "https://images.unsplash.com/photo-1564405666167-9d92b2523c4d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+    "image_url": "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
     "description": "A beautiful shared room perfect for your stay in New York. Enjoy modern amenities and comfort."
   },
   {
-    "id": 9,
+    "id": 8,
     "title": "Cozy shared room in Austin",
     "city": "San Francisco",
     "price_per_night": 233,
@@ -155,11 +136,11 @@
     ],
     "available_from": "2025-10-13",
     "available_to": "2025-11-18",
-    "image_url": "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+    "image_url": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
     "description": "A beautiful shared room perfect for your stay in New York. Enjoy modern amenities and comfort."
   },
   {
-    "id": 10,
+    "id": 9,
     "title": "Cozy private room in Miami",
     "city": "Miami",
     "price_per_night": 219,
@@ -174,11 +155,11 @@
     ],
     "available_from": "2025-11-29",
     "available_to": "2025-12-14",
-    "image_url": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+    "image_url": "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
     "description": "A beautiful entire home perfect for your stay in Miami. Enjoy modern amenities and comfort."
   },
   {
-    "id": 11,
+    "id": 10,
     "title": "Cozy shared room in Los Angeles",
     "city": "New York",
     "price_per_night": 374,
@@ -191,11 +172,11 @@
     ],
     "available_from": "2025-09-27",
     "available_to": "2025-10-12",
-    "image_url": "https://images.unsplash.com/photo-1618221203304-0b0d8b5c0b3e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+    "image_url": "https://images.unsplash.com/photo-1570129477492-45c003edd2be?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
     "description": "A beautiful private room perfect for your stay in New York. Enjoy modern amenities and comfort."
   },
   {
-    "id": 12,
+    "id": 11,
     "title": "Cozy private room in New York",
     "city": "Miami",
     "price_per_night": 63,
@@ -211,7 +192,7 @@
     "description": "A beautiful entire home perfect for your stay in New York. Enjoy modern amenities and comfort."
   },
   {
-    "id": 13,
+    "id": 12,
     "title": "Cozy private room in Miami",
     "city": "Miami",
     "price_per_night": 415,
@@ -230,7 +211,7 @@
     "description": "A beautiful shared room perfect for your stay in Los Angeles. Enjoy modern amenities and comfort."
   },
   {
-    "id": 14,
+    "id": 13,
     "title": "Cozy entire home in Miami",
     "city": "Los Angeles",
     "price_per_night": 215,
@@ -247,7 +228,7 @@
     "description": "A beautiful private room perfect for your stay in New York. Enjoy modern amenities and comfort."
   },
   {
-    "id": 15,
+    "id": 14,
     "title": "Cozy entire home in Los Angeles",
     "city": "San Francisco",
     "price_per_night": 488,
@@ -265,7 +246,7 @@
     "description": "A beautiful shared room perfect for your stay in San Francisco. Enjoy modern amenities and comfort."
   },
   {
-    "id": 16,
+    "id": 15,
     "title": "Cozy entire home in Austin",
     "city": "Austin",
     "price_per_night": 221,
@@ -282,7 +263,7 @@
     "description": "A beautiful private room perfect for your stay in Los Angeles. Enjoy modern amenities and comfort."
   },
   {
-    "id": 17,
+    "id": 16,
     "title": "Cozy entire home in Miami",
     "city": "San Francisco",
     "price_per_night": 386,
@@ -298,7 +279,7 @@
     "description": "A beautiful entire home perfect for your stay in Miami. Enjoy modern amenities and comfort."
   },
   {
-    "id": 18,
+    "id": 17,
     "title": "Cozy private room in Miami",
     "city": "Los Angeles",
     "price_per_night": 278,
@@ -316,7 +297,7 @@
     "description": "A beautiful private room perfect for your stay in San Francisco. Enjoy modern amenities and comfort."
   },
   {
-    "id": 19,
+    "id": 18,
     "title": "Cozy private room in Miami",
     "city": "San Francisco",
     "price_per_night": 171,
@@ -334,7 +315,7 @@
     "description": "A beautiful private room perfect for your stay in Miami. Enjoy modern amenities and comfort."
   },
   {
-    "id": 20,
+    "id": 19,
     "title": "Cozy entire home in San Francisco",
     "city": "Austin",
     "price_per_night": 477,
@@ -351,5 +332,24 @@
     "available_to": "2025-11-30",
     "image_url": "https://images.unsplash.com/photo-1600210492493-0946911123ea?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
     "description": "A beautiful shared room perfect for your stay in Los Angeles. Enjoy modern amenities and comfort."
+  },
+  {
+    "id": 20,
+    "title": "Cozy entire home in Los Angeles",
+    "city": "New York",
+    "price_per_night": 359,
+    "room_type": "Entire home",
+    "amenities": [
+      "Gym",
+      "Pool",
+      "WiFi",
+      "Pet friendly",
+      "Kitchen",
+      "TV"
+    ],
+    "available_from": "2025-11-07",
+    "available_to": "2025-11-30",
+    "image_url": "https://images.unsplash.com/photo-1558618047-3c8c76ca6e94?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+    "description": "A beautiful entire home perfect for your stay in Miami. Enjoy modern amenities and comfort."
   }
 ]
