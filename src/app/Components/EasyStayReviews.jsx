@@ -1,109 +1,135 @@
 "use client";
 
-import { Marquee } from "@/components/ui/marquee";
-import { cn } from "@/lib/utils";
+import { useState } from "react";
+import { Star } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const reviews = [
   {
-    img: "https://i.pravatar.cc/64?img=1",
+    name: "Justin",
+    location: "Rancho Cordova, California",
+    time: "6 days ago",
+    img: "https://i.pravatar.cc/100?img=12",
+    review:
+      "Beautiful condo home right by Gwangalli beach with attentive hosts. Very thoughtful amenities and snacks provided. Hosts communicated promptly throughout entire stay.",
+    rating: 5,
+  },
+  {
+    name: "Jacqueline",
+    location: "11 years on EasyStay",
+    time: "April 2025",
+    img: "https://i.pravatar.cc/100?img=15",
+    review:
+      "One of the best stays we’ve had in South Korea. The host designed every corner of the house with so much thought and attention to detail — very tastefully done!",
+    rating: 5,
+  },
+  {
+    name: "David",
+    location: "New York, USA",
+    time: "March 2025",
+    img: "https://i.pravatar.cc/100?img=18",
+    review:
+      "Great place to stay, very clean and comfortable. Location was perfect and close to everything. Highly recommend!",
+    rating: 4,
+  },
+  {
     name: "Sophia",
-    username: "@sophia_travels",
-    body: "Loved my stay! Booking was smooth and the apartment was spotless.",
+    location: "London, UK",
+    time: "February 2025",
+    img: "https://i.pravatar.cc/100?img=20",
+    review:
+      "Absolutely loved our stay. The host was super kind and helpful, the apartment was spotless and beautifully decorated.",
+    rating: 5,
   },
   {
-    img: "https://i.pravatar.cc/64?img=2",
-    name: "Liam",
-    username: "@liam_nomad",
-    body: "EasyStay made it super easy to find a last-minute rental in Paris!",
-  },
-  {
-    img: "https://i.pravatar.cc/64?img=3",
-    name: "Ava",
-    username: "@ava_wanderlust",
-    body: "The host was so friendly and check-in was seamless. Highly recommend!",
-  },
-  {
-    img: "https://i.pravatar.cc/64?img=4",
-    name: "Noah",
-    username: "@noah_explorer",
-    body: "Affordable and safe – I’ll definitely use EasyStay again on my next trip.",
-  },
-  {
-    img: "https://i.pravatar.cc/64?img=5",
-    name: "Emma",
-    username: "@emma_backpacker",
-    body: "Best platform for travelers. Love the flexible cancellation policy!",
-  },
-  {
-    img: "https://i.pravatar.cc/64?img=6",
-    name: "Oliver",
-    username: "@oliver_global",
-    body: "Great experience overall. Smooth payment process and nice support team.",
+    name: "Michael",
+    location: "Toronto, Canada",
+    time: "January 2025",
+    img: "https://i.pravatar.cc/100?img=22",
+    review:
+      "Fantastic experience. Smooth check-in process, modern amenities, and breathtaking views. Will definitely come back again!",
+    rating: 4,
   },
 ];
 
-const firstRow = reviews.slice(0, reviews.length / 2);
-const secondRow = reviews.slice(reviews.length / 2);
-
-const ReviewCard = ({ img, name, username, body }) => {
+function Stars({ count }) {
   return (
-    <figure
-      className={cn(
-        "relative h-full w-[80%] sm:w-64 cursor-pointer overflow-hidden rounded-xl border p-4 shadow-sm transition-all duration-300",
-        "border-gray-200 bg-white hover:bg-gray-100",
-        "dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
-      )}
-    >
-      <div className="flex items-center gap-2">
-        <img
-          className="rounded-full"
-          width="32"
-          height="32"
-          alt={name}
-          src={img}
+    <div className="flex gap-1">
+      {Array.from({ length: 5 }).map((_, i) => (
+        <Star
+          key={i}
+          className={`w-4 h-4 ${
+            i < count ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
+          }`}
         />
-        <div className="flex flex-col">
-          <figcaption className="text-sm font-semibold dark:text-white">
-            {name}
-          </figcaption>
-          <p className="text-xs font-medium text-gray-500 dark:text-gray-400">
-            {username}
-          </p>
+      ))}
+    </div>
+  );
+}
+
+function ReviewCard({ r }) {
+  return (
+    <div className="flex  flex-col gap-3 border rounded-xl p-4 shadow-sm">
+      <div className="flex items-center gap-3">
+        <img
+          src={r.img}
+          alt={r.name}
+          className="w-12 h-12 rounded-full object-cover"
+        />
+        <div>
+          <p className="font-semibold">{r.name}</p>
+          <p className="text-xs text-gray-500">{r.location}</p>
+          <Stars count={r.rating} />
         </div>
       </div>
-      <blockquote className="mt-2 text-sm text-gray-700 dark:text-gray-300">
-        {body}
-      </blockquote>
-    </figure>
+      <p className="text-xs text-gray-400">{r.time}</p>
+      <p className="text-sm text-gray-700">{r.review}</p>
+    </div>
   );
-};
+}
 
 export default function EasyStayReviews() {
+  const [open, setOpen] = useState(false);
+
   return (
-    <section className="relative flex w-full flex-col items-center justify-center overflow-hidden bg-gray-50 py-10 sm:py-16 dark:bg-gray-950">
+    <section className="max-w-7xl mx-auto px-4 py-12">
       <h2 className="mb-8 text-2xl sm:text-3xl lg:text-4xl font-bold text-center text-gray-900 dark:text-white">
         What Our Guests Say
       </h2>
 
-      <div className="w-full flex flex-col gap-6">
-        {/* First Row */}
-        <Marquee pauseOnHover className="[--duration:25s] gap-4">
-          {firstRow.map((review) => (
-            <ReviewCard key={review.username} {...review} />
-          ))}
-        </Marquee>
-
-        {/* Second Row */}
-        <Marquee reverse pauseOnHover className="[--duration:25s] gap-4">
-          {secondRow.map((review) => (
-            <ReviewCard key={review.username} {...review} />
-          ))}
-        </Marquee>
+      {/* Show first 4 reviews */}
+      <div className="grid sm:grid-cols-2 gap-8 mt-8">
+        {reviews.slice(0, 4).map((r, i) => (
+          <ReviewCard key={i} r={r} />
+        ))}
       </div>
 
-      {/* Gradient Overlays */}
-      <div className="pointer-events-none absolute inset-y-0 left-0 w-1/6 bg-gradient-to-r from-gray-50 dark:from-gray-950"></div>
-      <div className="pointer-events-none absolute inset-y-0 right-0 w-1/6 bg-gradient-to-l from-gray-50 dark:from-gray-950"></div>
+      {/* See All Reviews Button */}
+      <div className="mt-10 flex justify-center">
+        <Button variant="outline" onClick={() => setOpen(true)}>
+          See all reviews
+        </Button>
+      </div>
+
+      {/* Custom Modal */}
+      {open && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl max-w-4xl w-full max-h-[85vh] overflow-y-auto p-6 relative">
+            <button
+              onClick={() => setOpen(false)}
+              className="absolute top-4 right-4 text-gray-500 hover:text-black"
+            >
+              ✕
+            </button>
+            <h3 className="text-xl font-semibold mb-6">All Reviews</h3>
+            <div className="grid sm:grid-cols-2 gap-6">
+              {reviews.map((r, i) => (
+                <ReviewCard key={i} r={r} />
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

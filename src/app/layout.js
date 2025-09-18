@@ -1,5 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+
 import { ThemeProvider } from "@/app/Components/ThemeProvider";
 
 import Footer from "./Components/Footer";
@@ -28,8 +29,8 @@ export default function RootLayout({ children }) {
       >
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <Navbar />
-          <div className="min-h-screen">{children}</div>
-          <Footer></Footer>
+         {children}
+          <Footer/>
         </ThemeProvider>
       </body>
     </html>
