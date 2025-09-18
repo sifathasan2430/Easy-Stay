@@ -26,6 +26,11 @@ const Footer = () => {
                 </h3>
                 <ul className="mt-4 space-y-2">
                   <li>
+                    <Link href="/stays" className="hover:underline">
+                      Stays
+                    </Link>
+                  </li>
+                  <li>
                     <Link href="/about" className="hover:underline">
                       About Us
                     </Link>
@@ -69,7 +74,7 @@ const Footer = () => {
           </div>
 
           {/* Divider */}
-          <div className="mt-8 border-t border-gray-200 dark:border-gray-700 pt-8 flex flex-col md:flex-row md:justify-between md:items-center">
+          <div className="mt-8 border-t border-gray-700 pt-8 flex flex-col md:flex-row md:justify-between md:items-center">
             {/* Copyright */}
             <p className="text-sm">
               &copy; {new Date().getFullYear()} easyStay. All rights reserved.
