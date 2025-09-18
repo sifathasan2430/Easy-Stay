@@ -28,8 +28,8 @@ export default function RootLayout({ children }) {
       >
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <Navbar />
-          <div className="min-h-screen">{children}</div>
-          <Footer></Footer>
+         {children}
+          <Footer/>
         </ThemeProvider>
       </body>
     </html>
