@@ -6,7 +6,7 @@ import  EasyStayPartners  from "./Components/EasyStayPartners";
 
 export default function Home() {
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen md:pt-16">
       {/* Do not Code Here */}
       <HeroSection></HeroSection>
       <EasyStayReviews></EasyStayReviews>

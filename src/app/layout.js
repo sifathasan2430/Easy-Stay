@@ -3,7 +3,10 @@ import "./globals.css";
 import { ThemeProvider } from "@/app/Components/ThemeProvider";
 
 import Footer from "./Components/Footer";
-import Navbar from "./Components/Navbar";
+
+import Header from "@/components/Header/Header";
+import SessionProviderWrapper from "./Components/SessionProvider/SessionProviderWrapper";
+import { Toaster } from "sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,11 +29,19 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+         <SessionProviderWrapper>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-          <Navbar />
-         {children}
+           <div className="relative w-full flex items-center justify-center ">
+            <Header/>
+          </div>
+          
+          <main className="min-h-screen"> 
+            <Toaster/> 
+            {children}
+            </main> 
           <Footer/>
         </ThemeProvider>
+        </SessionProviderWrapper>
       </body>
     </html>
   );

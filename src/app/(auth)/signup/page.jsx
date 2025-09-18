@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import axios from "axios";
+import { toast } from "sonner";
 
 export default function SignupForm() {
   const [isSignupLoading, setIsSignupLoading] = useState(false);
@@ -37,16 +38,32 @@ export default function SignupForm() {
     try {
       setIsSignupLoading(true);
       const response = await axios.post("/api/user/signup", data);
-      router.replace(`/verify/${'username'}`);
+        toast('User created successfully', {
+            title: 'Success',
+        description: response?.data?.message,
+          action: {
+            label: "Undo",
+            onClick: () => console.log("Undo"),
+          },
+        })
+      router.replace(`/verify/${data.username}`);
     } catch (error) {
       console.error("Error during sign-up:", error);
+       toast('User registration fail', {
+          title: 'Success',
+         description:'User registration fail',
+          action: {
+            label: "Undo",
+            onClick: () => console.log("Undo"),
+          },
+        })
     } finally {
       setIsSignupLoading(false);
     }
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen px-4">
+    <div className="flex justify-center items-center min-h-screen md:pt-16 px-4">
      <div className="w-full max-w-md bg-white dark:bg-black shadow-lg rounded-xl p-6 md:p-8">
        <h2 className="text-3xl sm:text-4xl text-center font-bold text-neutral-800 dark:text-neutral-200">
         Signup Now
@@ -132,6 +149,7 @@ export default function SignupForm() {
           Login
         </Link>
       </p>
+      
      </div>
     </div>
   );

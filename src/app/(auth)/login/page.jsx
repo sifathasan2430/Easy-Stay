@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
+import { toast } from "sonner";
 
 export default function SignupForm() {
   const [isSignupLoading, setIsSignupLoading] = useState(false);
@@ -33,30 +34,42 @@ export default function SignupForm() {
   });
 
   const onSubmit = async (data) => {
-    try {
-      setIsSignupLoading(true);
-      const response = await signIn("credentials", {
-        redirect: false,
-        email: data?.email,
-        password: data?.password,
-      });
-
-      if (response?.error) {
-        console.log(response?.error);
-      }
-      if (response?.url) {
-        router.replace(`/`);
-      }
-    } catch (error) {
-      console.error("Error during login:", error);
-    } finally {
-      setIsSignupLoading(false);
-    }
+      try {
+      setIsSignupLoading(true)
+      const response=await signIn("credentials",{
+    redirect:false,
+    email:data?.email,
+    password:data?.password
+   })
+   if (response?.error){
+    toast({
+        title:response?.error,
+         description: 'Incorrect username or password',
+          variant: 'destructive',
+    })
+   }
+   if (response?.url){
+ router.replace(`/`);
+}
+   } catch (error) {
+     console.error('Error during sign-up:', error);
+     toast('User registration fail', {
+          title: 'Success',
+         description:'User registration fail',
+          action: {
+            label: "Undo",
+            onClick: () => console.log("Undo"),
+          },
+        })
+    
+   }finally{
+    setIsSignupLoading(false)
+   }
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen px-4">
-      <div className="w-full max-w-md bg-white dark:bg-black shadow-lg rounded-xl p-6 md:p-8">
+    <div className="flex justify-center items-center min-h-screen  md:pt-4  px-4">
+        <div className="w-full max-w-md bg-white dark:bg-black shadow-lg rounded-xl p-6 md:p-8">
         <h2 className="text-center text-3xl sm:text-4xl font-bold text-neutral-800 dark:text-neutral-200 mb-6">
           Login
         </h2>
