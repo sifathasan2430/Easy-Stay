@@ -12,6 +12,7 @@ export default function Navbar() {
 
     const links = [
         { name: "Home", href: "/" },
+        { name: "Stays", href: "/stays" },
         { name: "Services", href: "/services" },
         { name: "About", href: "/about" },
         { name: "Contact", href: "/contact" },
@@ -31,7 +32,7 @@ export default function Navbar() {
                         <Link
                             key={link.name}
                             href={link.href}
-                            className="hover:text-button-primary transition-colors"
+                            className="hover:text-button-primary  transition-colors"
                         >
                             {link.name}
                         </Link>
