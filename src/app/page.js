@@ -6,13 +6,13 @@ import  EasyStayPartners  from "./Components/EasyStayPartners";
 
 export default function Home() {
   return (
-    <div>
+    <main className="min-h-screen">
       {/* Do not Code Here */}
       <HeroSection></HeroSection>
       <EasyStayReviews></EasyStayReviews>
       <EasyStayPartners></EasyStayPartners>
       
       
-    </div>
+    </main>
   );
 }
