@@ -69,7 +69,7 @@ function Stars({ count }) {
 
 function ReviewCard({ r }) {
   return (
-    <div className="flex  flex-col gap-3 border rounded-xl p-4 shadow-sm">
+    <div className="flex  flex-col gap-3 border font-body rounded-xl p-4 shadow-sm">
       <div className="flex items-center gap-3">
         <img
           src={r.img}
@@ -93,7 +93,7 @@ export default function EasyStayReviews() {
 
   return (
     <section className="max-w-7xl mx-auto px-4 py-12">
-      <h2 className="mb-8 text-2xl sm:text-3xl lg:text-4xl font-bold text-center text-gray-900 dark:text-white">
+      <h2 className="mb-8 text-2xl sm:text-3xl lg:text-4xl font-heading font-bold text-center text-gray-900 dark:text-white">
         What Our Guests Say
       </h2>
 
@@ -121,7 +121,7 @@ export default function EasyStayReviews() {
             >
               ✕
             </button>
-            <h3 className="text-xl font-semibold mb-6">All Reviews</h3>
+            <h3 className="text-xl font-semibold font-heading mb-6">All Reviews</h3>
             <div className="grid sm:grid-cols-2 gap-6">
               {reviews.map((r, i) => (
                 <ReviewCard key={i} r={r} />

@@ -1,36 +1,38 @@
-import { Geist, Geist_Mono } from "next/font/google";
+// app/layout.jsx
+import { Poppins, Roboto } from "next/font/google";
 import "./globals.css";
 
 import { ThemeProvider } from "@/app/Components/ThemeProvider";
-
-import Footer from "./Components/Footer";
 import Navbar from "./Components/Navbar";
+import Footer from "./Components/Footer";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const poppins = Poppins({
   subsets: ["latin"],
+  variable: "--font-poppins",
+  weight: ["400", "500", "600", "700"], // Regular to Bold
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const roboto = Roboto({
   subsets: ["latin"],
+  variable: "--font-roboto",
+  weight: ["300", "400", "500"],
 });
 
 export const metadata = {
   title: "EasyStay— Short-Term Rental Marketplace",
-  description: "Develop by Team DevOps",
+  description: "Developed by Team DevOps",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${poppins.variable} ${roboto.variable} antialiased font-sans`}
       >
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <Navbar />
-         {children}
-          <Footer/>
+          {children}
+          <Footer />
         </ThemeProvider>
       </body>
     </html>

@@ -11,7 +11,7 @@ export default function NotFound() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="text-7xl font-bold text-primary mb-4"
+        className="text-7xl font-bold text-primary font-heading mb-4"
       >
         404
       </motion.h1>
@@ -21,7 +21,7 @@ export default function NotFound() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2, duration: 0.5 }}
-        className="text-lg text-muted-foreground mb-8"
+        className="text-lg text-muted-foreground mb-8 font-body"
       >
         Oops! The page you are looking for doesn’t exist.
       </motion.p>
@@ -34,7 +34,7 @@ export default function NotFound() {
       >
         <Link
           href="/"
-          className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-5 py-3 rounded-2xl shadow hover:shadow-lg hover:scale-105 transition-transform"
+          className="inline-flex items-center gap-2 bg-primary font-heading text-primary-foreground px-5 py-3 rounded-2xl shadow hover:shadow-lg hover:scale-105 transition-transform"
         >
           <FaHome /> Back to Home
         </Link>
