@@ -2,8 +2,6 @@
 
 import { Marquee } from "@/components/ui/marquee";
 
-
-
 const partners = [
   {
     name: "Booking.com",
@@ -33,46 +31,47 @@ const partners = [
 
 export default function EasyStayPartners() {
   return (
-    <section className="relative flex w-full flex-col items-center justify-center overflow-hidden bg-white py-10 dark:bg-gray-900">
-      <h2 className="mb-6 text-xl font-bold text-gray-800 dark:text-white sm:text-2xl">
+    <section className="relative flex w-full flex-col items-center justify-center overflow-hidden bg-white py-8 sm:py-12 md:py-16 dark:bg-gray-900">
+      {/* Heading */}
+      <h2 className="mb-6 text-xl sm:text-3xl md:text-4xl font-bold text-gray-800 dark:text-white text-center">
         Trusted by Leading Travel Platforms
       </h2>
 
       {/* Top Marquee */}
-      <Marquee pauseOnHover className="[--duration:50s] sm:[--duration:40s]">
+      <Marquee pauseOnHover className="[--duration:60s] sm:[--duration:45s] md:[--duration:35s]">
         {partners.map((p) => (
           <div
             key={p.name}
-            className="mx-4 sm:mx-8 flex items-center justify-center grayscale hover:grayscale-0 transition-all duration-300"
+            className="mx-3 sm:mx-6 md:mx-8 flex items-center justify-center grayscale hover:grayscale-0 transition-all duration-300"
           >
             <img
               src={p.logo}
               alt={p.name}
-              className="h-8 w-auto object-contain sm:h-10 md:h-12"
+              className="h-6 xs:h-8 sm:h-10 md:h-12 lg:h-14 w-auto object-contain"
             />
           </div>
         ))}
       </Marquee>
 
       {/* Bottom Marquee */}
-      <Marquee reverse pauseOnHover className="[--duration:50s] sm:[--duration:40s]">
+      <Marquee reverse pauseOnHover className="[--duration:60s] sm:[--duration:45s] md:[--duration:35s]">
         {partners.map((p) => (
           <div
             key={p.name + "-reverse"}
-            className="mx-4 sm:mx-8 flex items-center justify-center grayscale hover:grayscale-0 transition-all duration-300"
+            className="mx-3 sm:mx-6 md:mx-8 flex items-center justify-center grayscale hover:grayscale-0 transition-all duration-300"
           >
             <img
               src={p.logo}
               alt={p.name}
-              className="h-8 w-auto object-contain sm:h-10 md:h-12"
+              className="h-6 xs:h-8 sm:h-10 md:h-12 lg:h-14 w-auto object-contain"
             />
           </div>
         ))}
       </Marquee>
 
-      {/* Gradient Fade Effect */}
-      <div className="pointer-events-none absolute inset-y-0 left-0 w-1/6 bg-gradient-to-r from-white dark:from-gray-900"></div>
-      <div className="pointer-events-none absolute inset-y-0 right-0 w-1/6 bg-gradient-to-l from-white dark:from-gray-900"></div>
+      {/* Gradient Fade Effect for smoother edges */}
+      <div className="pointer-events-none absolute inset-y-0 left-0 w-1/5 sm:w-1/6 bg-gradient-to-r from-white dark:from-gray-900"></div>
+      <div className="pointer-events-none absolute inset-y-0 right-0 w-1/5 sm:w-1/6 bg-gradient-to-l from-white dark:from-gray-900"></div>
     </section>
   );
 }
