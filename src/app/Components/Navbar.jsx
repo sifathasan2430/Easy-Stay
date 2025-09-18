@@ -22,7 +22,7 @@ export default function Navbar() {
         <header className="w-full shadow-sm bg-primary dark:bg-gray-900 text-gray-900 dark:text-white">
             <div className="container mx-auto flex items-center justify-between p-4">
                 {/* Logo */}
-                <Link href="/" className="text-xl font-bold">
+                <Link href="/" className="text-2xl text-white font-heading font-bold">
                     EasyStay
                 </Link>
 
@@ -32,7 +32,7 @@ export default function Navbar() {
                         <Link
                             key={link.name}
                             href={link.href}
-                            className="hover:text-button-primary  transition-colors"
+                            className="hover:text-blue-700 text-xl font-bold font-heading text-white"
                         >
                             {link.name}
                         </Link>
@@ -44,7 +44,7 @@ export default function Navbar() {
                     <ModeToggle />
 
                     <Button
-                        className="bg-button-primary text-white border border-button-primary hover:bg-button-primary/80  
+                        className="bg-button-primary text-white border font-heading border-button-primary hover:bg-button-primary/80  
              transform hover:scale-105 transition-all duration-200"
                     >
                         <Link href="/login">Login</Link>
@@ -71,7 +71,7 @@ export default function Navbar() {
                             <li key={link.name}>
                                 <Link
                                     href={link.href}
-                                    className="block hover:text-button-primary transition-colors"
+                                    className="block font-heading hover:text-button-primary transition-colors"
                                     onClick={() => setMobileOpen(false)}
                                 >
                                     {link.name}

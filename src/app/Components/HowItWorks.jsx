@@ -24,10 +24,10 @@ export default function HowItWorks() {
   return (
     <section className="bg-gray-50 dark:bg-gray-950 py-16">
       <div className="max-w-7xl mx-auto px-4 text-center">
-        <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+        <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 font-heading dark:text-white mb-4">
           How It Works
         </h2>
-        <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-12">
+        <p className="text-gray-600 dark:text-gray-400 max-w-2xl font-body mx-auto mb-12">
           With EasyStay, booking your next short-term stay is simple and hassle-free.  
           Just follow these three easy steps!
         </p>
@@ -42,10 +42,10 @@ export default function HowItWorks() {
               <div className="flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
                 {step.icon}
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+              <h3 className="text-lg font-heading font-semibold text-gray-900 dark:text-white">
                 {step.title}
               </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+              <p className="text-sm font-body text-gray-600 dark:text-gray-400 mt-2">
                 {step.desc}
               </p>
             </div>

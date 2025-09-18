@@ -13,7 +13,7 @@ const Footer = () => {
             {/* Logo + description */}
             <div className="mb-8 md:mb-0">
               <h2 className="text-xl font-bold">EasyStay</h2>
-              <p className="mt-2 max-w-xs">
+              <p className="mt-2 font-body max-w-xs">
                 Discover and book amazing short-term stays around the world.
               </p>
             </div>
@@ -21,10 +21,10 @@ const Footer = () => {
             {/* Navigation Links */}
             <div className="grid grid-cols-2 gap-8 sm:gap-12 md:flex md:space-x-12">
               <div>
-                <h3 className="text-sm font-semibold tracking-wider uppercase">
+                <h3 className="text-md font-heading font-semibold tracking-wider uppercase">
                   Company
                 </h3>
-                <ul className="mt-4 space-y-2">
+                <ul className="mt-4 font-heading space-y-2">
                   <li>
                     <Link href="/stays" className="hover:underline">
                       Stays
@@ -49,10 +49,10 @@ const Footer = () => {
               </div>
 
               <div>
-                <h3 className="text-sm font-semibold tracking-wider uppercase">
+                <h3 className="text-md font-semibold tracking-wider font-heading uppercase">
                   Support
                 </h3>
-                <ul className="mt-4 space-y-2">
+                <ul className="mt-4 space-y-2 font-body">
                   <li>
                     <Link href="/help-center" className="hover:underline">
                       Help Center

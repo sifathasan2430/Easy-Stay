@@ -84,13 +84,13 @@ export default function HeroSection() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8 }}
                 >
-                  <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-4 leading-tight">
+                  <h1 className="text-3xl sm:text-4xl md:text-6xl font-heading font-bold mb-4 leading-tight">
                     {slide.title}
                   </h1>
-                  <p className="text-base sm:text-lg md:text-xl mb-6">
+                  <p className="text-base sm:text-lg font-body md:text-xl mb-6">
                     {slide.subtitle}
                   </p>
-                   <button className="bg-white text-black font-semibold px-4 sm:px-6 py-2 sm:py-3 rounded-2xl shadow-md hover:bg-gray-200 transition">
+                   <button className="bg-white text-black font-semibold px-4 font-heading sm:px-6 py-2 sm:py-3 rounded-2xl shadow-md hover:bg-gray-200 transition">
                    <Link href="/services">Get Started</Link> 
                   </button>
                  
