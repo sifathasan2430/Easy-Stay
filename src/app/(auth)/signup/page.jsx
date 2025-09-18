@@ -65,7 +65,7 @@ export default function SignupForm() {
   return (
     <div className="flex justify-center items-center min-h-screen md:pt-16 px-4">
      <div className="w-full max-w-md bg-white dark:bg-black shadow-lg rounded-xl p-6 md:p-8">
-       <h2 className="text-3xl sm:text-4xl text-center font-bold text-neutral-800 dark:text-neutral-200">
+       <h2 className="text-3xl font-heading sm:text-4xl text-center font-bold text-neutral-800 dark:text-neutral-200">
         Signup Now
       </h2>
 
@@ -79,7 +79,7 @@ export default function SignupForm() {
             name="username"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-sm sm:text-base">Username</FormLabel>
+                <FormLabel className="text-sm sm:text-base font-body">Username</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="jhon"
@@ -97,7 +97,7 @@ export default function SignupForm() {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-sm sm:text-base">Email</FormLabel>
+                <FormLabel className="text-sm sm:text-base font-body">Email</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="jhon@gmail.com"
@@ -115,7 +115,7 @@ export default function SignupForm() {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-sm sm:text-base">Password</FormLabel>
+                <FormLabel className="text-sm sm:text-base font-body">Password</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="*****"
@@ -130,7 +130,7 @@ export default function SignupForm() {
           />
 
           <button
-            className="group/btn relative block h-10 sm:h-12 w-full rounded-md bg-gradient-to-br from-black to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset] text-sm sm:text-base"
+            className="group/btn relative block h-10 sm:h-12 w-full font-heading rounded-md bg-gradient-to-br from-black to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset] text-sm sm:text-base"
             type="submit"
           >
             {isSignupLoading ? <span>Loading</span> : <span>Signup</span>}
@@ -140,11 +140,11 @@ export default function SignupForm() {
       </Form>
 
       {/* Login Link */}
-      <p className="text-center text-sm text-neutral-600 dark:text-neutral-400 mt-6">
+      <p className="text-center text-sm text-neutral-600 font-body dark:text-neutral-400 mt-6">
         Already have an account?{" "}
         <Link
           href="/login"
-          className="font-medium text-indigo-600 dark:text-indigo-400 hover:underline"
+          className="font-medium text-indigo-600 font-heading dark:text-indigo-400 hover:underline"
         >
           Login
         </Link>

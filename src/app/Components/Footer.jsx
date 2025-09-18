@@ -6,14 +6,14 @@ import { TfiWorld } from "react-icons/tfi";
 const Footer = () => {
   return (
     <div>
-      <footer className="bg-primary  dark:bg-gray-900">
+      <footer className="bg-primary text-white dark:bg-gray-900">
         <div className="max-w-7xl mx-auto py-12 px-4">
           {/* Top section */}
           <div className="md:flex md:justify-between md:items-start">
             {/* Logo + description */}
             <div className="mb-8 md:mb-0">
               <h2 className="text-xl font-bold">EasyStay</h2>
-              <p className="mt-2 max-w-xs">
+              <p className="mt-2 font-body max-w-xs">
                 Discover and book amazing short-term stays around the world.
               </p>
             </div>
@@ -21,10 +21,15 @@ const Footer = () => {
             {/* Navigation Links */}
             <div className="grid grid-cols-2 gap-8 sm:gap-12 md:flex md:space-x-12">
               <div>
-                <h3 className="text-sm font-semibold tracking-wider uppercase">
+                <h3 className="text-md font-heading font-semibold tracking-wider uppercase">
                   Company
                 </h3>
-                <ul className="mt-4 space-y-2">
+                <ul className="mt-4 font-heading space-y-2">
+                  <li>
+                    <Link href="/stays" className="hover:underline">
+                      Stays
+                    </Link>
+                  </li>
                   <li>
                     <Link href="/about" className="hover:underline">
                       About Us
@@ -44,10 +49,10 @@ const Footer = () => {
               </div>
 
               <div>
-                <h3 className="text-sm font-semibold tracking-wider uppercase">
+                <h3 className="text-md font-semibold tracking-wider font-heading uppercase">
                   Support
                 </h3>
-                <ul className="mt-4 space-y-2">
+                <ul className="mt-4 space-y-2 font-body">
                   <li>
                     <Link href="/help-center" className="hover:underline">
                       Help Center
@@ -69,7 +74,7 @@ const Footer = () => {
           </div>
 
           {/* Divider */}
-          <div className="mt-8 border-t border-gray-200 dark:border-gray-700 pt-8 flex flex-col md:flex-row md:justify-between md:items-center">
+          <div className="mt-8 border-t border-gray-700 pt-8 flex flex-col md:flex-row md:justify-between md:items-center">
             {/* Copyright */}
             <p className="text-sm">
               &copy; {new Date().getFullYear()} easyStay. All rights reserved.

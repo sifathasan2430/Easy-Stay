@@ -1,36 +1,43 @@
-import { Geist, Geist_Mono } from "next/font/google";
+// app/layout.jsx
+import { Poppins, Roboto } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/app/Components/ThemeProvider";
 
-import Footer from "./Components/Footer";
+
 
 import Header from "@/components/Header/Header";
 import SessionProviderWrapper from "./Components/SessionProvider/SessionProviderWrapper";
 import { Toaster } from "sonner";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+import { ThemeProvider } from "@/app/Components/ThemeProvider";
+
+import Footer from "./Components/Footer";
+
+
+const poppins = Poppins({
   subsets: ["latin"],
+  variable: "--font-poppins",
+  weight: ["400", "500", "600", "700"], // Regular to Bold
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const roboto = Roboto({
   subsets: ["latin"],
+  variable: "--font-roboto",
+  weight: ["300", "400", "500"],
 });
 
 export const metadata = {
   title: "EasyStay— Short-Term Rental Marketplace",
-  description: "Develop by Team DevOps",
+  description: "Developed by Team DevOps",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${poppins.variable} ${roboto.variable} antialiased font-sans`}
       >
          <SessionProviderWrapper>
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSy
            <div className="relative w-full flex items-center justify-center ">
             <Header/>
           </div>
@@ -40,6 +47,7 @@ export default function RootLayout({ children }) {
             {children}
             </main> 
           <Footer/>
+
         </ThemeProvider>
         </SessionProviderWrapper>
       </body>

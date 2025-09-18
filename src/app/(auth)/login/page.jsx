@@ -71,6 +71,8 @@ export default function SignupForm() {
     <div className="flex justify-center items-center min-h-screen  md:pt-4  px-4">
         <div className="w-full max-w-md bg-white dark:bg-black shadow-lg rounded-xl p-6 md:p-8">
         <h2 className="text-center text-3xl sm:text-4xl font-bold text-neutral-800 dark:text-neutral-200 mb-6">
+
+  
           Login
         </h2>
 
@@ -84,7 +86,7 @@ export default function SignupForm() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="my-1">Email</FormLabel>
+                  <FormLabel className="my-1 font-body">Email</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="jhon@gmail.com"
@@ -102,7 +104,7 @@ export default function SignupForm() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="mt-4">Password</FormLabel>
+                  <FormLabel className="mt-4 font-body">Password</FormLabel>
                   <FormControl>
                     <Input
                       type="password"
@@ -117,7 +119,7 @@ export default function SignupForm() {
             />
 
             <button
-              className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-black to-neutral-600 text-white font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset] transition-all duration-300 hover:scale-[1.02]"
+              className="group/btn relative block h-10 w-full font-heading rounded-md bg-gradient-to-br from-black to-neutral-600 text-white font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset] transition-all duration-300 hover:scale-[1.02]"
               type="submit"
             >
               {isSignupLoading ? <span>Loading...</span> : <span>Login</span>}
@@ -127,11 +129,11 @@ export default function SignupForm() {
         </Form>
 
         {/* Signup Link */}
-        <p className="text-center text-sm text-neutral-600 dark:text-neutral-400 mt-6">
+        <p className="text-center text-sm font-body text-neutral-600 dark:text-neutral-400 mt-6">
           Don&apos;t have an account?{" "}
           <Link
             href="/signup"
-            className="font-medium text-indigo-600 dark:text-indigo-400 hover:underline"
+            className="font-medium font-heading text-indigo-600 dark:text-indigo-400 hover:underline"
           >
             Sign up
           </Link>
