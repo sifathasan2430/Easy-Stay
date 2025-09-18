@@ -28,7 +28,7 @@ export default function AboutPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col transition-colors duration-300">
       {/* Hero Section */}
       <section className="relative bg-gradient-to-r from-primary/90 to-primary/70 text-white">
         <div className="max-w-5xl mx-auto px-6 py-20 text-center">
@@ -54,8 +54,10 @@ export default function AboutPage() {
       {/* Mission Section */}
       <section className="max-w-5xl mx-auto px-6 py-16">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-800 mb-4">Our Mission</h2>
-          <p className="text-gray-600 font-body max-w-2xl mx-auto">
+          <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-4">
+            Our Mission
+          </h2>
+          <p className="text-gray-600 dark:text-gray-300 font-body max-w-2xl mx-auto">
             Our mission is to make travel easy, affordable, and meaningful. We believe that finding a great place to stay should be simple and stress-free.
           </p>
         </div>
@@ -65,7 +67,7 @@ export default function AboutPage() {
           {values.map((item, index) => (
             <motion.div
               key={item.title}
-              className="bg-white p-6 rounded-2xl shadow-md flex items-start gap-4"
+              className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md flex items-start gap-4 transition-colors duration-300"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
@@ -73,10 +75,12 @@ export default function AboutPage() {
             >
               <div className="shrink-0">{item.icon}</div>
               <div>
-                <h3 className="text-xl font-heading font-semibold text-gray-800">
+                <h3 className="text-xl font-heading font-semibold text-gray-800 dark:text-gray-100">
                   {item.title}
                 </h3>
-                <p className="text-gray-600 font-body">{item.desc}</p>
+                <p className="text-gray-600 dark:text-gray-300 font-body">
+                  {item.desc}
+                </p>
               </div>
             </motion.div>
           ))}
@@ -84,10 +88,10 @@ export default function AboutPage() {
       </section>
 
       {/* Closing Statement */}
-      <section className="bg-gray-100 py-16">
+      <section className="bg-gray-100 dark:bg-gray-800 py-16 transition-colors duration-300">
         <div className="max-w-3xl mx-auto px-6 text-center">
           <motion.h3
-            className="text-2xl md:text-3xl font-heading font-bold text-gray-800 mb-4"
+            className="text-2xl md:text-3xl font-heading font-bold text-gray-800 dark:text-gray-100 mb-4"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
@@ -95,7 +99,7 @@ export default function AboutPage() {
             Travel Smarter, Stay Happier
           </motion.h3>
           <motion.p
-            className="text-gray-600 font-body max-w-xl mx-auto"
+            className="text-gray-600 dark:text-gray-300 font-body max-w-xl mx-auto"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
