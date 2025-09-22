@@ -23,49 +23,54 @@ import { useState } from "react"
 import axios from "axios"
 import { useParams } from "next/navigation"
 import { useRouter } from "next/navigation"
-import { FormSchema } from "@/zodSchema/userSchema"
-import { useSession } from "next-auth/react"
+import { codeSchema, FormSchema } from "@/zodSchema/userSchema"
+
 
 export default function InputOTPForm() {
   const params=useParams()
   const router=useRouter()
-  
-  
-   const [value, setValue] = useState("")
+ 
+  const email=decodeURIComponent(params?.email)
+ 
  
   const form = useForm({
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      pin: "",
-      email:params?.email
-    },
+  resolver: zodResolver(codeSchema),
+    defaultValues:{
+      pin:'',
+      email:email || ''
+    }
+    
+   
   })
 
- async function onSubmit(data) {
-    console.log(data)
-      try {
-         const response=await axios.post(`/api/user/verifyCode/${data.email}`,data)
-         console.log(response)
-         if (response.data?.success){
-       toast(response.data?.message, {
-      description: 'thanks for verification ',
-    })
-   router.replace('/')
+  const dataPost=async(data)=>{
+
+try {
+         const response=await axios.post(`/api/user/verifyCode/${data?.email}`,data)
+        console.log(response.data)
+
+       if (response.data?.success){
+         toast(response.data?.message, {
+           description: 'thanks for verification ',
+         })
+         router.replace('/')
+       }
+    } catch (error) {
+      console.log(error)
+      toast("Verification fail", {
+        description: error.response?.data?.message
+      })
+    }
   }
-      } catch (error) {
-          console.log(error?.response)
-          toast("Verification vail", {
-      description:error.response.data.message
-    })
-      }
-  }
+
+ 
 
   return (
     <div className="min-h-screen flex justify-center items-center">
       {/* Form wrapper already acts like a provider */}
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(onSubmit)}
+          onSubmit={form.handleSubmit(dataPost)}
           className="w-full max-w-md space-y-8 flex flex-col items-center"
         >
           <FormField
@@ -74,9 +79,13 @@ export default function InputOTPForm() {
             render={({ field }) => (
               <FormItem className="w-full flex flex-col items-center space-y-6">
                 <FormLabel>One-Time OTP</FormLabel>
-                <FormControl>
-                  <InputOTP    value={value}
-        onChange={(value) => setValue(value)} maxLength={6} {...field}>
+              
+                  <FormControl>
+          
+                    
+              <InputOTP
+      maxLength={6}
+                 {...field}>
                     <InputOTPGroup>
                       <InputOTPSlot index={0} />
                       <InputOTPSlot index={1} />
@@ -85,8 +94,8 @@ export default function InputOTPForm() {
                       <InputOTPSlot index={4} />
                       <InputOTPSlot index={5} />
                     </InputOTPGroup>
-                  </InputOTP>
-                </FormControl>
+                  </InputOTP> 
+                 </FormControl>
                 <FormDescription>
                   Please enter the one-time password sent to your phone.
                 </FormDescription>
@@ -94,7 +103,7 @@ export default function InputOTPForm() {
               </FormItem>
             )}
           />
-          <Button type="submit">Submit</Button>
+          <Button className='cursor-pointer' type="submit">Submit</Button>
         </form>
       </Form>
     </div>
