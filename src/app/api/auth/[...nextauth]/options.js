@@ -1,12 +1,17 @@
 
 import CredentialsProvider from "next-auth/providers/credentials";
-
+ import GoogleProvider from "next-auth/providers/google";
 import bcrypt from 'bcrypt'
 import User from "@/models/user.models";
 import dbConnect from "@/lib/dbConnect";
+import emailSender from "@/utils/emailSender";
 export const authOptions = {
   
   providers: [
+    GoogleProvider({
+    clientId: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET
+  }),
     
      CredentialsProvider({
   
@@ -18,6 +23,7 @@ export const authOptions = {
       password: { label: "Password", type: "password" }
     },
     async authorize(credentials, req) {
+     
         await  dbConnect()
     
       try {
@@ -49,6 +55,44 @@ export const authOptions = {
    
   ],
   callbacks: {
+    
+  async signIn({ user, account, profile,  credentials }) {
+const{name,email}=user
+const { provider}=account
+
+    try {
+        await dbConnect()
+         if (provider==='google'){
+ const IsVerifiedUserExists=await User.findOne({email})
+ 
+     const verifyCode=Math.floor(100000 + Math.random()*900000)
+      if (IsVerifiedUserExists && IsVerifiedUserExists.isVerified){
+      return '/'
+     }
+        if (!IsVerifiedUserExists) {
+        const newUser=new User({
+           email,
+           username:name,
+          
+           verifyCode,
+           verifyCodeExpiry:Date.now()+5*60*1000 ,
+           
+        })
+  
+        await newUser.save()
+        await emailSender(verifyCode)
+          return `/verify/${email}`
+        }
+         }
+      
+     
+      
+    } catch (error) {
+        console.error("Error in signIn callback:", error);
+        return false;
+    }
+    return true
+  },
   async jwt({ token, user}) {
     // Persist the OAuth access_token and or the user id to the token right after signin
     if (user) {

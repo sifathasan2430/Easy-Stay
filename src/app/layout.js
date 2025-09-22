@@ -37,14 +37,15 @@ export default function RootLayout({ children }) {
         className={`${poppins.variable} ${roboto.variable} antialiased font-sans`}
       >
          <SessionProviderWrapper>
-        <ThemeProvider attribute="class" defaultTheme="light" enableSy
-           <div className="relative w-full flex items-center justify-center ">
+        <ThemeProvider attribute="class" defaultTheme="light"   enableSystem>
+         <div>
             <Header/>
-          </div>
+        </div>
           
           <main className="min-h-screen"> 
-            <Toaster/> 
+            
             {children}
+            <Toaster/> 
             </main> 
           <Footer/>
 

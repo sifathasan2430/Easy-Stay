@@ -24,30 +24,33 @@ import axios from "axios"
 import { useParams } from "next/navigation"
 import { useRouter } from "next/navigation"
 import { FormSchema } from "@/zodSchema/userSchema"
+import { useSession } from "next-auth/react"
 
 export default function InputOTPForm() {
   const params=useParams()
   const router=useRouter()
+  
+  
    const [value, setValue] = useState("")
  
   const form = useForm({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       pin: "",
-      username:params?.username
+      email:params?.email
     },
   })
 
  async function onSubmit(data) {
     console.log(data)
       try {
-         const response=await axios.post(`/api/user/verifyCode/${data.username}`,data)
+         const response=await axios.post(`/api/user/verifyCode/${data.email}`,data)
          console.log(response)
          if (response.data?.success){
        toast(response.data?.message, {
       description: 'thanks for verification ',
     })
-   router.replace('/login')
+   router.replace('/')
   }
       } catch (error) {
           console.log(error?.response)

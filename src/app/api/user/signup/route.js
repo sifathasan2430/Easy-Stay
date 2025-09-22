@@ -10,7 +10,7 @@ export const POST=async(request)=>{
    await dbConnect()
 
         const reqBody=await request.json()
-//  
+
             
     
    const {email,username,password}=reqBody

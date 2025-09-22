@@ -25,7 +25,11 @@ console.log(session)
  const userNotExits=<>   
  <div className="flex items-center gap-4">
              
-            <NavbarButton variant="secondary"><Link href='/login'>Login</Link></NavbarButton>
+            <NavbarButton  href={'/login'}>
+           
+    Login
+   
+            </NavbarButton>
             {/* custom btn */}
             <LinkBtn href="/signup">Signup</LinkBtn>
           </div>

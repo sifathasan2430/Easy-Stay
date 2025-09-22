@@ -41,9 +41,14 @@ export default function SignupForm() {
     email:data?.email,
     password:data?.password
    })
+   toast("Welcome to our family",{
+         title:'Success',
+         description: 'Thanks for use our marketplace',
+          variant: 'destructive',
+    })
    if (response?.error){
-    toast({
-        title:response?.error,
+    toast("verification fail",{
+         title:response?.error,
          description: 'Incorrect username or password',
           variant: 'destructive',
     })
