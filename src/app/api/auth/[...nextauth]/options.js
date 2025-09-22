@@ -66,9 +66,18 @@ const { provider}=account
  const IsVerifiedUserExists=await User.findOne({email})
  
      const verifyCode=Math.floor(100000 + Math.random()*900000)
+     const verifyCodeExpiry=Date.now()+5*60*1000 
       if (IsVerifiedUserExists && IsVerifiedUserExists.isVerified){
       return '/'
      }
+      if (IsVerifiedUserExists && !IsVerifiedUserExists.isVerified){
+     IsVerifiedUserExists.verifyCode=verifyCode,
+     IsVerifiedUserExists.verifyCodeExpiry=verifyCodeExpiry
+
+
+      return  `/verify/${decodeURIComponent(email)}`
+     }
+     
         if (!IsVerifiedUserExists) {
         const newUser=new User({
            email,
@@ -81,7 +90,7 @@ const { provider}=account
   
         await newUser.save()
         await emailSender(verifyCode)
-          return `/verify/${email}`
+          return `/verify/${decodeURIComponent(email)}`
         }
          }
       
