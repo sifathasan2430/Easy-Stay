@@ -13,7 +13,7 @@ const HelpCenter = () => {
     >
       {/* Page Title */}
       <motion.h1
-        className="text-3xl font-bold mb-6 font-heading"
+        className="text-3xl text-center font-bold mb-6 font-heading"
         initial={{ opacity: 0, x: -30 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.5 }}
