@@ -4,6 +4,7 @@ import EasyStayReviews from "./Components/EasyStayReviews";
 import  EasyStayPartners  from "./Components/EasyStayPartners";
 import HowItWorks from "./Components/HowItWorks";
 import FAQ from "./Components/FAQ";
+import LatestStaysInHome from "./Components/LatestStaysInHome";
 
 
 export default function Home() {
@@ -11,6 +12,7 @@ export default function Home() {
     <main className="min-h-screen md:pt-16">
       {/* Do not Code Here */}
       <HeroSection></HeroSection>
+      <LatestStaysInHome></LatestStaysInHome>
       <EasyStayReviews></EasyStayReviews>
       <HowItWorks></HowItWorks>
       <FAQ></FAQ>
