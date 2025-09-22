@@ -104,7 +104,7 @@ const Stays = () => {
   if (error) return <div className="text-center p-4 text-destructive">{error}</div>;
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto md:pt-16 p-4">
       <h1 className="text-3xl font-bold mb-6 text-foreground">Property Listings</h1>
 
       {/* Filters */}

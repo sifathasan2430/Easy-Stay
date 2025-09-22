@@ -7,10 +7,10 @@ import { NextResponse } from "next/server";
 export const POST = async (request) => {
   try {
     const reqBody = await request.json();
-    const { username, pin } = reqBody;
+    const { email, pin } = reqBody;
    
 
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ email });
     
     if (!user) {
       return NextResponse.json(
