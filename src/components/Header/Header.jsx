@@ -21,7 +21,7 @@ import { signOut, useSession } from "next-auth/react";
  
 export default function Header() {
 const {data:session, status}=useSession()
-console.log(session)
+console.log(session?.user)
  const userNotExits=<>   
  <div className="flex items-center gap-4">
              

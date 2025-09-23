@@ -21,12 +21,12 @@ const userSchema=new Schema({
     },
     verifyCode:{
         type:String,
-        required:[true,'Please provide username'],
+       
     
     },
       verifyCodeExpiry:{
         type:Date,
-        required:[true,'Please provide username'],
+       
     
     },
     isVerified:{
