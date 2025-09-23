@@ -1,3 +1,4 @@
+import dbConnect from "@/lib/dbConnect";
 import User from "@/models/user.models";
 import mongoose from "mongoose";
 
@@ -5,12 +6,14 @@ import { NextResponse } from "next/server";
 
 
 export const POST = async (request) => {
+  
   try {
+    await dbConnect()
     const reqBody = await request.json();
-    const { username, pin } = reqBody;
+    const { email, pin } = reqBody;
    
 
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ email });
     
     if (!user) {
       return NextResponse.json(
@@ -20,7 +23,7 @@ export const POST = async (request) => {
     }
 
     const isCodeCorrect = user.verifyCode === pin;
-    console.log(isCodeCorrect)
+    
     const isDateValid = user.verifyCodeExpiry > Date.now();
 
     if (!isCodeCorrect) {

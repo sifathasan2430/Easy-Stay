@@ -7,11 +7,11 @@ const userSchema=new Schema({
     username:{
         type:String,
         required:[true,'Please provide username'],
-    unique:true
+        
     },
     password:{
         type:String,
-        required:['true','please provide password']
+        // required:[true,'please provide password']
     },
     email:{
         type:String,
@@ -40,5 +40,5 @@ const userSchema=new Schema({
 
 })
 
-const User=mongoose.models.users || mongoose.model('users',userSchema)
+const User=mongoose.models.user || mongoose.model('user',userSchema)
 export default User

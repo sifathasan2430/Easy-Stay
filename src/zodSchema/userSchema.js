@@ -15,9 +15,11 @@ export const loginSchema=z.object({
   email:z.string().email("Please provide a valid email"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 })
- export const FormSchema = z.object({
+ export const codeSchema = z.object({
   pin: z.string().min(6, {
     message: "Your one-time password must be 6 characters.",
+  
   }),
-  username:usernameValidation
+    email: z.string().email("Invalid email address").optional(),
+  
 })

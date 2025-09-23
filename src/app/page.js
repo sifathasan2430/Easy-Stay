@@ -9,7 +9,7 @@ import LatestStaysInHome from "./Components/LatestStaysInHome";
 
 export default function Home() {
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen md:pt-16">
       {/* Do not Code Here */}
       <HeroSection></HeroSection>
       <LatestStaysInHome></LatestStaysInHome>
