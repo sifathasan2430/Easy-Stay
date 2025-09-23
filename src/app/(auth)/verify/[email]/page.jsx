@@ -44,7 +44,7 @@ export default function InputOTPForm() {
   })
 
   const dataPost=async(data)=>{
-console.log(data )
+
 try {
          const response=await axios.post(`/api/user/verifyCode/${data?.email}`,data)
         console.log(response.data)
