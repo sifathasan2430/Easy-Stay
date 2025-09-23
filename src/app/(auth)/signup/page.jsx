@@ -47,7 +47,8 @@ export default function SignupForm() {
             onClick: () => console.log("Undo"),
           },
         })
-      router.replace(`/verify/${data.username}`);
+        console.log(data)
+      router.replace(`/verify/${data.email}`);
     } catch (error) {
       console.error("Error during sign-up:", error);
        toast('User registration fail', {
