@@ -64,6 +64,7 @@ export const authOptions = {
             return true; // Complete sign-in for existing users
           }
 
+
           // New Google user: create and mark as verified
           const newUser = new User({
             email,
@@ -73,6 +74,7 @@ export const authOptions = {
           });
           await newUser.save();
           return true; 
+  
         }
       } catch (error) {
         console.error("Error in signIn callback:", error);
