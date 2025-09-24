@@ -20,7 +20,7 @@ import {
 import { Input } from "@/components/ui/input";
 import axios from "axios";
 import { toast } from "sonner";
-import { IconBrandGoogle } from "@tabler/icons-react";
+import { IconBrandGithub, IconBrandGoogle } from "@tabler/icons-react";
 
 export default function SignupForm() {
   const [isSignupLoading, setIsSignupLoading] = useState(false);
@@ -142,14 +142,24 @@ export default function SignupForm() {
       </Form>
 
       {/* Login Link */}
-         <div className="my-4 ">
+         <div className="my-4  md:flex md:justify-center md:items-center md:gap-4 ">
 <button onClick={()=>signIn('google', { callbackUrl: "/" })}
-            className="group/btn shadow-input relative flex h-10 w-full items-center justify-start space-x-2 rounded-md bg-gray-50 px-4 font-medium text-black dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_#262626]"
+            className="my-4 md:my-0 group/btn shadow-input relative flex h-10 w-full items-center justify-start space-x-2 rounded-md bg-gray-50 px-4 font-medium text-black dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_#262626]"
             type="submit"
           >
             <IconBrandGoogle className="h-4 w-4 text-neutral-800 dark:text-neutral-300" />
             <span className="text-sm text-neutral-700 dark:text-neutral-300">
               Google
+            </span>
+            <BottomGradient />
+          </button>
+          <button onClick={()=>signIn('github', { callbackUrl: "/" })}
+            className="group/btn shadow-input relative flex h-10 w-full items-center justify-start space-x-2 rounded-md bg-gray-50 px-4 font-medium text-black dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_#262626]"
+            type="submit"
+          >
+            <IconBrandGithub className="h-4 w-4 text-neutral-800 dark:text-neutral-300" />
+            <span className="text-sm text-neutral-700 dark:text-neutral-300">
+              Github
             </span>
             <BottomGradient />
           </button>

@@ -74,7 +74,7 @@ export default function SignupForm() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen  md:pt-4  px-4">
+    <div className="flex justify-center items-center min-h-screen  md:pt-16  px-4">
         <div className="w-full max-w-md bg-white dark:bg-black shadow-lg rounded-xl p-6 md:p-8">
         <h2 className="text-center text-3xl sm:text-4xl font-bold text-neutral-800 dark:text-neutral-200 mb-6">
 
@@ -144,7 +144,7 @@ export default function SignupForm() {
             Sign up
           </Link>
         </p>
-         <div className="my-4 ">
+         <div className="my-4 space-y-4 sm:space-y-0 md:flex md:justify-center md:items-center md:gap-4 ">
         <button onClick={()=>signIn('google', { callbackUrl: "/" })}
                     className="group/btn shadow-input relative flex h-10 w-full items-center justify-start space-x-2 rounded-md bg-gray-50 px-4 font-medium text-black dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_#262626]"
                     type="submit"
