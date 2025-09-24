@@ -237,7 +237,7 @@ const Stays = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredListings.length > 0 ? (
           filteredListings.map((property) => (
-            <PropertyCard key={property.id} property={property} />
+            <PropertyCard key={property._id} property={property} />
           ))
         ) : (
           <p className="text-center col-span-full text-foreground">No listings match your filters.</p>
