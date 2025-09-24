@@ -17,7 +17,7 @@ const StayDetailsPage = () => {
     const [checkOut, setCheckOut] = useState(null);
 
     // Guest selector states
-    const [guests, setGuests] = useState(0);
+    const [guests, setGuests] = useState(1);
     const [showGuestMenu, setShowGuestMenu] = useState(false);
 
     useEffect(() => {
@@ -27,7 +27,7 @@ const StayDetailsPage = () => {
                 if (!response.ok) throw new Error('Failed to fetch listings');
 
                 const data = await response.json();
-                const found = data.find((p) => p.id === parseInt(id));
+                const found = data.find((p) => p._id === id);
                 if (!found) throw new Error('Property not found');
 
                 setProperty(found);
@@ -40,6 +40,53 @@ const StayDetailsPage = () => {
 
         fetchProperty();
     }, [id]);
+
+    // POST booking handler
+    const handleReserve = async () => {
+  if (!checkIn || !checkOut || guests < 1) {
+    return alert("Please select check-in, check-out dates and at least 1 guest.");
+  }
+
+  // Make sure property and price exist
+  if (!property || !property._id || !property.price_per_night) {
+    return alert("Property data is missing. Cannot create booking.");
+  }
+
+  // Prepare booking data
+  const bookingData = {
+    propertyId: property._id,                    // Mongoose ObjectId reference
+    userId: "64f9a0c1b6f8e0a123456789",          // replace with actual logged-in user ID
+    checkInDate: checkIn.toISOString(),          // Date in ISO format
+    checkOutDate: checkOut.toISOString(),        // Date in ISO format
+    guests: guests,                              // minimum 1
+    totalPrice: property.price_per_night * guests // total cost
+  };
+
+  console.log("Booking data sent:", bookingData);
+
+  try {
+    const res = await fetch("/api/bookings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(bookingData),
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json();
+      throw new Error(errorData.error || "Failed to create booking");
+    }
+
+    const data = await res.json();
+    console.log("Booking success:", data);
+    alert("Booking created successfully!");
+  } catch (err) {
+    console.error("Booking error:", err);
+    alert("Something went wrong while booking.");
+  }
+};
+
+
+
 
     if (loading)
         return <div className="text-center p-6 text-lg">Loading...</div>;
@@ -55,12 +102,8 @@ const StayDetailsPage = () => {
             {/* Title & Header */}
             <div className="flex justify-between items-start mb-6 ">
                 <div>
-                    <h1 className="text-2xl md:text-3xl font-semibold">
-                        {property.title}
-                    </h1>
-                    <p className=" mt-1 ">
-                        {property.city} · {property.room_type}
-                    </p>
+                    <h1 className="text-2xl md:text-3xl font-semibold">{property.title}</h1>
+                    <p className="mt-1">{property.city} · {property.room_type}</p>
                 </div>
                 <button className="flex items-center space-x-2 text-primary hover:text-red-500 transition">
                     <Heart className="w-5 h-5" />
@@ -69,7 +112,7 @@ const StayDetailsPage = () => {
             </div>
 
             {/* Image */}
-            <div className="relative mb-8 ">
+            <div className="relative mb-8">
                 <img
                     src={property.image_url}
                     alt={property.title}
@@ -83,9 +126,8 @@ const StayDetailsPage = () => {
                 <div className="lg:col-span-2 space-y-6">
                     {/* Host & Rating */}
                     <div className="flex items-center justify-between">
-                        <p className="text-lg font-medium ">
-                            Entire {property.room_type} hosted by{' '}
-                            {property.host_name || 'Host'}
+                        <p className="text-lg font-medium">
+                            Entire {property.room_type} hosted by {property.host_name || 'Host'}
                         </p>
                         <div className="flex items-center text-sm">
                             <Star className="w-4 h-4 text-yellow-500 fill-accent mr-1" />
@@ -97,24 +139,19 @@ const StayDetailsPage = () => {
 
                     {/* Amenities */}
                     <div>
-                        <h2 className="text-xl font-semibold mb-4">
-                            What this place offers
-                        </h2>
+                        <h2 className="text-xl font-semibold mb-4">What this place offers</h2>
                         <ul className="grid grid-cols-2 gap-3">
                             {property.amenities.map((amenity, index) => (
                                 <li
                                     key={index}
-                                    className="flex items-center border justify-between text-sm  px-3 py-2 rounded-full cursor-pointer 
-                    hover:scale-[1.02] transition transform"
+                                    className="flex items-center border justify-between text-sm px-3 py-2 rounded-full cursor-pointer 
+                  hover:scale-[1.02] transition transform"
                                 >
-                                    {/* Amenity Name */}
                                     <span className="flex items-center">
                                         <span className="mr-2 text-primary">•</span>
                                         {amenity}
                                     </span>
-
-                                    {/* Like Button */}
-                                    <button className="ml-2 p-1 rounded-full  hover:shadow">
+                                    <button className="ml-2 p-1 rounded-full hover:shadow">
                                         <Heart className="w-4 h-4 text-gray-500 hover:text-red-500 transition" />
                                     </button>
                                 </li>
@@ -128,7 +165,7 @@ const StayDetailsPage = () => {
                     <div className="sticky top-24 border rounded-2xl shadow-md p-6 space-y-4">
                         <p className="text-xl font-bold">
                             ${property.price_per_night}
-                            <span className=" font-normal text-base"> / night</span>
+                            <span className="font-normal text-base"> / night</span>
                         </p>
 
                         {/* Calendar Section */}
@@ -166,29 +203,24 @@ const StayDetailsPage = () => {
                             </div>
                         </div>
 
-
                         {/* Guests Section */}
                         <div className="relative">
-                            {/* Trigger */}
                             <div
                                 onClick={() => setShowGuestMenu(!showGuestMenu)}
-                                className="w-full p-3 text-left text-sm border rounded-lg cursor-pointer "
+                                className="w-full p-3 text-left text-sm border rounded-lg cursor-pointer"
                             >
                                 <p className="font-medium">Guests</p>
-                                <p>
-                                    {guests} guest{guests > 1 ? 's' : ''}
-                                </p>
+                                <p>{guests} guest{guests > 1 ? 's' : ''}</p>
                             </div>
 
-                            {/* Dropdown */}
                             {showGuestMenu && (
-                                <div className="mt-2 w-full  border shadow-lg rounded-lg p-4 space-y-3">
+                                <div className="mt-2 w-full border shadow-lg rounded-lg p-4 space-y-3">
                                     <div className="flex justify-between items-center">
                                         <span className="font-medium">{guests} guest{guests > 1 ? 's' : ''}</span>
                                         <div className="flex items-center space-x-2">
                                             <button
                                                 type="button"
-                                                onClick={() => setGuests(Math.max(0, guests - 1))}
+                                                onClick={() => setGuests(Math.max(1, guests - 1))}
                                                 className="px-3 py-1 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 transition"
                                             >
                                                 -
@@ -208,14 +240,13 @@ const StayDetailsPage = () => {
                         </div>
 
                         <button
+                            onClick={handleReserve}
                             className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium
-             shadow-md hover:shadow-xl hover:scale-105 active:scale-95
-             transition transform duration-200 ease-out"
+              shadow-md hover:shadow-xl hover:scale-105 active:scale-95
+              transition transform duration-200 ease-out"
                         >
                             Reserve
                         </button>
-
-
 
                         <p className="text-xs text-center text-gray-500">
                             You won't be charged yet
