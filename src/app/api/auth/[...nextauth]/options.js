@@ -1,13 +1,17 @@
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import bcrypt from 'bcrypt';
-
+import GitHubProvider from "next-auth/providers/github";
 import dbConnect from "@/lib/dbConnect";
-import emailSender from "@/utils/emailSender"; // Ensure this is still needed if no OTP
+ // Ensure this is still needed if no OTP
 import User from "@/models/user.models";
 
 export const authOptions = {
   providers: [
+     GitHubProvider({
+    clientId: process.env.GITHUB_ID,
+    clientSecret: process.env.GITHUB_SECRET
+  }),
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET
@@ -53,7 +57,7 @@ export const authOptions = {
 
       try {
         await dbConnect();
-        if (provider === 'google') {
+        if (provider === 'google' || provider ==='github') {
           const userExists = await User.findOne({ email });
 
           if (userExists) {
@@ -79,6 +83,7 @@ export const authOptions = {
       return true; //
     },
     async jwt({ token, user, account }) {
+      console.log(account)
       if (account) { // Only on initial sign-in
         await dbConnect();
         const dbUser = await User.findOne({ email: user.email });
