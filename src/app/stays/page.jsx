@@ -234,7 +234,7 @@ const Stays = () => {
         <div className="mt-6 flex gap-3">
           <button
             onClick={clearFilters}
-            className="bg-primary text-foreground px-5 py-2 rounded-lg hover:bg-primary/70 transition"
+            className="bg-primary text-white px-5 py-2 rounded-lg hover:scale-105 duration-200 transition-all"
           >
             Clear Filters
           </button>
