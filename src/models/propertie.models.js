@@ -20,7 +20,7 @@ const propertySchema = new Schema({
   checkInTime: { type: String, default: '14:00', match: /^([0-1][0-9]|2[0-3]):[0-5][0-9]$/ },
   checkOutTime: { type: String, default: '11:00', match: /^([0-1][0-9]|2[0-3]):[0-5][0-9]$/ },
   isActive: { type: Boolean, default: true },
-  amenities: [{ type: Schema.Types.ObjectId, ref: 'Amenity' }],
+  amenities: [{ type: Schema.Types.ObjectId, ref: 'amenity' }],
   images: [{
     url: { type: String, required: true, trim: true },
     isPrimary: { type: Boolean, default: false }

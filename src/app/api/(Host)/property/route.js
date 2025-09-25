@@ -22,12 +22,12 @@ export async function POST(request) {
 export async function GET(request) {
   await dbConnect();
   try {
-    console.log("api is hit");
+    
 
-    const response = await Property.find().populate("hostId amenities");
+    const  properties = await Property.find().populate("hostId amenities");
 
     return NextResponse.json(
-      { status: "success", datafrombackend: response },
+      { status: "success", data: properties },
       { status: 200 }
     );
   } catch (error) {

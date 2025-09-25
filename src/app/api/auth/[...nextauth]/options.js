@@ -1,10 +1,12 @@
+import User from "@/models/user.models";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import bcrypt from 'bcrypt';
 import GitHubProvider from "next-auth/providers/github";
 import dbConnect from "@/lib/dbConnect";
+
  // Ensure this is still needed if no OTP
-import User from "@/models/user.models";
+
 
 export const authOptions = {
   providers: [
