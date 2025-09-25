@@ -76,7 +76,7 @@ console.log(session?.user)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
  
   return (
-    <div className="relative w-full">
+    <div className="fixed top-0 left-0 w-full z-50">
       <Navbar>
         {/* Desktop Navigation */}
         <NavBody className={''}>

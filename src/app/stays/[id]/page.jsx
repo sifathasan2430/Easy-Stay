@@ -5,12 +5,14 @@ import { useParams } from 'next/navigation';
 import { Heart, Star } from 'lucide-react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { useSession } from 'next-auth/react';
 
 const StayDetailsPage = () => {
     const { id } = useParams();
     const [property, setProperty] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const { data: session, status } = useSession();
 
     // Calendar states
     const [checkIn, setCheckIn] = useState(null);
@@ -43,47 +45,47 @@ const StayDetailsPage = () => {
 
     // POST booking handler
     const handleReserve = async () => {
-  if (!checkIn || !checkOut || guests < 1) {
-    return alert("Please select check-in, check-out dates and at least 1 guest.");
-  }
+        if (!checkIn || !checkOut || guests < 1) {
+            return alert("Please select check-in, check-out dates and at least 1 guest.");
+        }
 
-  // Make sure property and price exist
-  if (!property || !property._id || !property.price_per_night) {
-    return alert("Property data is missing. Cannot create booking.");
-  }
+        // Make sure property and price exist
+        if (!property || !property._id || !property.price_per_night) {
+            return alert("Property data is missing. Cannot create booking.");
+        }
 
-  // Prepare booking data
-  const bookingData = {
-    propertyId: property._id,                    // Mongoose ObjectId reference
-    userId: "64f9a0c1b6f8e0a123456789",          // replace with actual logged-in user ID
-    checkInDate: checkIn.toISOString(),          // Date in ISO format
-    checkOutDate: checkOut.toISOString(),        // Date in ISO format
-    guests: guests,                              // minimum 1
-    totalPrice: property.price_per_night * guests // total cost
-  };
+        // Prepare booking data
+        const bookingData = {
+            propertyId: property._id,                    // Mongoose ObjectId reference
+            userId: session?.user?._id,                    // actual logged-in user ID
+            checkInDate: checkIn.toISOString(),          // Date in ISO format
+            checkOutDate: checkOut.toISOString(),        // Date in ISO format
+            guests: guests,                              // minimum 1
+            totalPrice: property.price_per_night * guests // total cost
+        };
 
-  console.log("Booking data sent:", bookingData);
+        console.log("Booking data sent:", bookingData);
 
-  try {
-    const res = await fetch("/api/bookings", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(bookingData),
-    });
+        try {
+            const res = await fetch("/api/bookings", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(bookingData),
+            });
 
-    if (!res.ok) {
-      const errorData = await res.json();
-      throw new Error(errorData.error || "Failed to create booking");
-    }
+            if (!res.ok) {
+                const errorData = await res.json();
+                throw new Error(errorData.error || "Failed to create booking");
+            }
 
-    const data = await res.json();
-    console.log("Booking success:", data);
-    alert("Booking created successfully!");
-  } catch (err) {
-    console.error("Booking error:", err);
-    alert("Something went wrong while booking.");
-  }
-};
+            const data = await res.json();
+            console.log("Booking success:", data);
+            alert("Booking created successfully!");
+        } catch (err) {
+            console.error("Booking error:", err);
+            alert("Something went wrong while booking.");
+        }
+    };
 
 
 
@@ -98,17 +100,17 @@ const StayDetailsPage = () => {
         );
 
     return (
-        <div className="max-w-11/12 mx-auto py-8">
+        <div className="max-w-11/12 mx-auto py-15">
             {/* Title & Header */}
-            <div className="flex justify-between items-start mb-6 ">
-                <div>
-                    <h1 className="text-2xl md:text-3xl font-semibold">{property.title}</h1>
-                    <p className="mt-1">{property.city} · {property.room_type}</p>
+            <div className="flex flex-col items-start mb-6 ">
+                <h1 className="text-2xl md:text-3xl font-semibold">{property.title}</h1>
+                <div className='flex  items-center gap-6 mt-1'>
+                    <p className="">{property.city} · {property.room_type}</p>
+                    <button className="flex items-center space-x-2 text-primary hover:text-red-500 transition">
+                        <Heart className="w-5 h-5" />
+                        <span className="text-sm font-medium">Save</span>
+                    </button>
                 </div>
-                <button className="flex items-center space-x-2 text-primary hover:text-red-500 transition">
-                    <Heart className="w-5 h-5" />
-                    <span className="text-sm font-medium">Save</span>
-                </button>
             </div>
 
             {/* Image */}

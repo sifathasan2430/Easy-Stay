@@ -33,8 +33,8 @@ const LatestStaysInHome = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {latestProperties.map((property) => (
                     <div
-                        key={property.id}
-                        onClick={() => handleCardClick(property.id)}
+                        key={property._id}
+                        onClick={() => handleCardClick(property._id)}
                         className="border rounded-lg shadow-lg overflow-hidden cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-2xl"
                     >
                         <img
