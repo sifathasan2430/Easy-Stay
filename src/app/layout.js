@@ -2,8 +2,6 @@
 import { Poppins, Roboto } from "next/font/google";
 import "./globals.css";
 
-
-
 import Header from "@/components/Header/Header";
 import SessionProviderWrapper from "./Components/SessionProvider/SessionProviderWrapper";
 import { Toaster } from "sonner";
@@ -11,7 +9,6 @@ import { Toaster } from "sonner";
 import { ThemeProvider } from "@/app/Components/ThemeProvider";
 
 import Footer from "./Components/Footer";
-
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -36,20 +33,18 @@ export default function RootLayout({ children }) {
       <body
         className={`${poppins.variable} ${roboto.variable} antialiased font-sans`}
       >
-         <SessionProviderWrapper>
-        <ThemeProvider attribute="class" defaultTheme="light"   enableSystem>
-         <div>
-            <Header/>
-        </div>
-          
-          <main className="min-h-screen"> 
-            
-            {children}
-            <Toaster/> 
-            </main> 
-          <Footer/>
+        <SessionProviderWrapper>
+          <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+            <div>
+              <Header />
+            </div>
 
-        </ThemeProvider>
+            <main className="min-h-screen">
+              {children}
+              <Toaster />
+            </main>
+            <Footer />
+          </ThemeProvider>
         </SessionProviderWrapper>
       </body>
     </html>
