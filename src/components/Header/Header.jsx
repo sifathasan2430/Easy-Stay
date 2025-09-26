@@ -18,35 +18,31 @@ import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { signOut, useSession } from "next-auth/react";
 
- 
 export default function Header() {
-const {data:session, status}=useSession()
-console.log(session?.user)
- const userNotExits=<>   
- <div className="flex items-center gap-4">
-             
-            <NavbarButton  href={'/login'}>
-           
-    Login
-   
-            </NavbarButton>
-            {/* custom btn */}
-            <LinkBtn href="/signup">Signup</LinkBtn>
-          </div>
-          
-          </>
-          const userExits=<>
-          <div className="flex justify-center items-center gap-4">
-          <Avatar>
-  <AvatarImage src="https://github.com/shadcn.png" />
-  <AvatarFallback>PF</AvatarFallback>
-</Avatar>
-        <SignOutBtn  onClick={()=>signOut()}  href="#">
-            Logout
-          </SignOutBtn>
-          </div> 
-          </>
-
+  const { data: session, status } = useSession();
+  console.log(session?.user);
+  const userNotExits = (
+    <>
+      <div className="flex items-center gap-4">
+        <NavbarButton href={"/login"}>Login</NavbarButton>
+        {/* custom btn */}
+        <LinkBtn href="/signup">Signup</LinkBtn>
+      </div>
+    </>
+  );
+  const userExits = (
+    <>
+      <div className="flex justify-center items-center gap-4">
+        <Avatar>
+          <AvatarImage src="https://github.com/shadcn.png" />
+          <AvatarFallback>PF</AvatarFallback>
+        </Avatar>
+        <SignOutBtn onClick={() => signOut()} href="#">
+          Logout
+        </SignOutBtn>
+      </div>
+    </>
+  );
 
   const navItems = [
     {
@@ -61,33 +57,29 @@ console.log(session?.user)
       name: "Services",
       link: "/services",
     },
-     {
+    {
       name: "About",
       link: "/about",
     },
-     {
+    {
       name: "Contact",
       link: "/contact",
     },
   ];
-  
-   
- 
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
- 
+
   return (
     <div className="fixed top-0 left-0 w-full z-50">
       <Navbar>
         {/* Desktop Navigation */}
-        <NavBody className={''}>
+        <NavBody className={""}>
           <NavbarLogo />
           <NavItems items={navItems} />
-         
-          {
-            session ? userExits : userNotExits
-          }
+
+          {session ? userExits : userNotExits}
         </NavBody>
- 
+
         {/* Mobile Navigation */}
         <MobileNav>
           <MobileNavHeader>
@@ -97,7 +89,7 @@ console.log(session?.user)
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             />
           </MobileNavHeader>
- 
+
           <MobileNavMenu
             isOpen={isMobileMenuOpen}
             onClose={() => setIsMobileMenuOpen(false)}
@@ -113,16 +105,13 @@ console.log(session?.user)
               </a>
             ))}
             <div className="flex w-full flex-col gap-4">
-            {/* custom btn and links */}
-             {
-            session ? userExits : userNotExits
-          }
+              {/* custom btn and links */}
+              {session ? userExits : userNotExits}
             </div>
           </MobileNavMenu>
         </MobileNav>
       </Navbar>
-     
- 
+
       {/* Navbar */}
     </div>
   );
