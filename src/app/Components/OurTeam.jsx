@@ -15,18 +15,18 @@ const team = [
   {
     name: "Naimur Rahman Dujoy",
     role: "MERN Stack Developer",
-    img: "https://i.postimg.cc/yY6wLQfV/cto.jpg",
-    linkedin: "https://linkedin.com/in/sarahahmed",
-    twitter: "https://twitter.com/sarah_tech",
-    github: "https://github.com/sarahahmed",
+    img: "https://i.postimg.cc/90bch241/Professional-Profile-3.png",
+    linkedin: "https://www.linkedin.com/in/durjoy4004/",
+    twitter: "https://twitter.com/",
+    github: "https://github.com/rahmandurjoy04",
   },
   {
     name: "Sifat Hasan",
     role: "MERN Stack Developer",
-    img: "https://i.postimg.cc/6QXn9N8k/designer.jpg",
-    linkedin: "https://linkedin.com/in/davidlee",
-    twitter: "https://twitter.com/davidlee",
-    github: "https://github.com/davidlee",
+    img: "https://i.ibb.co.com/8LPJqTx3/1754646608911-e-1758153600-v-beta-t-TO7-VI7y1-HS0-z-Vy-Fy-LSr6-K4-UG1-WSyfz-it-JDs-KC8-I.jpg",
+    linkedin: "https://www.linkedin.com/in/sifathasan1/",
+    twitter: "https://twitter.com/",
+    github: "https://github.com/sifathasan2430",
   },
 ];
 
