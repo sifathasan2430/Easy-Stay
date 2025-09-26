@@ -15,8 +15,8 @@ const StayCard = ({ property }) => {
         <p className="text-sm"><span className="font-bold">City:</span> {property.city}</p>
         <p className="text-sm "><span className="font-bold">Room Type:</span> {property.room_type.split(' ')[0]}</p>
         <p className="text-lg font-semibold text-primary">${property.price_per_night}/night</p>
-        <Link href={`/stays/${property.id}`}>
-          <button className="mt-2 w-full bg-blue-500 text-white text-sm py-1.5 rounded-md hover:bg-blue-600 transition-colors">
+        <Link href={`/stays/${property._id}`}>
+          <button className="mt-2 w-full hover:scale-103 bg-primary text-white text-sm py-1.5 rounded-md duration-200 transition-all">
             Details
           </button>
         </Link>
