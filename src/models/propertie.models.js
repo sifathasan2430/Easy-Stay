@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 const propertySchema = new Schema({
-  hostId: { type: Schema.Types.ObjectId, ref: 'user', required: true },
+  hostId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   title: { type: String, required: true, trim: true, minlength: 3, maxlength: 100 },
   description: { type: String, trim: true, maxlength: 1000 },
   address: { type: String, required: true, trim: true, maxlength: 200 },
@@ -20,7 +20,7 @@ const propertySchema = new Schema({
   checkInTime: { type: String, default: '14:00', match: /^([0-1][0-9]|2[0-3]):[0-5][0-9]$/ },
   checkOutTime: { type: String, default: '11:00', match: /^([0-1][0-9]|2[0-3]):[0-5][0-9]$/ },
   isActive: { type: Boolean, default: true },
-  amenities: [{ type: Schema.Types.ObjectId, ref: 'amenity' }],
+  amenities: [{ type: Schema.Types.ObjectId, ref: 'Amenity' }],
   images: [{
     url: { type: String, required: true, trim: true },
     isPrimary: { type: Boolean, default: false }
@@ -28,4 +28,4 @@ const propertySchema = new Schema({
   averageRating: { type: Number, default: 0, min: 0, max: 5 },
   reviewCount: { type: Number, default: 0, min: 0 }
 }, { timestamps: true });
-export const Property=mongoose.models.property || mongoose.model('property',propertySchema)
+export const Property=mongoose.models.Property || mongoose.model('Property',propertySchema)
