@@ -1,5 +1,6 @@
 import dbConnect from '@/lib/dbConnect';
 import { Property } from '@/models/propertie.models';
+import mongoose from 'mongoose';
 import { NextResponse } from 'next/server';
 
 
@@ -23,8 +24,8 @@ export async function GET(request) {
   await dbConnect();
   try {
     
-
-    const  properties = await Property.find().populate("hostId amenities");
+console.log(mongoose.modelNames());
+    const  properties = await Property.find().populate("hostId","email").populate('amenities');
 
     return NextResponse.json(
       { status: "success", data: properties },
