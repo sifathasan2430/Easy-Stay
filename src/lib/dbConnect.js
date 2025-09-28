@@ -6,6 +6,7 @@ const connection={}
  const  dbConnect=async()=>{
 
     if (connection.isConnected){
+        
        return   console.log('mongodb already connected to the database with mongoose and mongodb')
     }
     try {

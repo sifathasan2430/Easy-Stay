@@ -1,5 +1,6 @@
 import dbConnect from '@/lib/dbConnect';
 import { Property } from '@/models/propertie.models';
+import '@/models/index'
 import mongoose from 'mongoose';
 import { NextResponse } from 'next/server';
 
