@@ -6,4 +6,4 @@ const amenitySchema = new Schema({
   description: { type: String, trim: true, maxlength: 200 }
 }, { timestamps: { createdAt: true, updatedAt: false } });
 
-export const Amenity=mongoose.models.amenity || mongoose.model('amenity',amenitySchema)
+export const Amenity=mongoose.models.Amenity || mongoose.model('Amenity',amenitySchema)
