@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const reviews = [
   {
@@ -95,8 +96,39 @@ function ReviewCard({ r, i }) {
   );
 }
 
+// Skeleton card for loading
+function ReviewSkeleton({ i }) {
+  return (
+    <div className="flex flex-col gap-3 border rounded-xl p-4 shadow-sm bg-white dark:bg-gray-800">
+      <div className="flex items-center gap-3">
+        <Skeleton className="w-12 h-12 rounded-full" />
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-24" />
+          <Skeleton className="h-3 w-32" />
+          <div className="flex gap-1">
+            {[...Array(5)].map((_, i) => (
+              <Skeleton key={i} className="h-4 w-4 rounded" />
+            ))}
+          </div>
+        </div>
+      </div>
+      <Skeleton className="h-3 w-16" />
+      <Skeleton className="h-4 w-full" />
+      <Skeleton className="h-4 w-5/6" />
+      <Skeleton className="h-4 w-3/4" />
+    </div>
+  );
+}
+
 export default function EasyStayReviews() {
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate loading delay
+    const timer = setTimeout(() => setLoading(false), 1200);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <section className="max-w-7xl mx-auto px-4 py-24">
@@ -110,25 +142,27 @@ export default function EasyStayReviews() {
         What Our <span className="text-blue-500">Guests Say</span>
       </motion.h2>
 
-      {/* Show first 4 reviews */}
+      {/* Show Skeletons or Reviews */}
       <div className="grid sm:grid-cols-2 gap-8 mt-8">
-        {reviews.slice(0, 4).map((r, i) => (
-          <ReviewCard key={i} r={r} i={i} />
-        ))}
+        {loading
+          ? [1, 2, 3, 4].map((i) => <ReviewSkeleton key={i} />)
+          : reviews.slice(0, 4).map((r, i) => <ReviewCard key={i} r={r} i={i} />)}
       </div>
 
       {/* See All Reviews Button */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ delay: 0.3 }}
-        className="mt-10 flex justify-center"
-      >
-        <Button variant="outline" onClick={() => setOpen(true)}>
-          See all reviews
-        </Button>
-      </motion.div>
+      {!loading && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.3 }}
+          className="mt-10 flex justify-center"
+        >
+          <Button variant="outline" onClick={() => setOpen(true)}>
+            See all reviews
+          </Button>
+        </motion.div>
+      )}
 
       {/* Animated Modal */}
       <AnimatePresence>
