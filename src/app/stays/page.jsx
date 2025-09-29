@@ -109,7 +109,7 @@ const Stays = () => {
 
   return (
     <div className="max-w-11/12 mx-auto md:pt-16 p-4">
-      <h1 className="text-3xl font-bold mb-6 text-foreground">
+      <h1 className="text-3xl font-bold mb-6 text-blue-600">
         Property Listings
       </h1>
 
