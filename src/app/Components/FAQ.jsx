@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 
 export default function FAQ() {
   return (
-    <section className="max-w-6xl mx-auto px-4 py-16">
+    <section className="max-w-6xl mx-auto px-4 py-24">
       {/* Animated Heading */}
       <motion.h2
         className="text-3xl md:text-4xl font-bold text-center font-heading mb-8 text-gray-900 dark:text-gray-100"
@@ -14,7 +14,7 @@ export default function FAQ() {
         transition={{ duration: 0.5 }}
         viewport={{ once: true }}
       >
-        Frequently Asked Questions
+        Frequently  <span className="text-blue-500">Asked Questions</span>
       </motion.h2>
 
       {/* Animated Accordion Wrapper */}
