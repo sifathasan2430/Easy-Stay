@@ -99,15 +99,15 @@ export default function EasyStayReviews() {
   const [open, setOpen] = useState(false);
 
   return (
-    <section className="max-w-7xl mx-auto px-4 py-12">
+    <section className="max-w-7xl mx-auto px-4 py-24">
       <motion.h2
         initial={{ opacity: 0, y: -20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
-        className="mb-8 text-2xl sm:text-3xl lg:text-4xl font-heading font-bold text-center text-gray-900 dark:text-white"
+        className="mb-8 text-2xl sm:text-3xl lg:text-4xl font-heading font-bold text-center p-5 text-gray-900 dark:text-white"
       >
-        What Our Guests Say
+        What Our <span className="text-blue-500">Guests Say</span>
       </motion.h2>
 
       {/* Show first 4 reviews */}

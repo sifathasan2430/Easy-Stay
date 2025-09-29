@@ -27,8 +27,8 @@ const LatestStaysInHome = () => {
     };
 
     return (
-        <div className="w-11/12 mx-auto py-6">
-            <h2 className="text-4xl font-bold mb-6 text-center">Latest Stays</h2>
+        <div className="w-11/12 mx-auto py-24">
+            <h2 className="text-4xl font-bold mb-6  text-center p-5">Latest <span className='text-blue-500'>Stays</span></h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {latestProperties.map((property) => (

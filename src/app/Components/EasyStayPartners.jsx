@@ -31,10 +31,10 @@ const partners = [
 
 export default function EasyStayPartners() {
   return (
-    <section className="relative flex w-full flex-col items-center justify-center overflow-hidden bg-white py-8 sm:py-12 md:py-16 dark:bg-gray-900">
+    <section className="relative flex w-full flex-col items-center justify-center overflow-hidden bg-white  py-24 sm:py-12 md:py-16 dark:bg-gray-900">
       {/* Heading */}
-      <h2 className="mb-6 text-xl sm:text-3xl md:text-4xl font-bold text-gray-800 dark:text-white text-center">
-        Trusted by Leading Travel Platforms
+      <h2 className="mb-6 text-xl sm:text-3xl md:text-4xl font-bold text-black dark:text-white p-5 text-center">
+        Trusted by Leading <span className="text-blue-500">Travel Platforms</span>
       </h2>
 
       {/* Top Marquee */}
@@ -54,7 +54,7 @@ export default function EasyStayPartners() {
       </Marquee>
 
       {/* Bottom Marquee */}
-      <Marquee reverse pauseOnHover className="[--duration:60s] sm:[--duration:45s] md:[--duration:35s]">
+      {/* <Marquee reverse pauseOnHover className="[--duration:60s] sm:[--duration:45s] md:[--duration:35s]">
         {partners.map((p) => (
           <div
             key={p.name + "-reverse"}
@@ -67,7 +67,7 @@ export default function EasyStayPartners() {
             />
           </div>
         ))}
-      </Marquee>
+      </Marquee> */}
 
       {/* Gradient Fade Effect for smoother edges */}
       <div className="pointer-events-none absolute inset-y-0 left-0 w-1/5 sm:w-1/6 bg-gradient-to-r from-white dark:from-gray-900"></div>
