@@ -1,4 +1,4 @@
-// app/layout.jsx
+
 import { Poppins, Roboto } from "next/font/google";
 import "./globals.css";
 
@@ -9,6 +9,9 @@ import { Toaster } from "sonner";
 import { ThemeProvider } from "@/app/Components/ThemeProvider";
 
 import Footer from "./Components/Footer";
+import TanstackProvider from "./Components/tanstackProvider/tanstackProvider";
+
+
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -28,11 +31,13 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+    
   return (
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${poppins.variable} ${roboto.variable} antialiased font-sans`}
       >
+       <TanstackProvider>
         <SessionProviderWrapper>
           <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
             <div>
@@ -46,6 +51,7 @@ export default function RootLayout({ children }) {
             <Footer />
           </ThemeProvider>
         </SessionProviderWrapper>
+       </TanstackProvider>
       </body>
     </html>
   );
