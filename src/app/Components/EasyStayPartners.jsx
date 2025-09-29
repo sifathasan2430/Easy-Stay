@@ -31,7 +31,7 @@ const partners = [
 
 export default function EasyStayPartners() {
   return (
-    <section className="relative flex w-full flex-col items-center justify-center overflow-hidden bg-white  py-24 sm:py-12 md:py-16 dark:bg-gray-900">
+    <section className="relative flex w-full flex-col items-center justify-center overflow-hidden py-24 sm:py-12 md:py-16 dark:bg-gray-900">
       {/* Heading */}
       <h2 className="mb-6 text-xl sm:text-3xl md:text-4xl font-bold text-black dark:text-white p-5 text-center">
         Trusted by Leading <span className="text-blue-500">Travel Platforms</span>

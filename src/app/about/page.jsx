@@ -57,7 +57,7 @@ export default function AboutPage() {
       <section className="max-w-5xl mx-auto px-6 py-16">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-4">
-            Our Mission
+            Our <span className="text-blue-500">Mission</span>
           </h2>
           <p className="text-gray-600 dark:text-gray-300 font-body max-w-2xl mx-auto">
             Our mission is to make travel easy, affordable, and meaningful. We believe that finding a great place to stay should be simple and stress-free.
@@ -101,7 +101,7 @@ export default function AboutPage() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
           >
-            Travel Smarter, Stay Happier
+            Travel Smarter, <span className="text-blue-500">Stay Happier</span>
           </motion.h3>
           <motion.p
             className="text-gray-600 dark:text-gray-300 font-body max-w-xl mx-auto"
