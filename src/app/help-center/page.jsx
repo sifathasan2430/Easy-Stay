@@ -18,7 +18,7 @@ const HelpCenter = () => {
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.5 }}
       >
-        Help Center
+        Help <span className="text-blue-500">Center</span>
       </motion.h1>
 
       {/* Intro Paragraph */}

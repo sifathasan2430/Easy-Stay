@@ -35,7 +35,7 @@ export default function OurTeam() {
     <section className="bg-gray-100 dark:bg-gray-800 py-16 transition-colors duration-300">
       <div className="max-w-5xl mx-auto px-6 text-center">
         <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-10">
-          Meet Our Team
+          Meet <span className="text-blue-500">Our Team</span>
         </h2>
         <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3">
           {team.map((member, index) => (
@@ -52,7 +52,7 @@ export default function OurTeam() {
                 alt={member.name}
                 className="w-24 h-28 rounded-full object-cover mb-4 shadow-lg"
               />
-              <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
+              <h3 className="text-lg font-semibold text-blue-500 dark:text-gray-100">
                 {member.name}
               </h3>
               <p className="text-gray-500 dark:text-gray-300 mb-3">
