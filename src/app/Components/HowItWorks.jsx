@@ -23,17 +23,17 @@ export default function HowItWorks() {
   ];
 
   return (
-    <section className="bg-gray-50 dark:bg-gray-950/30 py-16">
+    <section className="bg-gray-50 dark:bg-gray-950/30 py-24">
       <div className="max-w-7xl mx-auto px-4 text-center">
         {/* Animated Section Title */}
         <motion.h2
-          className="text-3xl sm:text-4xl font-bold text-gray-900 font-heading dark:text-white mb-4"
+          className="text-3xl sm:text-4xl font-bold text-gray-900 p-5 font-heading dark:text-white mb-4"
           initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           viewport={{ once: true }}
         >
-          How It Works
+          How <span className="text-blue-500">It Works</span>
         </motion.h2>
 
         <motion.p
