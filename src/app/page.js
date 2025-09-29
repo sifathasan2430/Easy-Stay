@@ -5,6 +5,7 @@ import EasyStayPartners from "./Components/EasyStayPartners";
 import HowItWorks from "./Components/HowItWorks";
 import FAQ from "./Components/FAQ";
 import LatestStaysInHome from "./Components/LatestStaysInHome";
+import Stats from "./Components/Stats";
 
 export default function Home() {
   return (
@@ -15,6 +16,7 @@ export default function Home() {
         <LatestStaysInHome></LatestStaysInHome>
         <EasyStayReviews></EasyStayReviews>
         <HowItWorks></HowItWorks>
+        <Stats></Stats>
         <FAQ></FAQ>
         <EasyStayPartners></EasyStayPartners>
       </div>
