@@ -109,7 +109,7 @@
   --muted: #F3F4F6;
   --muted-foreground: #6B7280;
 
-  --accent: #F59E0B; /* Amber 500 for CTA buttons */
+  --accent: #efefef; 
   --accent-foreground: #1C1917;
 
   --destructive: #EF4444; /* Red 500 */
