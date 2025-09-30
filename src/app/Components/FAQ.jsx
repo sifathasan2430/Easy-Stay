@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import Container from "./Container/Container";
 
 export default function FAQ() {
   const [loading, setLoading] = useState(true);

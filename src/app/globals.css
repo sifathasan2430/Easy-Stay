@@ -193,32 +193,3 @@
 }
 
 
-@layer components {
-  .card {
-    @apply
-      flex
-      flex-col
-      gap-6
-      rounded-xl
-      border-[0.666667px]
-      border-[oklch(0.2686_0.0032_34.85)]
-      bg-[oklch(0.1463_0.0027_33.58)]
-      text-[oklch(0.9227_0.0029_34.49)]
-      font-poppins
-      text-base
-      leading-6
-      w-[204px]
-      h-[190px]
-      py-0
-      box-border
-      outline
-      outline-[0.666667px]
-      outline-red-500
-      outline-dashed
-      items-center
-      justify-center
-      dark:bg-[oklch(0.2_0.003_33.58)]
-      dark:border-[oklch(0.3_0.004_34.85)]
-      dark:text-[oklch(0.95_0.003_34.49)];
-  }
-}
