@@ -114,7 +114,8 @@ useEffect(()=>{
          const response=await axios.get('/api/amenity')
          return response.data.amenities
      },
-     staleTime:1000*60*5
+     staleTime:1000*60*5,
+    
       })
 
 

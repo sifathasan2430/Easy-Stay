@@ -44,7 +44,8 @@ export default function FAQ() {
   ];
 
   return (
-    <section className="max-w-6xl mx-auto px-4 py-24">
+    <Container>
+    <section className=" px-4 py-24">
       {/* Animated Heading */}
       {loading ? (
         <div className="text-center mb-8">
@@ -98,5 +99,6 @@ export default function FAQ() {
         )}
       </motion.div>
     </section>
+    </Container>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { Marquee } from "@/components/ui/marquee";
+import Container from "./Container/Container";
 
 const partners = [
   {
@@ -56,5 +57,6 @@ export default function EasyStayPartners() {
       {/* Gradient Fade Effect for smoother edges */}
       <div className="pointer-events-none absolute inset-y-0 left-0 w-1/5 sm:w-1/6 bg-gradient-to-r from-white dark:from-gray-900"></div>
     </section>
+    
   );
 }

@@ -34,7 +34,8 @@ export default function HowItWorks() {
   ];
 
   return (
-    <section className="bg-gray-50 dark:bg-gray-950/30 py-24">
+    <Container>
+    <section className=" py-24">
       <div className="max-w-7xl mx-auto px-4 text-center">
         {/* Title */}
         {loading ? (
@@ -118,5 +119,6 @@ export default function HowItWorks() {
         </div>
       </div>
     </section>
+    </Container>
   );
 }

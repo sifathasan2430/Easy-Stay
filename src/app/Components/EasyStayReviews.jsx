@@ -131,7 +131,8 @@ export default function EasyStayReviews() {
   }, []);
 
   return (
-    <section className="max-w-7xl mx-auto px-4 py-24">
+    <Container>
+    <section className=" px-4 py-24">
       <motion.h2
         initial={{ opacity: 0, y: -20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -199,5 +200,6 @@ export default function EasyStayReviews() {
         )}
       </AnimatePresence>
     </section>
+    </Container>
   );
 }
