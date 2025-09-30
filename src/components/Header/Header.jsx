@@ -75,7 +75,7 @@ export default function Header() {
         {/* Desktop Navigation */}
         <NavBody className={""}>
           <NavbarLogo />
-          <NavItems items={navItems} />
+          <NavItems className="text-xl" items={navItems} />
 
           {session ? userExits : userNotExits}
         </NavBody>

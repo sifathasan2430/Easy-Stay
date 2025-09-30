@@ -18,7 +18,7 @@ const Privacy = () => {
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.5 }}
       >
-        Privacy Policy
+        Privacy <span className="text-blue-500">Policy</span>
       </motion.h1>
 
       {/* Intro */}

@@ -37,7 +37,7 @@ const Stays = () => {
     fetchListings();
   }, []);
 
-  // Apply filters whenever filters or listings change
+  // Apply filters
   useEffect(() => {
     let filtered = [...listings];
 
@@ -104,47 +104,50 @@ const Stays = () => {
   const roomTypes = [...new Set(listings.map((l) => l.room_type))];
   const amenities = [...new Set(listings.flatMap((l) => l.amenities))];
 
-  if (loading) return <div className="text-center p-4">Loading...</div>;
-  if (error) return <div className="text-center p-4 text-destructive">{error}</div>;
+  if (loading) return <div className="text-center py-10">Loading...</div>;
+  if (error)
+    return <div className="text-center py-10 text-destructive">{error}</div>;
 
   return (
-    <div className="max-w-11/12 mx-auto md:pt-16 p-4">
-      <h1 className="text-3xl font-bold mb-6 text-blue-600">
-        Property Listings
+    <div className="container mx-auto px-4 md:px-6 lg:px-8 py-8 md:pt-16">
+      <h1 className="text-2xl md:text-3xl font-bold mb-6 text-blue-600 text-center md:text-left">
+        🏠 Property Listings
       </h1>
 
       {/* Filters */}
-      <div className="mb-8 p-6 bg-background border border-border rounded-xl shadow-sm">
-        <h2 className="text-xl font-semibold mb-6 text-foreground">Filters</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="mb-10 p-5 md:p-6 bg-background border border-border rounded-2xl shadow-sm">
+        <h2 className="text-xl font-semibold mb-5 text-foreground">
+          🔍 Filters
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {/* City */}
           <div>
             <label className="block text-sm font-medium mb-2 text-foreground">
-              Search City
+              City
             </label>
             <input
               type="text"
               name="city"
-              placeholder="Type a city..."
+              placeholder="Search city..."
               value={filters.city}
               onChange={handleFilterChange}
-              className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-ring bg-input text-foreground border-border"
+              className="w-full p-2 border rounded-lg bg-input text-foreground border-border focus:ring-2 focus:ring-ring"
             />
           </div>
 
-          {/* Price */}
+          {/* Price Range */}
           <div>
             <label className="block text-sm font-medium mb-2 text-foreground">
-              Price Range
+              Price Range (per night)
             </label>
-            <div className="flex gap-2">
+            <div className="flex gap-3">
               <input
                 type="number"
                 name="priceMin"
                 placeholder="Min"
                 value={filters.priceMin}
                 onChange={handleFilterChange}
-                className="w-1/2 p-2 border rounded-lg focus:ring-2 focus:ring-ring bg-input text-foreground border-border"
+                className="w-1/2 p-2 border rounded-lg bg-input text-foreground border-border focus:ring-2 focus:ring-ring"
               />
               <input
                 type="number"
@@ -152,7 +155,7 @@ const Stays = () => {
                 placeholder="Max"
                 value={filters.priceMax}
                 onChange={handleFilterChange}
-                className="w-1/2 p-2 border rounded-lg focus:ring-2 focus:ring-ring bg-input text-foreground border-border"
+                className="w-1/2 p-2 border rounded-lg bg-input text-foreground border-border focus:ring-2 focus:ring-ring"
               />
             </div>
           </div>
@@ -166,9 +169,9 @@ const Stays = () => {
               name="roomType"
               value={filters.roomType}
               onChange={handleFilterChange}
-              className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-ring bg-input text-foreground border-border"
+              className="w-full p-2 border rounded-lg bg-input text-foreground border-border focus:ring-2 focus:ring-ring"
             >
-              <option value="">All Room Types</option>
+              <option value="">All</option>
               {roomTypes.map((t) => (
                 <option key={t} value={t}>
                   {t}
@@ -178,7 +181,7 @@ const Stays = () => {
           </div>
 
           {/* Amenities */}
-          <div className="md:col-span-2">
+          <div className="sm:col-span-2 lg:col-span-3">
             <label className="block text-sm font-medium mb-2 text-foreground">
               Amenities
             </label>
@@ -186,7 +189,7 @@ const Stays = () => {
               {amenities.map((a) => (
                 <label
                   key={a}
-                  className={`px-3 py-1 border rounded-full cursor-pointer text-sm ${
+                  className={`px-3 py-1 text-sm rounded-full border cursor-pointer ${
                     filters.amenities.includes(a)
                       ? "bg-primary text-primary-foreground border-primary"
                       : "bg-muted text-foreground border-border hover:bg-accent hover:text-accent-foreground"
@@ -207,60 +210,62 @@ const Stays = () => {
           </div>
 
           {/* Availability */}
-          <div>
+          <div className="sm:col-span-2 lg:col-span-3">
             <label className="block text-sm font-medium mb-2 text-foreground">
               Availability
             </label>
-            <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row gap-3">
               <input
                 type="date"
                 name="dateFrom"
                 value={filters.dateFrom}
                 onChange={handleFilterChange}
-                className="w-1/2 p-2 border rounded-lg focus:ring-2 focus:ring-ring bg-input text-foreground border-border"
+                className="w-full sm:w-1/2 p-2 border rounded-lg bg-input text-foreground border-border focus:ring-2 focus:ring-ring"
               />
               <input
                 type="date"
                 name="dateTo"
                 value={filters.dateTo}
                 onChange={handleFilterChange}
-                className="w-1/2 p-2 border rounded-lg focus:ring-2 focus:ring-ring bg-input text-foreground border-border"
+                className="w-full sm:w-1/2 p-2 border rounded-lg bg-input text-foreground border-border focus:ring-2 focus:ring-ring"
               />
             </div>
           </div>
         </div>
 
         {/* Buttons */}
-        <div className="mt-6 flex gap-3">
+        <div className="mt-6 flex flex-wrap gap-3">
           <button
             onClick={clearFilters}
-            className="bg-primary text-white px-5 py-2 rounded-lg hover:scale-105 duration-200 transition-all"
+            className="bg-primary text-primary-foreground px-5 py-2 rounded-lg hover:scale-105 transition-transform"
           >
             Clear Filters
           </button>
         </div>
       </div>
 
-      {/* Map */}
-      <div className="mb-6">
-        <h2 className="text-lg font-medium mb-2">
-          Click on a pin to select a city as a filter
+      {/* Map Section */}
+      <div className="mb-8">
+        <h2 className="text-lg font-medium mb-3 text-center md:text-left">
+          🗺️ Click a pin to filter by city
         </h2>
-        <Map
-          listings={listings}
-          onCityClick={handleCityClick}
-          selectedCity={filters.city}
-        />
+        <div className="rounded-xl overflow-hidden shadow-md">
+          <Map
+            listings={listings}
+            onCityClick={handleCityClick}
+            selectedCity={filters.city}
+          />
+        </div>
       </div>
 
-      {/* Listings */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Listings Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
         {filteredListings.length > 0 ? (
           filteredListings.map((property) => (
             <PropertyCard key={property._id} property={property} />
           ))
         ) : (
-          <p className="text-center col-span-full text-foreground">
+          <p className="col-span-full text-center py-10 text-muted-foreground">
             No listings match your filters.
           </p>
         )}

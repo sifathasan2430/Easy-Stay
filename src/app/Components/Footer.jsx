@@ -12,7 +12,10 @@ const Footer = () => {
           <div className="md:flex md:justify-between md:items-start">
             {/* Logo + description */}
             <div className="mb-8 md:mb-0">
-              <h2 className="text-xl font-bold">EasyStay</h2>
+              <h2 className="text-xl font-bold">
+                <img src="ES  LOGO.png" alt="Logo" width={50} height={50} />
+                EasyStay
+              </h2>
               <p className="mt-2 font-body max-w-xs">
                 Discover and book amazing short-term stays around the world.
               </p>
