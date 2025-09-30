@@ -2,10 +2,12 @@
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { motion } from "framer-motion";
+import { Container } from "lucide-react";
 
 export default function FAQ() {
   return (
-    <section className="max-w-6xl mx-auto px-4 py-24">
+    <Container>
+    <section className=" px-4 py-24">
       {/* Animated Heading */}
       <motion.h2
         className="text-3xl md:text-4xl font-bold text-center font-heading mb-8 text-gray-900 p-5 dark:text-gray-100"
@@ -77,5 +79,6 @@ export default function FAQ() {
         </Accordion>
       </motion.div>
     </section>
+    </Container>
   );
 }

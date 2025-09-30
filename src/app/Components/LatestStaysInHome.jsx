@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { GoLocation } from 'react-icons/go';
+import Container from './Container/Container';
 
 const LatestStaysInHome = () => {
     const [latestProperties, setLatestProperties] = useState([]);
@@ -27,7 +28,8 @@ const LatestStaysInHome = () => {
     };
 
     return (
-        <div className="w-11/12 mx-auto py-24">
+        <Container>
+        <div className=" py-24">
             <h2 className="text-4xl font-bold mb-6  text-center p-5">Latest <span className='text-blue-500'>Stays</span></h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -52,6 +54,7 @@ const LatestStaysInHome = () => {
                 ))}
             </div>
         </div>
+        </Container>
     );
 };
 

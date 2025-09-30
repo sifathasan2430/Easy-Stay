@@ -1,6 +1,7 @@
 "use client";
 
 import { Marquee } from "@/components/ui/marquee";
+import Container from "./Container/Container";
 
 const partners = [
   {
@@ -31,6 +32,7 @@ const partners = [
 
 export default function EasyStayPartners() {
   return (
+    <Container>
     <section className="relative flex w-full flex-col items-center justify-center overflow-hidden bg-white  py-24 sm:py-12 md:py-16 dark:bg-gray-900">
       {/* Heading */}
       <h2 className="mb-6 text-xl sm:text-3xl md:text-4xl font-bold text-black dark:text-white p-5 text-center">
@@ -73,5 +75,6 @@ export default function EasyStayPartners() {
       <div className="pointer-events-none absolute inset-y-0 left-0 w-1/5 sm:w-1/6 bg-gradient-to-r from-white dark:from-gray-900"></div>
       <div className="pointer-events-none absolute inset-y-0 right-0 w-1/5 sm:w-1/6 bg-gradient-to-l from-white dark:from-gray-900"></div>
     </section>
+    </Container>
   );
 }

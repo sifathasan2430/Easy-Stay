@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { FaUserPlus, FaSearchLocation, FaCheckCircle } from "react-icons/fa";
+import Container from "./Container/Container";
 
 export default function HowItWorks() {
   const steps = [
@@ -23,7 +24,8 @@ export default function HowItWorks() {
   ];
 
   return (
-    <section className="bg-gray-50 dark:bg-gray-950/30 py-24">
+    <Container>
+    <section className=" py-24">
       <div className="max-w-7xl mx-auto px-4 text-center">
         {/* Animated Section Title */}
         <motion.h2
@@ -73,5 +75,6 @@ export default function HowItWorks() {
         </div>
       </div>
     </section>
+    </Container>
   );
 }

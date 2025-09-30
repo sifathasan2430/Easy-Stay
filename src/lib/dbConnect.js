@@ -10,6 +10,7 @@ const connection={}
        return   console.log('mongodb already connected to the database with mongoose and mongodb')
     }
     try {
+        
         const db=await mongoose.connect(process.env.MONGO_URL || "")
         
         connection.isConnected=db.connections[0].readyState;
