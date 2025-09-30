@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import Container from "./Container/Container";
 
 export default function FAQ() {
   const [loading, setLoading] = useState(true);
@@ -44,7 +45,8 @@ export default function FAQ() {
   ];
 
   return (
-    <section className="max-w-6xl mx-auto px-4 py-24">
+    <Container>
+    <section className=" px-4 py-24">
       {/* Animated Heading */}
       {loading ? (
         <div className="text-center mb-8">
@@ -98,5 +100,6 @@ export default function FAQ() {
         )}
       </motion.div>
     </section>
+    </Container>
   );
 }

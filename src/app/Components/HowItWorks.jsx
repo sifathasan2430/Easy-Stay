@@ -5,6 +5,7 @@ import { FaUserPlus, FaSearchLocation, FaCheckCircle } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import Container from "./Container/Container";
 
 export default function HowItWorks() {
   const [loading, setLoading] = useState(true);
@@ -34,7 +35,8 @@ export default function HowItWorks() {
   ];
 
   return (
-    <section className="bg-gray-50 dark:bg-gray-950/30 py-24">
+    <Container>
+    <section className=" py-24">
       <div className="max-w-7xl mx-auto px-4 text-center">
         {/* Title */}
         {loading ? (
@@ -118,5 +120,6 @@ export default function HowItWorks() {
         </div>
       </div>
     </section>
+    </Container>
   );
 }

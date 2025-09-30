@@ -4,9 +4,10 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        heading: ["var(--font-poppins)", ...fontFamily.sans],
-        body: ["var(--font-roboto)", ...fontFamily.sans],
+        heading: ["'Poppins'", ...fontFamily.sans],
+        body: ["'Roboto'", ...fontFamily.sans],
       },
     },
   },
+  plugins: [],
 };
