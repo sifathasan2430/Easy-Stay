@@ -41,7 +41,7 @@ export default function RootLayout({ children }) {
         <SessionProviderWrapper>
           <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
             <div>
-              <Header />
+              <Header /> 
             </div>
 
             <main className="min-h-screen">

@@ -28,136 +28,149 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useEffect, useState } from "react"
 import axios from "axios"
 import { Checkbox } from "@/components/ui/checkbox"
-import propertySchema from "@/zodSchema/propertySchema"
+
 import { useSession } from "next-auth/react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { LoaderOne } from "@/components/ui/loader"
 import { toast, Toaster } from "sonner"
+import propertySchema from "@/zodSchema/propertySchema"
 
  
 
 
 
 
-export default function ReuseableForm() {
-  const {data:Session}=useSession()
+
+export default function ReuseableForm({ propertyId }) {
+  const { data: Session } = useSession()
   const queryClient = useQueryClient()
-  
-  
 
-
-  const defaultValue={
-      hostId: "",
-      title: "room in dhaka",
-      description: "this is best room",
-      address: "uttoradhaka",
-      city: "dhaka",
-      state: "mirput state",
-      country: "Bangladesj",
-      location: {
-    type: "Point",
-    coordinates: [20, 10], 
-  },
-      pricePerNight: 40,
-      roomType: "private_room",
-      maxGuests: 15,
-      bedrooms: 2,
-      beds: 1,
-      bathrooms: 1,
-      checkInTime: "14:00",
-      checkOutTime: "11:00",
-      amenities: [],
-      images: [{ url: "https://a0.muscache.com/im/pictures/miso/Hosting-973934339954558939/original/303d46e3-8071-4fd2-ac11-fb73b6995f42.jpeg?im_w=720", isPrimary: false },{ url: "https://a0.muscache.com/im/pictures/miso/Hosting-973934339954558939/original/a6ea2b22-ef8b-4c87-84bd-2f24623913e6.jpeg?im_w=720", isPrimary: true }],
-      isActive:true
-    }
-
-
-
-
-
-
-
-
-
-
-
-
- const form=useForm({
-   resolver: zodResolver(propertySchema),
-   defaultValues:defaultValue,
-    mode:"onChange"
-    
- }
-)
-
-const { fields, append, remove } = useFieldArray({
-    control:form.control,
-    name:'images'
-  });
-
-
-
-
-
-
-useEffect(()=>{
-  if (Session){
-    defaultValue.hostId=Session.user._id
-    form.reset(defaultValue)
+  const defaultValue = {
+    hostId: "",
+    title: "Room in Paris",
+    description: "Good",
+    address: "Paris",
+    city: "Franch",
+    state: "Franch",
+    country: "Franch",
+    latitude: 20, // Add these
+    longitude: 40, // Add these
+    pricePerNight: 0,
+    roomType: "private_room",
+    maxGuests: 1,
+    bedrooms: 1,
+    beds: 1,
+    bathrooms: 1,
+    checkInTime: "",
+    checkOutTime: "",
+    amenities: [],
+    images: [{ url: "", isPrimary: true }],
+    isActive: true,
   }
-},[Session])
 
-   
-  const {data:amenitiesArray,isLoading:amenitiesArrayLoading,isError:amenitiesArrayError} = useQuery({ 
-    queryKey: ['amenities'],
-     queryFn: async()=> {
-         const response=await axios.get('/api/amenity')
-         return response.data.amenities
-     },
-     staleTime:1000*60*5,
-    
-      })
-
-
-
-  const mutation = useMutation({
-    mutationFn:async(data)=>{
-      
-     const response=await axios.post('/api/property',data)
-    
-    } ,
-    onSuccess: (data) => {
-      // Invalidate and refetch
-        toast.success("Property created successfully")
-
-      queryClient.invalidateQueries({ queryKey: ['property'] })
-       console.log(data)
-
-    },
-    onError:(error)=>{
-   console.log(error)
-      toast.error(`Failed: ${error.message}`)
-    console.error(error)
-    }
+  // Form setup - uncomment resolver once schema matches your transformed data
+  const form = useForm({
+    resolver: zodResolver(propertySchema), // Uncomment this
+    defaultValues: defaultValue,
+    mode: "onChange",
   })
 
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "images",
+  })
 
- const formData=async(value)=>{
-  console.log(value)
-   mutation.mutate(value)
- 
-}
-  
+  // Fetch property for EDIT mode
+  const { data: propertyData, isLoading: propertyLoading } = useQuery({
+    queryKey: ["property", propertyId,'single'],
+    queryFn: async () => {
+      if (!propertyId) return null
+      const res = await axios.get(`/api/property/${propertyId}`)
+      return res.data.data
+    },
+    enabled: !!propertyId,
+  })
+
+  // Reset for CREATE mode only (hostId from Session) - moved condition to avoid overriding edit
+  useEffect(() => {
+    if (Session && !propertyId) { // Add !propertyId to skip in edit mode
+      form.reset({ ...defaultValue, hostId: Session.user._id })
+    }
+  }, [Session, propertyId])
+console.log(propertyData)
+  // Reset for EDIT mode: Transform data to match form structure
+  useEffect(() => {
+    if (propertyId && propertyData) {
+      const transformedData = {
+        ...propertyData,
+         hostId: propertyData.hostId?._id || "", // Extract string ID from object
+        amenities: propertyData.amenities?.map(a => a._id) || [], // Extract array of string IDs
+        latitude: propertyData.location?.coordinates?.[0] || 0, // Map from location object
+        longitude: propertyData.location?.coordinates?.[1] || 0, // Map from location object
+        // Add type conversions if needed, e.g., parseFloat for numbers
+      }
+      form.reset(transformedData)
+    }
+  }, [propertyId, propertyData])
+
+  const {data: amenitiesArray, isLoading: amenitiesArrayLoading, isError: amenitiesArrayError} = useQuery({ 
+    queryKey: ['amenities'],
+    queryFn: async () => {
+      const response = await axios.get('/api/amenity')
+      return response.data.amenities
+    },
+    staleTime: 1000 * 60 * 5,
+    refetchOnMount: true, // Add this to ensure fresh data
+  })
+
+  // Create or Update Mutation
+  const mutation = useMutation({
+    mutationFn: async (data) => {
+      if (propertyId) {
+        return axios.put(`/api/property/${propertyId}`, data)
+      }
+      return axios.post("/api/property", data)
+    },
+    onSuccess: (response) => { // Get response for updated data
+      toast.success(propertyId ? "Property updated successfully" : "Property created successfully")
+      if (propertyId) {
+        // In edit mode, reset to updated data instead of defaults to avoid "refresh without changes"
+        form.reset(response.data.data) // Assume API returns updated property; transform if needed
+      } else {
+        form.reset(defaultValue) // Reset only in create mode
+      }
+      queryClient.invalidateQueries({ queryKey: ["property", Session?.user._id,'list'] }) // Fix key to match fetch
+    },
+    onError: (error) => {
+      toast.error(`Failed: ${error.message}`)
+    },
+  })
+
+  // Transform values before submit to match backend (e.g., build location object)
+  const handleSubmitForm = (values) => {
+    console.log("Form values before transform:", values)
+    const transformedValues = {
+      ...values,
+      location: {
+        type: "Point",
+        coordinates: [parseFloat(values.latitude || 0), parseFloat(values.longitude || 0)],
+      },
+    }
+    // Remove temp fields
+    delete transformedValues.latitude
+    delete transformedValues.longitude
+    mutation.mutate(transformedValues)
+  }
   return (
-    <div className="shadow-input mx-auto w-full max-w-5xl rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-black my-20">
-      <h2 className="text-2xl text-center  font-bold text-neutral-800 dark:text-neutral-200">
-         Welcome to Eaststay
-       </h2>
+    <div className="shadow-input mx-auto  max-w-4xl rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-black my-10">
+       <h2 className="text-2xl font-bold text-center">
+        {propertyId ? "Edit Property" : "Create Property"}
+      </h2>
        
-           
-         
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(formData)} className="my-8">
+            {propertyId && propertyLoading ? (
+        <p className="text-center text-gray-500">Loading property data...</p>
+      ) : ( <Form {...form}>
+      <form onSubmit={form.handleSubmit(handleSubmitForm)} className="my-8">
 <div className=" grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-10">
  
        {[{
@@ -207,7 +220,7 @@ useEffect(()=>{
            />
           </LabelInputContainer>
         </div>
-         <div className="mb-4 grid grid-cols-1 gap-5 md:gap-10 md:grid-cols-5">
+         <div className="mb-4 grid grid-cols-1 gap-5 md:gap-10 md:grid-cols-5 overflow-x-hidden">
           {
             [{name:"address",text:"Address",placeholder:'12 sector Uttora',type:'text'},{name:"city",text:"City",placeholder:'Dhaka',type:'text'},{name:"state",text:"State",placeholder:'Dhaka',type:'text'},{name:"country",text:"Country",placeholder:'Usa',type:'text'},{name:"latitude",text:"Latitude",placeholder:50,type:'number'},{name:"longitude",text:"Longitude",placeholder:60,type:'number'},{ name: "pricePerNight", text: "Price Per Night", placeholder: 0 ,type:'number'},{ name: "bathrooms", text: "Bathrooms", placeholder: 1,type:'number' },
   { name: "beds", text: "Beds", placeholder: 1,type:'number' },
@@ -219,7 +232,7 @@ useEffect(()=>{
             <FormItem>
               <FormLabel>{items.text}</FormLabel>
               <FormControl>
-                <Input placeholder={items.placeholder} {...field}  type={items.type} />
+                <Input     className="min-w-0"  placeholder={items.placeholder} {...field}  type={items.type} />
               </FormControl>
             
               <FormMessage />
@@ -262,15 +275,15 @@ useEffect(()=>{
          </div>
          
          <div className="my-5 ">
-            <FormField
-               
+           <FormField
                 control={form.control}
                 name="isActive"
                 render={({ field }) => (
                   <FormItem className="flex flex-row items-center gap-2">
                     <FormControl>
                       <Checkbox
-                        
+                        checked={field.value} // Add this
+                        onCheckedChange={field.onChange} // Add this
                       />
                     </FormControl>
                     <FormLabel className="text-sm font-normal">
@@ -278,7 +291,6 @@ useEffect(()=>{
                     </FormLabel>
                     <FormMessage />
                   </FormItem>
-                    
                 )}
               />
          < h1 className="text-xl font-bold uppercase text-center my-10">Provide the amenities</h1>
@@ -287,41 +299,43 @@ useEffect(()=>{
       }
       {
         amenitiesArrayError && <h1 className="text-xl text-red-700 font-bold">Something on wrong on connecting the database</h1>
-      }
+      }  
+
   {amenitiesArray && (
-    <div className="grid grid-cols-2 md:grid-cols-5 gap-10">
+             <div >
               
 
-            {amenitiesArray && amenitiesArray.map((item) => (
-              <FormField
-                key={item._id}
-                control={form.control}
-                name="amenities"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-center gap-2">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value?.includes(item._id)}
-                        onCheckedChange={(checked) => {
-                          return checked
-                            ? field.onChange([...field.value, item._id])
-                            : field.onChange(
-                                field.value?.filter(
-                                  (value) => value !== item._id
-                                )
-                              )
-                        }}
-                      />
-                    </FormControl>
-                    <FormLabel className="text-sm font-normal">
-                      {item.name}
-                    </FormLabel>
-                    <FormMessage />
-                  </FormItem>
+            {amenitiesArray && (
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-10">
+                  {amenitiesArray.map((item) => (
                     
-                )}
-              />
-            ))}
+                   <div key={item._id}> <FormField
+                      
+                      control={form.control}
+                      name="amenities"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-row items-center gap-2">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value?.includes(item._id)} // Now works with string array
+                              onCheckedChange={(checked) => {
+                                return checked
+                                  ? field.onChange([...(field.value || []), item._id])
+                                  : field.onChange(field.value?.filter((value) => value !== item._id))
+                              }}
+                            />
+                          </FormControl>
+                          <FormLabel className="text-sm font-normal">
+                            {item.name}
+                          </FormLabel>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    </div>
+                  ))}
+                </div>
+              )}
           </div>
   )}
 </div> 
@@ -329,7 +343,7 @@ useEffect(()=>{
 <div>
              <h2 className="text-xl uppercase font-semibold text-gray-900  dark:text-white text-center my-10">Images</h2>
              <div className="space-y-4">
-               {form.watch("images").map((img, idx) => (
+               { form.watch("images") && form.watch("images").map((img, idx) => (
                  <div key={idx} className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
                    <div className="col-span-3">
                      <Input
@@ -388,11 +402,23 @@ useEffect(()=>{
              </div>
            </div>
           
-       <div className="flex justify-center items-center my-10">
-         <button className="cursor-pointer" type="submit">Submit</button>
-       </div>
+       <div className="flex justify-center items-center my-10"><button
+              type="submit"
+            
+              className="group/btn shadow-input relative flex h-10 w-2xs items-center justify-center space-x-2 rounded-md bg-gray-50 px-4 font-medium text-black dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_#262626]"
+            >
+                    <span className="text-sm text-neutral-700 text-center dark:text-neutral-300">
+              {mutation.isLoading
+                ? propertyId
+                  ? "Updating..."
+                  : "Creating..."
+                : propertyId
+                ? "Update Property"
+                : "Create Property"}
+                </span>
+            </button>   </div>
       </form>
-    </Form>
+    </Form>)}
     </div>
   )
 }

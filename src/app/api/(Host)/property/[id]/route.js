@@ -18,17 +18,23 @@ export const GET=async(req,{params})=>{
   
  
    try {
-    const res=await Property.findById(id)
-    
-          return NextResponse.json({
+    const property=await Property.findById(id).lean().populate("hostId", "email").populate("amenities");
+    property._id=property._id.toString()
+   property.amenities=property.amenities.map((property)=>({
+     _id:property._id.toString(),
+     name:property.name
+   }))
+    property.hostId._id=property.hostId._id.toString()
+    return NextResponse.json({
             status:'success',
-            message:'hit the sever'
+           data:property
           },
         {status:200})
    } catch (error) {
+    console.log(error.message)
         return NextResponse.json({
             status:'fail',
-            message:'Fail to connect the database'
+            message:`Fail to connect the database ${error.message}`
         },
     {
         status:500
@@ -116,7 +122,7 @@ console.log(response)
 
 export const DELETE = async (req, { params }) => {
   await dbConnect();
-  const { id } = params;
+ const {id}=await params
 
   try {
     const deletedProperty = await Property.findByIdAndDelete(id);
