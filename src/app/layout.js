@@ -10,6 +10,7 @@ import { ThemeProvider } from "@/app/Components/ThemeProvider";
 
 import Footer from "./Components/Footer";
 import TanstackProvider from "./Components/tanstackProvider/tanstackProvider";
+import ConditionalLayout from "@/components/ConditionalLayout";
 
 
 
@@ -34,24 +35,14 @@ export default function RootLayout({ children }) {
     
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${poppins.variable} ${roboto.variable} antialiased font-sans`}
-      >
-       <TanstackProvider>
-        <SessionProviderWrapper>
-          <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-            <div>
-              <Header /> 
-            </div>
-
-            <main className="min-h-screen">
-              {children}
-              <Toaster />
-            </main>
-            <Footer />
-          </ThemeProvider>
-        </SessionProviderWrapper>
-       </TanstackProvider>
+      <body className={`${poppins.variable} ${roboto.variable} antialiased font-sans`}>
+        <TanstackProvider>
+          <SessionProviderWrapper>
+            <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+              <ConditionalLayout>{children}</ConditionalLayout>
+            </ThemeProvider>
+          </SessionProviderWrapper>
+        </TanstackProvider>
       </body>
     </html>
   );
