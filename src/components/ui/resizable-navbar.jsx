@@ -196,7 +196,7 @@ export const NavbarLogo = () => {
       href="/"
       className="relative z-20 mr-4 flex items-center space-x-2 px-2 py-1 text-sm font-normal text-black">
       <img
-        src="ES  LOGO.png"
+        src="https://i.ibb.co.com/7x2w9nxn/ES-LOGO.png"
         alt="logo"
         width={40}
         height={40} />

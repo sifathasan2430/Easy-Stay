@@ -21,12 +21,28 @@ export async function POST(request) {
         return NextResponse.json({ status: 'error', message: error.message }, { status: 400 });
     }
 }
-export async function GET(request) {
+export async function GET(request,{params}) {
   await dbConnect();
   try {
+       
+    const { searchParams } = new URL(request.url);
+ const hostId = searchParams.get("host")
+ console.log(hostId)
+ let properties
+  if (hostId) {
+      // Get properties for one host
+     properties = await Property.find( {hostId} ).populate("hostId", "email").populate("amenities");
+     
+       
+        
+       
+    } else {
+      // Get all properties
+    properties = await Property.find()
+        .populate("hostId", "email")
+        .populate("amenities");
+    }
     
-console.log(mongoose.modelNames());
-    const  properties = await Property.find().populate("hostId","email").populate('amenities');
 
     return NextResponse.json(
       { status: "success", data: properties },
