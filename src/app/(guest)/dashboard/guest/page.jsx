@@ -56,7 +56,7 @@ export default function UserAnalytics() {
         <CardHeader>
           <CardTitle className="text-blue-700 text-lg">Total Properties</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className='ml-4'>
           <p className="text-3xl font-bold text-blue-800">{totalProperties}</p>
           <p className="text-sm text-blue-600 mt-1">Available for booking</p>
         </CardContent>
@@ -66,7 +66,7 @@ export default function UserAnalytics() {
         <CardHeader>
           <CardTitle className="text-green-700 text-lg">Active Users</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className='ml-4'>
           <p className="text-3xl font-bold text-green-800">{totalUsers}</p>
           <p className="text-sm text-green-600 mt-1">Trusted members</p>
         </CardContent>
@@ -76,7 +76,7 @@ export default function UserAnalytics() {
         <CardHeader>
           <CardTitle className="text-purple-700 text-lg">Total Bookings</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className='ml-4'>
           <p className="text-3xl font-bold text-purple-800">{totalBookings}</p>
           <p className="text-sm text-purple-600 mt-1">Completed so far</p>
         </CardContent>
@@ -87,7 +87,7 @@ export default function UserAnalytics() {
         <CardHeader>
           <CardTitle className="text-yellow-700 text-lg">Most Popular Month</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className='ml-4'>
           <p className="text-2xl font-semibold text-yellow-800">{popularMonth.month}</p>
           <p className="text-sm text-yellow-700 mt-1">
             This month had the highest booking activity on our platform.

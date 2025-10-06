@@ -108,9 +108,8 @@ const navItems = [
   { title: "Profile", href: "/dashboard/guest/profile", icon: IconUsers },
   { title: "Past Stays", href: "/dashboard/guest/past", icon: IconHistory },
   { title: "Upcoming Stays", href: "/dashboard/guest/upcoming", icon: IconCalendarEvent },
-  { title: "Payments", href: "/dashboard/guest/payments", icon: IconCreditCard },
+  { title: "Payment History", href: "/dashboard/guest/payments", icon: IconCreditCard },
   { title: "Favorites", href: "/dashboard/guest/favorites", icon: IconHeart },
-  { title: "Cancel Booking", href: "/dashboard/guest/cancel", icon: IconFolder },
 ];
 
 export function AppSidebar() {

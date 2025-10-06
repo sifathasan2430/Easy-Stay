@@ -94,7 +94,7 @@ export async function GET(request,{params}) {
 export async function POST(req) {
   try {
     const body = await req.json(); // <-- parse JSON body
-    const { propertyId, userId, checkInDate, checkOutDate, guests, totalPrice } = body;
+    const { propertyId, userId, checkInDate, checkOutDate, guests, totalPrice,payment_status } = body;
 
     // Validate required fields manually (optional)
     if (!propertyId || !userId || !checkInDate || !checkOutDate || !totalPrice) {
@@ -111,7 +111,8 @@ export async function POST(req) {
       checkOutDate,
       guests: guests || 1,
       totalPrice,
-      status: "pending"
+      status: "pending",
+      payment_status :payment_status ||"unpaid"
     });
 
     return NextResponse.json(
