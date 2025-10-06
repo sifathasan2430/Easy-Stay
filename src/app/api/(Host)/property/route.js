@@ -21,37 +21,25 @@ export async function POST(request) {
         return NextResponse.json({ status: 'error', message: error.message }, { status: 400 });
     }
 }
-export async function GET(request,{params}) {
+export async function GET(request) {
   await dbConnect();
-  try {
-       
-    const { searchParams } = new URL(request.url);
- const hostId = searchParams.get("host")
- 
- let properties
-  if (hostId) {
-      // Get properties for one host
-     properties = await Property.find( { hostId: new mongoose.Types.ObjectId(hostId) } ).populate("hostId", "email").populate("amenities");
-     
-       
-        
-       
-    } else {
-      // Get all properties
-    properties = await Property.find()
-        // .populate("hostId", "email")
-        // .populate("amenities");
-    }
-    
 
-    return NextResponse.json(
-      { status: "success", data: properties },
-      { status: 200 }
-    );
-  } catch (error) {
-    return NextResponse.json(
-      { status: "error", message: error.message },
-      { status: 400 }
-    );
-  }
+  const { searchParams } = new URL(request.url);
+  const search = searchParams.get("search") || "";
+  const roomType = searchParams.get("roomType");
+  const page = parseInt(searchParams.get("page")) || 1;
+  const limit = parseInt(searchParams.get("limit")) || 6;
+
+  const query = {
+    ...(search && { city: { $regex: search, $options: "i" } }),
+    ...(roomType && { roomType }),
+  };
+
+  const properties = await Property.find(query)
+    .populate("hostId", "email")
+    .populate("amenities")
+    .skip((page - 1) * limit)
+    .limit(limit);
+
+  return NextResponse.json({ status: "success", data: properties });
 }

@@ -62,7 +62,7 @@ const StatsCard = ({
       
       {/* Header and Title */}
       <div className="flex flex-col justify-between items-center">
-        <h1 className="my-10
+        <h1 className="my-4
             text-2xl font-bold 
             text-gray-500 dark:text-gray-400 
             uppercase tracking-wider

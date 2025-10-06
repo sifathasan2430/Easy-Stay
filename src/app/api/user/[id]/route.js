@@ -5,10 +5,9 @@ import { NextResponse } from "next/server";
 // ✅ GET user by ID
 export async function GET(request, { params }) {
   await dbConnect();
-
-  const resolvedParams = await params;
-  const { id } = resolvedParams;
-
+  
+  const {id}=await params
+  console.log(id)
   try {
     const user = await User.findById(id).select("-password -verifyCode -verifyCodeExpiry");
     if (!user) {
