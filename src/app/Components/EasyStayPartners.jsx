@@ -32,7 +32,8 @@ const partners = [
 
 export default function EasyStayPartners() {
   return (
-    <section className="relative flex w-full flex-col items-center justify-center overflow-hidden py-24 sm:py-12 md:py-16 dark:bg-gray-900">
+    <Container>
+    <section className="relative flex  flex-col items-center justify-center overflow-hidden py-24 sm:py-12 md:py-16 dark:bg-gray-900">
       {/* Heading */}
       <h2 className="mb-6 text-xl sm:text-3xl md:text-4xl font-bold text-black dark:text-white p-5 text-center">
         Trusted by Leading <span className="text-blue-500">Travel Platforms</span>
@@ -57,6 +58,7 @@ export default function EasyStayPartners() {
       {/* Gradient Fade Effect for smoother edges */}
       <div className="pointer-events-none absolute inset-y-0 left-0 w-1/5 sm:w-1/6 bg-gradient-to-r from-white dark:from-gray-900"></div>
     </section>
+    </Container>
     
   );
 }

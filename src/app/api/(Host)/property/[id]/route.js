@@ -19,12 +19,24 @@ export const GET=async(req,{params})=>{
  
    try {
     const property=await Property.findById(id).lean().populate("hostId", "email").populate("amenities");
-    property._id=property._id.toString()
-   property.amenities=property.amenities.map((property)=>({
-     _id:property._id.toString(),
-     name:property.name
-   }))
-    property.hostId._id=property.hostId._id.toString()
+   
+ if (property._id) property._id = property._id.toString();
+
+
+
+if (Array.isArray(property.amenities)) {
+  property.amenities = property.amenities.map((amenity) => ({
+    _id: amenity._id?.toString(),
+    name: amenity.name
+  }));
+}
+
+
+if (property.hostId && property.hostId._id) {
+  property.hostId._id = property.hostId._id.toString();
+}
+
+
     return NextResponse.json({
             status:'success',
            data:property

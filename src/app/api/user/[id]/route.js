@@ -7,7 +7,9 @@ import { NextResponse } from "next/server";
 // ✅ GET user by ID
 export async function GET(request, { params }) {
   await dbConnect();
+  
   const {id}=await params
+  console.log(id,"api hit")
   try {
     const user = await User.findById(id).select("-password -verifyCodeExpiry -verifyCode"); // exclude password
     if (!user) {

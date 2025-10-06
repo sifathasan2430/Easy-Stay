@@ -1,277 +1,150 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import PropertyCard from "../Components/PropertyCard";
-import Map from "../Components/Map/Map";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { MapPin, Star } from "lucide-react";
+import { motion } from "framer-motion";
 
-const Stays = () => {
-  const [listings, setListings] = useState([]);
-  const [filteredListings, setFilteredListings] = useState([]);
-  const [filters, setFilters] = useState({
-    city: "",
-    priceMin: "",
-    priceMax: "",
-    amenities: [],
-    roomType: "",
-    dateFrom: "",
-    dateTo: "",
+import dynamic from "next/dynamic";
+import Link from "next/link";
+import { LoaderOne } from "@/components/ui/loader";
+
+// Lazy load the Map component
+const MapView = dynamic(() => import("@/components/MapView/MapView"), { ssr: false });
+
+export default function ExploreProperties() {
+  const [search, setSearch] = useState("");
+  const [roomType, setRoomType] = useState("");
+  const [page, setPage] = useState(1);
+  const [showMap, setShowMap] = useState(false);
+  const limit = 8;
+
+  // Fetch data using React Query
+  const { data, isLoading } = useQuery({
+    queryKey: ["properties", search, roomType, page],
+    queryFn: async () => {
+      const res = await axios.get("/api/property", {
+        params: { search, roomType, page, limit },
+      });
+      return res.data.data;
+    },
+    staleTime:1000,
+    
+    
   });
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
-  // Fetch listings
-  useEffect(() => {
-    const fetchListings = async () => {
-      try {
-        const res = await fetch("/listings.json");
-        if (!res.ok) throw new Error("Failed to fetch listings");
-        const data = await res.json();
-        setListings(data);
-        setFilteredListings(data);
-        setLoading(false);
-      } catch (err) {
-        setError(err.message);
-        setLoading(false);
-      }
-    };
-    fetchListings();
-  }, []);
+  const properties = data || [];
 
-  // Apply filters
-  useEffect(() => {
-    let filtered = [...listings];
-
-    if (filters.city)
-      filtered = filtered.filter((l) =>
-        l.city.toLowerCase().includes(filters.city.toLowerCase())
-      );
-    if (filters.priceMin)
-      filtered = filtered.filter(
-        (l) => l.price_per_night >= Number(filters.priceMin)
-      );
-    if (filters.priceMax)
-      filtered = filtered.filter(
-        (l) => l.price_per_night <= Number(filters.priceMax)
-      );
-    if (filters.amenities.length > 0)
-      filtered = filtered.filter((l) =>
-        filters.amenities.every((a) => l.amenities.includes(a))
-      );
-    if (filters.roomType)
-      filtered = filtered.filter((l) => l.room_type === filters.roomType);
-    if (filters.dateFrom)
-      filtered = filtered.filter(
-        (l) => new Date(l.available_from) <= new Date(filters.dateFrom)
-      );
-    if (filters.dateTo)
-      filtered = filtered.filter(
-        (l) => new Date(l.available_to) >= new Date(filters.dateTo)
-      );
-
-    setFilteredListings(filtered);
-  }, [filters, listings]);
-
-  const handleFilterChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    if (type === "checkbox") {
-      setFilters((prev) => ({
-        ...prev,
-        amenities: checked
-          ? [...prev.amenities, value]
-          : prev.amenities.filter((a) => a !== value),
-      }));
-    } else {
-      setFilters((prev) => ({ ...prev, [name]: value }));
-    }
-  };
-
-  const handleCityClick = (city) => {
-    setFilters((prev) => ({ ...prev, city }));
-  };
-
-  const clearFilters = () => {
-    setFilters({
-      city: "",
-      priceMin: "",
-      priceMax: "",
-      amenities: [],
-      roomType: "",
-      dateFrom: "",
-      dateTo: "",
-    });
-  };
-
-  const roomTypes = [...new Set(listings.map((l) => l.room_type))];
-  const amenities = [...new Set(listings.flatMap((l) => l.amenities))];
-
-  if (loading) return <div className="text-center py-10">Loading...</div>;
-  if (error)
-    return <div className="text-center py-10 text-destructive">{error}</div>;
-
-  return (
-    <div className="container mx-auto px-4 md:px-6 lg:px-8 py-8 md:pt-16">
-      <h1 className="text-2xl md:text-3xl font-bold mb-6 text-blue-600 text-center md:text-left">
-        🏠 Property Listings
-      </h1>
-
-      {/* Filters */}
-      <div className="mb-10 p-5 md:p-6 bg-background border border-border rounded-2xl shadow-sm">
-        <h2 className="text-xl font-semibold mb-5 text-foreground">
-          🔍 Filters
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {/* City */}
-          <div>
-            <label className="block text-sm font-medium mb-2 text-foreground">
-              City
-            </label>
-            <input
-              type="text"
-              name="city"
-              placeholder="Search city..."
-              value={filters.city}
-              onChange={handleFilterChange}
-              className="w-full p-2 border rounded-lg bg-input text-foreground border-border focus:ring-2 focus:ring-ring"
-            />
-          </div>
-
-          {/* Price Range */}
-          <div>
-            <label className="block text-sm font-medium mb-2 text-foreground">
-              Price Range (per night)
-            </label>
-            <div className="flex gap-3">
-              <input
-                type="number"
-                name="priceMin"
-                placeholder="Min"
-                value={filters.priceMin}
-                onChange={handleFilterChange}
-                className="w-1/2 p-2 border rounded-lg bg-input text-foreground border-border focus:ring-2 focus:ring-ring"
-              />
-              <input
-                type="number"
-                name="priceMax"
-                placeholder="Max"
-                value={filters.priceMax}
-                onChange={handleFilterChange}
-                className="w-1/2 p-2 border rounded-lg bg-input text-foreground border-border focus:ring-2 focus:ring-ring"
-              />
-            </div>
-          </div>
-
-          {/* Room Type */}
-          <div>
-            <label className="block text-sm font-medium mb-2 text-foreground">
-              Room Type
-            </label>
-            <select
-              name="roomType"
-              value={filters.roomType}
-              onChange={handleFilterChange}
-              className="w-full p-2 border rounded-lg bg-input text-foreground border-border focus:ring-2 focus:ring-ring"
-            >
-              <option value="">All</option>
-              {roomTypes.map((t) => (
-                <option key={t} value={t}>
-                  {t}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Amenities */}
-          <div className="sm:col-span-2 lg:col-span-3">
-            <label className="block text-sm font-medium mb-2 text-foreground">
-              Amenities
-            </label>
-            <div className="flex flex-wrap gap-2">
-              {amenities.map((a) => (
-                <label
-                  key={a}
-                  className={`px-3 py-1 text-sm rounded-full border cursor-pointer ${
-                    filters.amenities.includes(a)
-                      ? "bg-primary text-primary-foreground border-primary"
-                      : "bg-muted text-foreground border-border hover:bg-accent hover:text-accent-foreground"
-                  }`}
-                >
-                  <input
-                    type="checkbox"
-                    name="amenities"
-                    value={a}
-                    checked={filters.amenities.includes(a)}
-                    onChange={handleFilterChange}
-                    className="hidden"
-                  />
-                  {a}
-                </label>
-              ))}
-            </div>
-          </div>
-
-          {/* Availability */}
-          <div className="sm:col-span-2 lg:col-span-3">
-            <label className="block text-sm font-medium mb-2 text-foreground">
-              Availability
-            </label>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <input
-                type="date"
-                name="dateFrom"
-                value={filters.dateFrom}
-                onChange={handleFilterChange}
-                className="w-full sm:w-1/2 p-2 border rounded-lg bg-input text-foreground border-border focus:ring-2 focus:ring-ring"
-              />
-              <input
-                type="date"
-                name="dateTo"
-                value={filters.dateTo}
-                onChange={handleFilterChange}
-                className="w-full sm:w-1/2 p-2 border rounded-lg bg-input text-foreground border-border focus:ring-2 focus:ring-ring"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Buttons */}
-        <div className="mt-6 flex flex-wrap gap-3">
-          <button
-            onClick={clearFilters}
-            className="bg-primary text-primary-foreground px-5 py-2 rounded-lg hover:scale-105 transition-transform"
-          >
-            Clear Filters
-          </button>
-        </div>
-      </div>
-
-      {/* Map Section */}
-      <div className="mb-8">
-        <h2 className="text-lg font-medium mb-3 text-center md:text-left">
-          🗺️ Click a pin to filter by city
-        </h2>
-        <div className="rounded-xl overflow-hidden shadow-md">
-          <Map
-            listings={listings}
-            onCityClick={handleCityClick}
-            selectedCity={filters.city}
-          />
-        </div>
-      </div>
-
-      {/* Listings Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-        {filteredListings.length > 0 ? (
-          filteredListings.map((property) => (
-            <PropertyCard key={property._id} property={property} />
-          ))
-        ) : (
-          <p className="col-span-full text-center py-10 text-muted-foreground">
-            No listings match your filters.
-          </p>
-        )}
+ return (
+  <div className="max-w-7xl mx-auto px-4 my-40">
+    {/* Header */}
+    <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+      <h1 className="text-2xl font-semibold text-gray-900">Explore Homes</h1>
+      <div className="flex flex-wrap gap-3">
+        <Input
+          placeholder="Search city or area..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="w-48 sm:w-60"
+        />
+        <Select onValueChange={setRoomType}>
+          <SelectTrigger className="w-40">
+            <SelectValue placeholder="Room Type" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="entire_place">Entire place</SelectItem>
+            <SelectItem value="private_room">Private room</SelectItem>
+            <SelectItem value="shared_room">Shared room</SelectItem>
+          </SelectContent>
+        </Select>
+        <Button
+          onClick={() => setShowMap((prev) => !prev)}
+          variant="outline"
+          className="rounded-xl"
+        >
+          {showMap ? "Hide Map" : "Show Map"}
+        </Button>
       </div>
     </div>
-  );
-};
 
-export default Stays;
+    {/* Map View Toggle */}
+    {showMap ? (
+      <div className="h-[600px] rounded-2xl overflow-hidden mb-8 border">
+        <MapView properties={properties} />
+      </div>
+    ) : (
+      <div className="max-w-7xl mx-auto px-4 py-6">
+        {isLoading ? (
+          <div className="flex justify-center items-center w-full h-[70vh]">
+            <LoaderOne />
+          </div>
+        ) : properties.length > 0 ? (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {properties.map((p) => (
+              <motion.div
+                key={p._id}
+                whileHover={{ scale: 1.02 }}
+                className="cursor-pointer"
+              >
+                <Card className="border rounded-2xl shadow-sm hover:shadow-md transition-all overflow-hidden">
+                  <Link href={`/stays/${p._id}`} className="block">
+                    {/* Image Section */}
+                    <div className="relative w-full h-56">
+                      <img
+                        src={p.images?.[0]?.url}
+                        alt={p.title}
+                        className="absolute inset-0 w-full h-full object-cover"
+                      />
+                      <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-full px-2 py-1 text-sm flex items-center">
+                        <Star className="w-3 h-3 text-yellow-500 mr-1" />
+                        {p.averageRating || "4.8"}
+                      </div>
+                    </div>
+                  </Link>
+                  <CardContent className="p-4 pt-3">
+                    <h3 className="font-semibold text-gray-900 line-clamp-1">{p.title}</h3>
+                    <p className="text-sm text-gray-500 flex items-center gap-1 mt-1">
+                      <MapPin className="w-4 h-4" />
+                      {p.city}
+                    </p>
+                    <p className="text-sm text-gray-600 mt-2">
+                      <span className="font-medium text-gray-900">${p.pricePerNight}</span>{" "}
+                      / night
+                    </p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        ) : (
+          <p className="col-span-full text-center text-gray-500">
+            No properties found.
+          </p>
+        )}
+        {/* Pagination */}
+        <div className="flex justify-center items-center gap-4 mt-10">
+          <Button
+            disabled={page === 1}
+            onClick={() => setPage((prev) => prev - 1)}
+            variant="outline"
+          >
+            Prev
+          </Button>
+          <span className="text-gray-600 text-sm">Page {page}</span>
+          <Button
+            onClick={() => setPage((prev) => prev + 1)}
+            variant="outline"
+          >
+            Next
+          </Button>
+        </div>
+      </div>
+    )}
+  </div>
+)
+}

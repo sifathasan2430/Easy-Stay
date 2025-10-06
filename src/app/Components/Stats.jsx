@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import CountUp from "react-countup";
+import Container from "./Container/Container";
 
 export default function Stats() {
   const stats = [
@@ -32,8 +33,8 @@ export default function Stats() {
   ];
 
   return (
-    <section className="bg-gray-50 dark:bg-gray-900 py-24">
-      <div className="max-w-6xl mx-auto text-center px-4">
+    <Container className="bg-gray-50 dark:bg-gray-900 py-24">
+      <div className=" text-center px-4">
         {/* Heading */}
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
@@ -70,6 +71,6 @@ export default function Stats() {
           ))}
         </div>
       </div>
-    </section>
+    </Container>
   );
 }
