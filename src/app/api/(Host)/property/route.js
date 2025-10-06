@@ -12,11 +12,11 @@ export async function POST(request) {
     await dbConnect()
     try {
         const reqBody = await request.json();
-        
-        const newUser=new Property(reqBody)
-        const response=await newUser.save()
+           const user=await Property.create(reqBody)
+        // const newUser=new Property(reqBody)
+        // const response=await newUser.save()
       
-        return NextResponse.json({ status: 'success', message:'Property created successfully',response }, { status: 201 });
+        return NextResponse.json({ status: 'success', message:'Property created successfully',user }, { status: 201 });
     } catch (error) {
         return NextResponse.json({ status: 'error', message: error.message }, { status: 400 });
     }
@@ -27,11 +27,11 @@ export async function GET(request,{params}) {
        
     const { searchParams } = new URL(request.url);
  const hostId = searchParams.get("host")
- console.log(hostId)
+ 
  let properties
   if (hostId) {
       // Get properties for one host
-     properties = await Property.find( {hostId} ).populate("hostId", "email").populate("amenities");
+     properties = await Property.find( { hostId: new mongoose.Types.ObjectId(hostId) } ).populate("hostId", "email").populate("amenities");
      
        
         
@@ -39,8 +39,8 @@ export async function GET(request,{params}) {
     } else {
       // Get all properties
     properties = await Property.find()
-        .populate("hostId", "email")
-        .populate("amenities");
+        // .populate("hostId", "email")
+        // .populate("amenities");
     }
     
 
