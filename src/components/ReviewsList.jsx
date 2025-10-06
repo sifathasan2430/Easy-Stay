@@ -7,6 +7,7 @@ export default function ReviewsList({ propertyId }) {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
 
+
   useEffect(() => {
     async function fetchReviews() {
       try {
@@ -29,6 +30,7 @@ export default function ReviewsList({ propertyId }) {
 
   return (
     <div className="space-y-4">
+      <h3 className="text-2xl">Reviews</h3>
       {reviews.map((r) => (
         <div key={r._id} className="border p-4 rounded shadow-sm bg-white">
           <div className="flex justify-between items-center mb-2">

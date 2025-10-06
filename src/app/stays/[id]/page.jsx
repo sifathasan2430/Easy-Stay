@@ -1,4 +1,5 @@
 "use client"
+import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -7,16 +8,27 @@ import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { LoaderFive } from "@/components/ui/loader";
+import ReviewsList from "@/components/ReviewsList";
 
-export default function PropertyDetails({ params }) {
+export default  function PropertyDetails({ params }) {
+  const unwrappedParams = React.use(params);
  
 const {data:property,isLoading}=useQuery({
   queryKey:['property'],
   queryFn:async()=>{
-    const response=await axios.get("/api/property/68d7df90d81235ac13340ac9")
+    const response=await axios.get(`/api/property/${unwrappedParams.id}`)
     return response.data.data
   }
 })
+
+const { data: reviewsData } = useQuery({
+  queryKey: ["property-reviews", unwrappedParams.id],
+  queryFn: async () => {
+    const res = await axios.get(`/api/reviews?propertyId=${unwrappedParams.id}`);
+    return res.data;
+  },
+});
+
   return (
     <div className="max-w-7xl mx-auto px-4 my-30">
       {/* Title Section */}
@@ -37,7 +49,7 @@ const {data:property,isLoading}=useQuery({
             <div className="flex items-center gap-2">
               <Star className="w-5 h-5 text-yellow-500" />
               <span className="text-sm font-medium">
-                {property.averageRating} · {property.reviewCount} reviews
+                {reviewsData?.averageRating||property.averageRating} · {reviewsData?.reviewCount||property.reviewCount} reviews
               </span>
             </div>
           </div>
@@ -92,6 +104,8 @@ const {data:property,isLoading}=useQuery({
               </div>
 
               <Separator className="my-6" />
+              <ReviewsList propertyId={unwrappedParams.id}></ReviewsList>
+              <Separator className="my-6" />
 
               {/* Check-in / out */}
               <div className="text-sm text-gray-600 space-y-1">
@@ -122,7 +136,7 @@ const {data:property,isLoading}=useQuery({
                     </p>
                     <div className="flex items-center text-sm text-gray-600">
                       <Star className="w-4 h-4 text-yellow-500" />
-                      <span className="ml-1">{property.averageRating}</span>
+                      <span className="ml-1">{reviewsData?.averageRating||4.8}</span>
                     </div>
                   </div>
 
