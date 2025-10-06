@@ -11,7 +11,7 @@ export default function GuestDashboardLayout({ children }) {
         <SiteHeader />
         <div className="flex flex-1 flex-col overflow-auto">
           <div className="@container/main flex flex-1 flex-col gap-2 p-4">
-            {children} {/* <-- This renders the page at the current route */}
+            {children}
           </div>
         </div>
       </SidebarInset>

@@ -50,10 +50,28 @@ const userSchema = new Schema({
     type: String,
     enum: ['male', 'female', 'other'], // optional
   },
-  preferredLanguage: {
-    type: String,
-    default: 'en',
-  },
+  preferredLanguages: {
+  type: [String],
+  default: ['en'], // default to English
+  enum: [
+    'en', // English
+    'es', // Spanish
+    'fr', // French
+    'de', // German
+    'zh', // Chinese (Mandarin)
+    'hi', // Hindi
+    'ar', // Arabic
+    'pt', // Portuguese
+    'ru', // Russian
+    'ja', // Japanese
+    'bn', // Bengali
+    'pa', // Punjabi
+    'ko', // Korean
+    'it', // Italian
+    'tr', // Turkish
+  ],
+},
+
   currentCity: {
     type: String,
     default: '',
