@@ -26,9 +26,9 @@ export default function DashboardLayout({ children }) {
   const [open, setOpen] = useState(false);
 
   const links = [
-    { label: "Dashboard", href: "/host/dashboard", icon: IconBrandTabler },
+    { label: "Analytics", href: "/host", icon: IconBrandTabler },
     { label: "Property Management", href: "/host/property/management", icon: IconUserBolt },
-    { label: "Settings", href: "/host/settings", icon: IconSettings },
+    { label: "Bookings", href: "/host/bookings", icon: IconSettings },
     { label: "Logout", href: "/logout", icon: IconArrowLeft },
   ];
 

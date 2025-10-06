@@ -2,11 +2,89 @@ import { NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect";
 import { Booking } from "../../../models/booking.models";
 
-export async function GET() {
+export async function GET(request,{params}) {
   try {
     await dbConnect();
+     const queries=request.nextUrl.searchParams
+     const limit=parseInt(queries.get('limit'))
+     const skip=parseInt(queries.get('skip') )
+     const analytics=queries.get('analytics')
+     
+   
+    const statusCount=await Booking.aggregate([
+      
+  {
+    $group: {
+      _id:"$status",
+      count: {
+     $sum:1
+      }
+    }
+  },
+  {
+    $project: {
+      status:"$_id",
+     count:1,
+      _id:0
+    }
+  }
+
+    ])
+    const monthlyRevenue=await Booking.aggregate([
+  {
+    $match: {
+      status: { $in: ["completed", "confirmed"] }
+    }
+  },
+  {
+    $addFields: {
+      monthNumber: { $month: "$createdAt" }, // numeric month
+      monthName: {
+        $dateToString: { format: "%B", date: "$createdAt" } // e.g. January, February
+      }
+    }
+  },
+  {
+    $group: {
+      _id: {
+        monthNumber: "$monthNumber",
+        monthName: "$monthName"
+      },
+      totalRevenue: { $sum: "$totalPrice" }
+    }
+  },
+  {
+    $project: {
+      _id: 0,
+      month: "$_id.monthName",
+      monthNumber: "$_id.monthNumber",
+      totalRevenue: 1
+    }
+  },
+  {
+    $sort: {
+      monthNumber: 1 
+    }
+  }
+])
+
+    if (limit || skip){
+      const total=await Booking.countDocuments()
+      const bookings=await Booking.find().sort({createdAt:-1}).skip(skip).limit(limit)
+        
+      return NextResponse.json({data:bookings,total:total,statData:statusCount}, { status: 200 });
+    }
+
+  if (analytics){
+      const total=await Booking.countDocuments()
+      const bookings=await Booking.find().sort({createdAt:-1})
+        
+      return NextResponse.json({total:total,statData:statusCount,monthlyRevenueData:monthlyRevenue}, { status: 200 });
+    }
+
+
     const bookings = await Booking.find().sort({ createdAt: -1 }); // latest first
-    return NextResponse.json(bookings, { status: 200 });
+    return NextResponse.json({data:bookings}, { status: 200 });
   } catch (error) {
     console.error("GET /bookings error:", error);
     return NextResponse.json({ error: "Failed to fetch bookings" }, { status: 500 });
@@ -48,4 +126,5 @@ export async function POST(req) {
     );
   }
 }
+
 

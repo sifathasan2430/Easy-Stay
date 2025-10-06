@@ -47,22 +47,22 @@ export default function ReuseableForm({ propertyId }) {
 
   const defaultValue = {
     hostId: "",
-    title: "Room in Paris",
-    description: "Good",
-    address: "Paris",
-    city: "Franch",
-    state: "Franch",
-    country: "Franch",
-    latitude: 20, // Add these
-    longitude: 40, // Add these
-    pricePerNight: 0,
+    title: "Stylish Automated Vacation House in Uttara",
+    description: "Have fun with the whole family at this stylish place. It's an automated house, all appliances are wifi controlled. Open the main door with a password and relax. Enjoy Bangladeshi rural views from wide windows. This house was constructed in 2021 for my own use as a vacation house",
+    address: "Uttara Sector-12, Dhaka",
+    city: "Dhaka",
+    state: "Dhaka Division",
+    country: "Bangladesh",
+    latitude: 90.388962, // Add these
+    longitude: 23.911522, // Add these
+    pricePerNight: 1200,
     roomType: "private_room",
     maxGuests: 1,
-    bedrooms: 1,
-    beds: 1,
-    bathrooms: 1,
-    checkInTime: "",
-    checkOutTime: "",
+    bedrooms: 3,
+    beds: 3,
+    bathrooms: 4,
+    checkInTime: "12.00",
+    checkOutTime: "8.00",
     amenities: [],
     images: [{ url: "", isPrimary: true }],
     isActive: true,
