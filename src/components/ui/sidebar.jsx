@@ -1,11 +1,16 @@
 "use client";
-import * as React from "react"
+import { cn } from "@/lib/utils";
+import React, { useState, createContext, useContext } from "react";
+import { AnimatePresence, motion } from "motion/react";
+import { IconMenu2, IconX } from "@tabler/icons-react";
+// import { cva } from "class-variance-authority";  // This makes problem in user Dashboard
 import { Slot } from "@radix-ui/react-slot"
 import { cva } from "class-variance-authority";
 import { PanelLeftIcon } from "lucide-react"
 
 import { useIsMobile } from "@/hooks/use-mobile"
-import { cn } from "@/lib/utils"
+
+// import { cn } from "@/lib/utils" // This makes problem in user Dashboard
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
@@ -281,7 +286,7 @@ function SidebarInset({
     <main
       data-slot="sidebar-inset"
       className={cn(
-        "bg-[#0c0a0a] relative flex w-full flex-1 flex-col",
+        "bg-background relative flex w-full flex-1 flex-col",
         "md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow-sm md:peer-data-[variant=inset]:peer-data-[state=collapsed]:ml-2",
         className
       )}
