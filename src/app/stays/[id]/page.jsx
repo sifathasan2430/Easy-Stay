@@ -1,5 +1,5 @@
 "use client"
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -9,9 +9,12 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { LoaderFive } from "@/components/ui/loader";
 import ReviewsList from "@/components/ReviewsList";
+import { useSession } from "next-auth/react";
 
 export default  function PropertyDetails({ params }) {
   const unwrappedParams = React.use(params);
+  const { data: session } = useSession();
+  const [loading, setLoading] = useState(false);
  
 const {data:property,isLoading}=useQuery({
   queryKey:['property'],
@@ -28,6 +31,40 @@ const { data: reviewsData } = useQuery({
     return res.data;
   },
 });
+
+const handleReserve = async () => {
+  setLoading(true);
+  try {
+    const bookingDetails = {
+      propertyId: property._id,
+    
+      userId: session.user._id,
+      checkInDate: new Date(),
+      checkOutDate: new Date(new Date().getTime() + 3 * 24 * 60 * 60 * 1000),
+      guests: 2,
+      totalPrice: property.pricePerNight * 3,
+    };
+
+    // 1️⃣ Save the booking first
+    const bookingResponse = await axios.post("/api/bookings", bookingDetails);
+
+    // 2️⃣ Create Stripe Checkout Session
+    if (bookingResponse.data.booking) {
+      const { data: stripeResponse } = await axios.post("/api/stripe", {
+        propertyTitle: property.title, // ✅ required for Stripe product_data.name
+        amount: bookingResponse.data.booking.totalPrice, // ✅ required for unit_amount
+        userEmail: "customer@example.com", // ✅ your logged-in user’s email
+      });
+
+      // 3️⃣ Redirect to Stripe Checkout
+      window.location.href = stripeResponse.url;
+    }
+  } catch (error) {
+    console.error("Failed to create booking or Stripe session", error);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="max-w-7xl mx-auto px-4 my-30">
@@ -141,8 +178,12 @@ const { data: reviewsData } = useQuery({
                   </div>
 
                   <div className="mt-4">
-                    <Button className="w-full bg-[#4f46e5] text-white font-medium rounded-xl">
-                      Reserve
+                    <Button 
+                      className="w-full bg-[#4f46e5] text-white font-medium rounded-xl"
+                      onClick={handleReserve}
+                      disabled={loading}
+                    >
+                      {loading ? 'Reserving...' : 'Reserve'}
                     </Button>
                   </div>
 

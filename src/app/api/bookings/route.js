@@ -92,6 +92,7 @@ export async function GET(request,{params}) {
 }
 
 export async function POST(req) {
+  console.log('hit')
   try {
     const body = await req.json(); // <-- parse JSON body
     const { propertyId, userId, checkInDate, checkOutDate, guests, totalPrice,payment_status } = body;

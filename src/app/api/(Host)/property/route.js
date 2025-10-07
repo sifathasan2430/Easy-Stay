@@ -35,11 +35,21 @@ export async function GET(request) {
     ...(roomType && { roomType }),
   };
 
-  const properties = await Property.find(query)
+    
+if(limit ||page ) {  
+    const properties = await Property.find()
     .populate("hostId", "email")
     .populate("amenities")
     .skip((page - 1) * limit)
     .limit(limit);
 
   return NextResponse.json({ status: "success", data: properties });
+}
+
+
+
+const properties = await Property.find()
+
+return NextResponse.json({ status: "success", data: properties,total:properties.length() })
+
 }

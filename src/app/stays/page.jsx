@@ -25,7 +25,7 @@ export default function ExploreProperties() {
   const limit = 8;
 
   // Fetch data using React Query
-  const { data, isLoading } = useQuery({
+  const { data:properties =[], isLoading } = useQuery({
     queryKey: ["properties", search, roomType, page],
     queryFn: async () => {
       const res = await axios.get("/api/property", {
@@ -37,8 +37,15 @@ export default function ExploreProperties() {
     
     
   });
+  const {data:mapProperties=[]}=useQuery({
+    queryKey:'mapProperty',
+    queryFn:async () => {
+      const response=await axios.get('/api/property')
+      return response.data.data
+    }
+  })
 
-  const properties = data || [];
+ 
 
  return (
   <div className="max-w-7xl mx-auto px-4 my-40">
@@ -75,7 +82,7 @@ export default function ExploreProperties() {
     {/* Map View Toggle */}
     {showMap ? (
       <div className="h-[600px] rounded-2xl overflow-hidden mb-8 border">
-        <MapView properties={properties} />
+        <MapView properties={mapProperties} />
       </div>
     ) : (
       <div className="max-w-7xl mx-auto px-4 py-6">
@@ -91,8 +98,8 @@ export default function ExploreProperties() {
                 whileHover={{ scale: 1.02 }}
                 className="cursor-pointer"
               >
-                <Card className="border rounded-2xl shadow-sm hover:shadow-md transition-all overflow-hidden">
-                  <Link href={`/stays/${p._id}`} className="block">
+                <Link href={`/stays/${p._id}`} className="block"> <Card className="border rounded-2xl shadow-sm hover:shadow-md transition-all overflow-hidden">
+                 
                     {/* Image Section */}
                     <div className="relative w-full h-56">
                       <img
@@ -105,12 +112,12 @@ export default function ExploreProperties() {
                         {p.averageRating || "4.8"}
                       </div>
                     </div>
-                  </Link>
+                  
                   <CardContent className="p-4 pt-3">
-                    <h3 className="font-semibold text-gray-900 line-clamp-1">{p.title}</h3>
+                    <h3 className="font-semibold text-gray-900 line-clamp-1">{p.title} </h3>
                     <p className="text-sm text-gray-500 flex items-center gap-1 mt-1">
-                      <MapPin className="w-4 h-4" />
-                      {p.city}
+                      <MapPin className="w-10 h-4" />
+                     {p.city} 
                     </p>
                     <p className="text-sm text-gray-600 mt-2">
                       <span className="font-medium text-gray-900">${p.pricePerNight}</span>{" "}
@@ -118,6 +125,7 @@ export default function ExploreProperties() {
                     </p>
                   </CardContent>
                 </Card>
+                </Link>
               </motion.div>
             ))}
           </div>
