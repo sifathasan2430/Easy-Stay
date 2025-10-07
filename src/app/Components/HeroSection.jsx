@@ -9,6 +9,7 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel"
 import Link from "next/link"
+import Container from "./Container/Container"
 
 export default function HeroSection() {
   const plugin = React.useRef(
@@ -60,6 +61,7 @@ export default function HeroSection() {
   
 
   return (
+    
     <section className="relative w-full min-h-[70vh] md:min-h-[90vh] overflow-hidden">
       <Carousel
         plugins={[plugin.current]}
@@ -101,5 +103,7 @@ export default function HeroSection() {
         </CarouselContent>
       </Carousel>
     </section>
+
+    
   )
 }
