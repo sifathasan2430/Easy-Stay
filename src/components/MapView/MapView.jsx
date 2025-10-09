@@ -17,12 +17,13 @@ export default function MapView({ properties }) {
   
   const defaultCenter = [23.8103, 90.4125]; // Dhaka
 
+    
   return (
     <MapContainer
       center={defaultCenter}
       zoom={12}
       scrollWheelZoom={true}
-      className="h-full w-full"
+      className=" h-[500px] w-2xl rounded-2xl mx-auto"
     >
       <TileLayer
         attribution='© OpenStreetMap contributors'
