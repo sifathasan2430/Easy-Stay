@@ -22,3 +22,7 @@ export async function PATCH(request, { params }) {
     return NextResponse.json({ error: "Failed to update booking" }, { status: 500 });
   }
 }
+
+
+
+

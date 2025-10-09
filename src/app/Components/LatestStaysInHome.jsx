@@ -5,33 +5,26 @@ import { useRouter } from 'next/navigation';
 import { GoLocation } from 'react-icons/go';
 import { Skeleton } from '@/components/ui/skeleton';
 import Container from './Container/Container';
+import { useQuery } from '@tanstack/react-query';
+import Link from 'next/link';
+import { Map, Star } from 'lucide-react';
+import ReuseableCard from '@/components/reuseableCard/ReuseableCard';
 
 const LatestStaysInHome = () => {
-  const [latestProperties, setLatestProperties] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const router = useRouter();
 
-  useEffect(() => {
-    fetch('/listings.json')
-      .then((res) => res.json())
-      .then((data) => {
-        const sorted = data
-          .sort(
-            (a, b) => new Date(b.available_from) - new Date(a.available_from)
-          )
-          .slice(0, 4); // latest 4
-        setLatestProperties(sorted);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        setLoading(false);
-      });
-  }, []);
+ 
+  const {data:latestProperties,isLoading}=useQuery({
+    queryKey:['latestProperties'],
+    queryFn:async()=>{
+      const res=await fetch('/api/property?mostReviewed=true');
+      const data=await res.json();
+      return data.data;
+    },
+    staleTime:10*60*1000
+})
+  
 
-  const handleCardClick = (id) => {
-    router.push(`/stays/${id}`); // navigate to details page
-  };
+
 
   return (
     <Container>
@@ -41,7 +34,7 @@ const LatestStaysInHome = () => {
       </h2>
 
       {/* Loading Skeletons */}
-      {loading ? (
+      {isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {[1, 2, 3, 4].map((i) => (
             <div
@@ -58,30 +51,14 @@ const LatestStaysInHome = () => {
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {latestProperties.map((property) => (
-            <div
-              key={property._id}
-              onClick={() => handleCardClick(property._id)}
-              className="border rounded-lg shadow-lg overflow-hidden cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-2xl"
-            >
-              <img
-                src={property.image_url}
-                alt={property.title}
-                className="w-full h-48 object-cover"
-              />
-              <div className="p-4">
-                <h3 className="font-semibold text-lg">{property.title}</h3>
-                <div className="flex items-center mt-1 text-sm text-gray-600">
-                  <GoLocation className="mr-1" /> {property.city}
-                </div>
-                <p className="font-bold mt-2">
-                  ${property.price_per_night} 
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
+     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+  {latestProperties.map((property) => {
+ 
+    return (
+     <ReuseableCard property={property} key={property._id}  />
+    );
+  })}
+</div>
       )}
     </div>
     </Container>

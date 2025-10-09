@@ -10,6 +10,20 @@ export async function GET(request,{params}) {
      const skip=parseInt(queries.get('skip') )
      const analytics=queries.get('analytics')
      
+    const id = queries.get('id')
+    
+    
+   if (id){
+      const userBooking = await Booking.find({userId:id})
+      if (!userBooking) {
+      return NextResponse.json({ error: "Booking not found" }, { status: 404 });
+    }
+      return NextResponse.json({data:userBooking}, { status: 200 });
+   }
+  
+
+   
+ 
    
     const statusCount=await Booking.aggregate([
       
