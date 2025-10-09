@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Sidebar, SidebarHeader, SidebarContent, SidebarFooter, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
@@ -12,20 +13,23 @@ import {
   IconCreditCard,
   IconHeart,
   IconMoneybag,
-  IconInnerShadowTop
+  IconInnerShadowTop,
+  IconUser
 } from "@tabler/icons-react";
+import {  Clock, MessageSquare } from "lucide-react";
+
 
 const navItems = [
-  { title: "Dashboard", href: "/dashboard/guest", icon: IconDashboard },
-  { title: "Profile", href: "/dashboard/guest/profile", icon: IconUsers },
-  { title: "Past Stays", href: "/dashboard/guest/past", icon: IconHistory },
-  { title: "Upcoming Stays", href: "/dashboard/guest/upcoming", icon: IconCalendarEvent },
-  { title: "Payment", href: "/dashboard/guest/pay", icon: IconMoneybag },
-  { title: "Payment History", href: "/dashboard/guest/payments", icon: IconCreditCard },
-  { title: "Favorites", href: "/dashboard/guest/favorites", icon: IconHeart },
+  { title: "Dashboard", href: "/dash/admin", icon: IconDashboard },
+  { title: "Profile", href: "/dash/admin/profile", icon: IconUser },
+  { title: "Manage Users", href: "/dash/admin/manageusers", icon: IconUsers },
+  { title: "Manage Stays", href: "/dash/admin/managestays", icon: IconCalendarEvent },
+  { title: "Manage Reviews", href: "/dash/admin/managereviews", icon:  MessageSquare},
+  { title: "Recent Activity", href: "/dash/admin/recentactivity", icon: Clock },
+  { title: "Most Favorites", href: "/dash/admin/mostfavorites", icon: IconHeart },
 ];
 
-export function AppSidebar() {
+export function AdminAppSidebar() {
   const { data: session } = useSession();
   const user = session?.user || { name: "Guest", email: "guest@example.com", avatar: "/avatars/shadcn.jpg" };
 

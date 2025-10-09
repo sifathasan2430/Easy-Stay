@@ -13,9 +13,11 @@ export default function ConditionalLayout({ children }) {
     '/guest',
     '/guest/',
     '/dashboard',
+    '/dash',
     '/dashboard/',
     '/guest/dashboard',
     "/host",
+    "/admin",
     '/guest/dashboard/'
   ];
   
