@@ -99,7 +99,7 @@ import {
   IconCalendarEvent,
   IconCreditCard,
   IconHeart,
-  IconFolder,
+  IconMoneybag,
   IconInnerShadowTop
 } from "@tabler/icons-react";
 
@@ -108,6 +108,7 @@ const navItems = [
   { title: "Profile", href: "/dashboard/guest/profile", icon: IconUsers },
   { title: "Past Stays", href: "/dashboard/guest/past", icon: IconHistory },
   { title: "Upcoming Stays", href: "/dashboard/guest/upcoming", icon: IconCalendarEvent },
+  { title: "Payment", href: "/dashboard/guest/pay", icon: IconMoneybag },
   { title: "Payment History", href: "/dashboard/guest/payments", icon: IconCreditCard },
   { title: "Favorites", href: "/dashboard/guest/favorites", icon: IconHeart },
 ];
