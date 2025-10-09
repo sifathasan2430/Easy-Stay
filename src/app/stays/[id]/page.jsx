@@ -1,157 +1,335 @@
 "use client"
 import React, { useState } from "react";
+// Shadcn Imports
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { MapPin, Star, Users, Bed, Bath } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar"; // Assuming this is installed via shadcn CLI
+
+// Utility Imports
+// NOTE: Ensure your @/lib/utils/cn function is imported/available
+import { cn } from "@/lib/utils"; 
+import { format, differenceInDays } from "date-fns"; // For formatting and date calculation
+
+// Icon Imports
+import { MapPin, Star, Users, Bed, Bath, ChevronDown, Minus, Plus } from "lucide-react"; 
+
+// Custom/External Imports
 import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { LoaderFive } from "@/components/ui/loader";
-import ReviewsList from "@/components/ReviewsList";
+import { LoaderOne } from "@/components/ui/loader"; // Assuming LoaderOne is imported/available
+import ReviewsList from "@/components/ReviewsList"; // Assuming ReviewsList is imported/available
 import { useSession } from "next-auth/react";
+import { useParams, useRouter } from "next/navigation";
+import { toast } from "sonner";
 
-export default  function PropertyDetails({ params }) {
-  const unwrappedParams = React.use(params);
-  const { data: session } = useSession();
-  const [loading, setLoading] = useState(false);
- 
-const {data:property,isLoading}=useQuery({
-  queryKey:['property'],
-  queryFn:async()=>{
-    const response=await axios.get(`/api/property/${unwrappedParams.id}`)
-    return response.data.data
-  }
-})
 
-const { data: reviewsData } = useQuery({
-  queryKey: ["property-reviews", unwrappedParams.id],
-  queryFn: async () => {
-    const res = await axios.get(`/api/reviews?propertyId=${unwrappedParams.id}`);
-    return res.data;
-  },
-});
+// ==============================================================================
+// 1. DATE PICKER COMPONENT (Helper function defined within the file)
+// ==============================================================================
+const AirbnbDatePicker = ({ dateRange, setDateRange }) => {
+    // Determine the text to display for Check-in and Check-out
+    const checkInText = dateRange?.from ? format(dateRange.from, "MMM dd") : 'Add Date';
+    const checkOutText = dateRange?.to ? format(dateRange.to, "MMM dd") : 'Add Date';
 
-const handleReserve = async () => {
-  setLoading(true);
-  try {
-    const bookingDetails = {
-      propertyId: property._id,
-    
-      userId: session.user._id,
-      checkInDate: new Date(),
-      checkOutDate: new Date(new Date().getTime() + 3 * 24 * 60 * 60 * 1000),
-      guests: 2,
-      totalPrice: property.pricePerNight * 3,
-    };
+    const selectedRange = dateRange || { from: undefined, to: undefined };
 
-    // 1️⃣ Save the booking first
-    const bookingResponse = await axios.post("/api/bookings", bookingDetails);
+    return (
+        <Popover>
+            <PopoverTrigger asChild>
+                <div className="flex border-b border-gray-300 cursor-pointer">
+                    <div 
+                        className={cn(
+                            "flex flex-col p-2 pt-3 flex-1 text-left rounded-tl-xl hover:bg-gray-100",
+                            // Highlight check-in until check-out is picked
+                            { "bg-gray-100": selectedRange.from && !selectedRange.to } 
+                        )}
+                    >
+                        <span className="text-xs font-bold uppercase">Check-in</span>
+                        <span className="text-sm text-gray-700 font-normal">
+                            {checkInText}
+                        </span>
+                    </div>
 
-    // 2️⃣ Create Stripe Checkout Session
-    if (bookingResponse.data.booking) {
-      const { data: stripeResponse } = await axios.post("/api/stripe", {
-        propertyTitle: property.title, // ✅ required for Stripe product_data.name
-        amount: bookingResponse.data.booking.totalPrice, // ✅ required for unit_amount
-        userEmail: "customer@example.com", // ✅ your logged-in user’s email
-      });
-
-      // 3️⃣ Redirect to Stripe Checkout
-      window.location.href = stripeResponse.url;
-    }
-  } catch (error) {
-    console.error("Failed to create booking or Stripe session", error);
-  } finally {
-    setLoading(false);
-  }
+                    <div 
+                        className={cn(
+                            "flex flex-col p-2 pt-3 flex-1 text-left border-l border-gray-300 rounded-tr-xl hover:bg-gray-100"
+                        )}
+                    >
+                        <span className="text-xs font-bold uppercase">Check-out</span>
+                        <span className="text-sm text-gray-700 font-normal">
+                            {checkOutText}
+                        </span>
+                    </div>
+                </div>
+            </PopoverTrigger>
+            <PopoverContent 
+                className="w-auto p-0 z-50 shadow-2xl rounded-xl" 
+                align="end" 
+            >
+                <Calendar
+                    initialFocus
+                    mode="range"
+                    defaultMonth={selectedRange.from}
+                    selected={selectedRange}
+                    onSelect={setDateRange}
+                    numberOfMonths={2}
+                    // Disable dates in the past
+                    disabled={(date) => date < new Date() && date.toDateString() !== new Date().toDateString()} 
+                />
+            </PopoverContent>
+        </Popover>
+    );
 };
 
+
+// ==============================================================================
+// 2. GUEST COUNTER COMPONENT (Helper function defined within the file)
+// ==============================================================================
+const GuestSelector = ({ numGuests, setNumGuests, maxGuests }) => {
+    const increment = () => setNumGuests(prev => Math.min(prev + 1, maxGuests));
+    const decrement = () => setNumGuests(prev => Math.max(prev - 1, 1));
+    
+    return (
+        <Popover>
+            <PopoverTrigger asChild>
+                <button 
+                    className="flex justify-between items-center p-2 pt-3 w-full text-left rounded-b-xl hover:bg-gray-100 focus:outline-none"
+                >
+                    <div className="flex flex-col">
+                        <span className="text-xs font-bold uppercase">Guests</span>
+                        <span className="text-sm text-gray-700 font-normal">
+                            {numGuests} guest{numGuests > 1 ? 's' : ''}
+                        </span>
+                    </div>
+                    <ChevronDown className="w-4 h-4 text-gray-500" />
+                </button>
+            </PopoverTrigger>
+
+            <PopoverContent 
+                className="w-72 p-4 z-50 shadow-2xl rounded-xl" 
+                align="end" 
+            >
+                <div className="flex justify-between items-center">
+                    <span className="font-medium">Adults</span>
+                    <div className="flex items-center space-x-3">
+                        <Button 
+                            variant="outline" 
+                            size="icon" 
+                            onClick={decrement} 
+                            disabled={numGuests <= 1}
+                            className="rounded-full h-8 w-8 border-gray-400 text-gray-700 hover:bg-gray-100"
+                        >
+                            <Minus className="w-4 h-4" />
+                        </Button>
+                        <span className="w-4 text-center text-lg">{numGuests}</span>
+                        <Button 
+                            variant="outline" 
+                            size="icon" 
+                            onClick={increment} 
+                            disabled={numGuests >= maxGuests}
+                            className="rounded-full h-8 w-8 border-gray-400 text-gray-700 hover:bg-gray-100"
+                        >
+                            <Plus className="w-4 h-4" />
+                        </Button>
+                    </div>
+                </div>
+                <p className="text-xs text-gray-500 mt-2">Max {maxGuests} guests allowed.</p>
+            </PopoverContent>
+        </Popover>
+    );
+};
+
+
+// ==============================================================================
+// 3. MAIN COMPONENT
+// ==============================================================================
+export default function PropertyDetails() {
+  const { id } = useParams();
+  const { data: session } = useSession();
+  const [loading, setLoading] = useState(false);
+  
+  // State for Booking Widget
+  const [dateRange, setDateRange] = useState({ from: undefined, to: undefined });
+  const [numGuests, setNumGuests] = useState(1); 
+  
+  
+  const { data: property, isLoading } = useQuery({
+    queryKey: ['property', id],
+    queryFn: async () => {
+      const response = await axios.get(`/api/property/${id}`);
+      return response.data.data
+    }
+  });
+
+  const { data: reviewsData } = useQuery({
+    queryKey: ["property-reviews", id],
+    queryFn: async () => {
+      const res = await axios.get(`/api/reviews?propertyId=${id}`);
+      return res.data;
+    },
+  });
+
+  // Derived Values
+  const pricePerNight = property?.pricePerNight || 0;
+  const maxGuests = property?.maxGuests || 1;
+  
+  const nights = dateRange?.from && dateRange?.to 
+    ? differenceInDays(dateRange.to, dateRange.from) 
+    : 0;
+
+  const subtotal = pricePerNight * nights;
+  const serviceFee = nights > 0 ? Math.ceil(subtotal * 0.15) : 0; // 15% service fee
+  const total = subtotal + serviceFee;
+
+  const handleReserve = async () => {
+    if (!session) {
+        toast.error("You must be logged in to reserve a property.");
+        return;
+    }
+    if (!dateRange?.from || !dateRange?.to || nights <= 0 || numGuests === 0) {
+        toast.error("Please select valid check-in/check-out dates.");
+        return;
+    }
+    
+    setLoading(true);
+
+    try {
+      const bookingDetails = {
+        propertyId: id,
+        userId: session?.user._id,
+        // Convert dates to ISO string for API payload
+        checkInDate: dateRange.from.toISOString(),
+        checkOutDate: dateRange.to.toISOString(),
+        guests: numGuests,
+        totalPrice: total,
+      };
+
+      const bookingResponse = await axios.post("/api/bookings", bookingDetails);
+
+      if (bookingResponse.data.booking) {
+        toast.success("Booking created successfully!");
+      }
+    } catch (error) {
+      console.error("Failed to create booking or Stripe session:", error);
+      toast.error("Failed to create booking.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // --- Render Logic ---
+  if (isLoading) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 my-20 md:my-40 min-h-screen flex items-center justify-center">
+        <LoaderOne />
+      </div>
+    );
+  }
+  if (!property) return <div className="max-w-7xl mx-auto px-4 my-20 min-h-screen">Property not found.</div>
+
+  const averageRating = reviewsData?.averageRating || property.averageRating || 4.8;
+  const reviewCount = reviewsData?.reviewCount || property.reviewCount || 0;
+
+  const primaryImage = property.images?.find(img => img.isPrimary) || property.images?.[0];
+  const secondaryImages = property.images?.filter(img => img !== primaryImage);
+
   return (
-    <div className="max-w-7xl mx-auto px-4 my-30">
-      {/* Title Section */}
-      {isLoading ? (
-        <h1>loading</h1>
-      ) : (
-        <>
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-              <h1 className="text-2xl font-semibold text-gray-900">
-                {property.title}
-              </h1>
-              <div className="flex items-center text-gray-600 mt-1 text-sm">
-                <MapPin className="w-4 h-4 mr-1" />
-                {property.address}, {property.city}, {property.country}
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <Star className="w-5 h-5 text-yellow-500" />
-              <span className="text-sm font-medium">
-                {reviewsData?.averageRating||property.averageRating} · {reviewsData?.reviewCount||property.reviewCount} reviews
-              </span>
-            </div>
-          </div>
+    <div className="max-w-[1300px] mx-auto px-6 md:px-10 my-10 md:my-20">
+      {/* Title & Info Section */}
+      <div className="mb-6">
+        <h1 className="text-3xl font-semibold text-gray-900">
+          {property.title}
+        </h1>
+        <div className="flex items-center text-gray-700 mt-2 text-base">
+          <Star className="w-4 h-4 text-gray-800 mr-1" fill="currentColor" />
+          <span className="font-semibold mr-1">
+            {averageRating.toFixed(2)}
+          </span>
+          <span className="mx-1">•</span>
+          <span className="underline cursor-pointer hover:text-gray-900">
+            {reviewCount} reviews
+          </span>
+          <span className="mx-1">•</span>
+          <MapPin className="w-4 h-4 mr-1" />
+          <span className="underline cursor-pointer hover:text-gray-900">
+            {property.city}, {property.country}
+          </span>
+        </div>
+      </div>
 
-          {/* Image Gallery */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-2 mt-6 rounded-2xl overflow-hidden">
-            {property.images?.map((img, idx) => (
-              <motion.img
-                key={idx}
-                src={img.url}
-                alt={`Property Image ${idx + 1}`}
-                className={`object-cover w-full h-64 md:h-72 ${
-                  img.isPrimary ? "md:col-span-2 md:row-span-2" : ""
-                }`}
-                whileHover={{ scale: 1.02 }}
-              />
-            ))}
-          </div>
+      {/* Image Gallery */}
+      <div className="grid grid-cols-4 grid-rows-2 gap-2 mt-6 rounded-xl overflow-hidden shadow-lg">
+        {/* Large Primary Image */}
+        {primaryImage && (
+          <motion.img
+            src={primaryImage.url}
+            alt="Primary Property Image"
+            className="col-span-2 row-span-2 object-cover w-full h-full min-h-[300px] cursor-pointer"
+            whileHover={{ scale: 1.02 }}
+            transition={{ duration: 0.3 }}
+          />
+        )}
+        {/* Smaller Secondary Images */}
+        {secondaryImages?.slice(0, 4).map((img, idx) => (
+          <motion.img
+            key={idx}
+            src={img.url}
+            alt={`Property Image ${idx + 2}`}
+            className={`object-cover w-full h-full min-h-[150px] cursor-pointer ${
+              idx === 1 ? 'rounded-tr-xl' : idx === 3 ? 'rounded-br-xl' : '' 
+            }`}
+            whileHover={{ scale: 1.02 }}
+            transition={{ duration: 0.3 }}
+          />
+        ))}
+      </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 mt-10">
-            {/* Left: Property Info */}
-            <div className="lg:col-span-2">
-              {/* Basic Info */}
-              <div className="flex flex-wrap gap-4 text-gray-700 text-sm mt-2">
-                <div className="flex items-center gap-1">
-                  <Users className="w-4 h-4" /> {property.maxGuests} guests
-                </div>
-                <div className="flex items-center gap-1">
-                  <Bed className="w-4 h-4" /> {property.bedrooms} bedrooms
-                </div>
-                <div className="flex items-center gap-1">
-                  <Bath className="w-4 h-4" /> {property.bathrooms} baths
-                </div>
-              </div>
-
-              <Separator className="my-5" />
-
-              {/* Description */}
-              <p className="text-gray-800 leading-relaxed">{property.description}</p>
-
-              {/* Amenities */}
-              <h2 className="text-lg font-semibold mt-8 mb-3">What this place offers</h2>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                {property.amenities?.map((a) => (
-                  <div
-                    key={a._id}
-                    className="flex items-center gap-2 text-sm text-gray-700"
-                  >
-                    <span>• {a.name}</span>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 mt-10">
+        {/* Left: Property Info & Reviews */}
+        <div className="lg:col-span-2">
+            <div className="pb-6">
+                <h2 className="text-xl font-semibold text-gray-900">
+                    Entire place hosted by Host Name
+                </h2>
+                <div className="flex flex-wrap gap-4 text-gray-700 text-base mt-2">
+                  <div className="flex items-center gap-1">
+                    {property.maxGuests} guests
                   </div>
-                ))}
-              </div>
+                  <span className="text-gray-400">•</span>
+                  <div className="flex items-center gap-1">
+                    {property.bedrooms} bedrooms
+                  </div>
+                  <span className="text-gray-400">•</span>
+                  <div className="flex items-center gap-1">
+                    {property.bathrooms} baths
+                  </div>
+                </div>
+            </div>
+            <Separator className="my-6" />
+            <p className="text-gray-800 leading-relaxed">{property.description}</p>
+            <Separator className="my-6" />
+            
+            {/* Amenities, ReviewsList, Map sections */}
+            <h2 className="text-lg font-semibold mt-8 mb-3">What this place offers</h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+              {property.amenities?.map((a) => (
+                <div
+                  key={a._id}
+                  className="flex items-center gap-2 text-sm text-gray-700"
+                >
+                  <span>• {a.name}</span>
+                </div>
+              ))}
+            </div>
 
-              <Separator className="my-6" />
-              <ReviewsList propertyId={unwrappedParams.id}></ReviewsList>
-              <Separator className="my-6" />
-
-              {/* Check-in / out */}
-              <div className="text-sm text-gray-600 space-y-1">
-                <p>🕑 Check-in: {property.checkInTime}</p>
-                <p>🕚 Check-out: {property.checkOutTime}</p>
-              </div>
-
-              {/* Map Section */}
-              <h2 className="text-lg font-semibold mt-8 mb-3">Where you’ll be</h2>
+            <Separator className="my-6" />
+            <ReviewsList propertyId={id}></ReviewsList>
+            <Separator className="my-6" />
+            
+            <h2 className="text-lg font-semibold mt-8 mb-3">Where you’ll be</h2>
               <div className="rounded-xl overflow-hidden border">
                 <iframe
                   title="map"
@@ -160,42 +338,81 @@ const handleReserve = async () => {
                   loading="lazy"
                 />
               </div>
-            </div>
+        </div>
 
-            {/* Right: Booking Card */}
-            <div>
-              <Card className="shadow-lg sticky top-20 border rounded-2xl">
-                <CardContent className="p-5">
-                  <div className="flex items-baseline justify-between">
-                    <p className="text-xl font-semibold">
-                      ${property.pricePerNight}
-                      <span className="text-sm text-gray-500 font-normal"> / night</span>
-                    </p>
-                    <div className="flex items-center text-sm text-gray-600">
-                      <Star className="w-4 h-4 text-yellow-500" />
-                      <span className="ml-1">{reviewsData?.averageRating||4.8}</span>
+        {/* Right: Booking Card (Sticky) */}
+        <div>
+          <Card className="shadow-2xl sticky top-28 border rounded-xl p-6">
+            <CardContent className="p-0">
+              {/* Price and Rating Header */}
+              <div className="flex items-baseline justify-between mb-4">
+                <p className="text-2xl font-semibold">
+                  ${pricePerNight}
+                  <span className="text-base text-gray-600 font-normal"> / night</span>
+                </p>
+                <div className="flex items-center text-sm text-gray-700">
+                  <Star className="w-4 h-4 text-gray-900 mr-1" fill="currentColor" />
+                  <span className="font-medium">{averageRating.toFixed(2)}</span>
+                  <span className="mx-1">•</span>
+                  <span className="underline">{reviewCount} reviews</span>
+                </div>
+              </div>
+
+              {/* Check-in / Check-out / Guests Inputs */}
+              <div className="border border-gray-300 rounded-xl mb-4">
+                {/* Dates Section */}
+                <AirbnbDatePicker dateRange={dateRange} setDateRange={setDateRange} />
+                
+                {/* Guests Section */}
+                <div className="border-t border-gray-300">
+                    <GuestSelector 
+                        numGuests={numGuests} 
+                        setNumGuests={setNumGuests} 
+                        maxGuests={maxGuests}
+                    />
+                </div>
+              </div>
+
+              {/* Reserve Button */}
+              <Button
+                className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-3 text-lg rounded-lg transition duration-200"
+                onClick={handleReserve}
+                disabled={loading || !session || nights <= 0}
+              >
+                {loading 
+                    ? 'Reserving...' 
+                    : (nights > 0 ? `Reserve for ${nights} night${nights > 1 ? 's' : ''}` : (session ? 'Check availability' : 'Log in to Reserve'))}
+              </Button>
+
+              <p className="text-sm text-gray-500 mt-3 text-center">
+                You won’t be charged yet
+              </p>
+              
+              {/* Price Calculation */}
+              {nights > 0 && (
+                <>
+                  <Separator className="my-4" />
+                  <div className="space-y-2 text-gray-800 text-base">
+                    <div className="flex justify-between">
+                        <span className="underline">${pricePerNight} x {nights} night{nights > 1 ? 's' : ''}</span>
+                        <span>${subtotal.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                        <span className="underline">Service fee</span>
+                        <span>${serviceFee.toFixed(2)}</span>
+                    </div>
+                    <Separator className="my-4" />
+                    <div className="flex justify-between font-bold text-lg">
+                        <span>Total before taxes</span>
+                        <span>${total.toFixed(2)}</span>
                     </div>
                   </div>
-
-                  <div className="mt-4">
-                    <Button 
-                      className="w-full bg-[#4f46e5] text-white font-medium rounded-xl"
-                      onClick={handleReserve}
-                      disabled={loading}
-                    >
-                      {loading ? 'Reserving...' : 'Reserve'}
-                    </Button>
-                  </div>
-
-                  <p className="text-xs text-gray-500 mt-3 text-center">
-                    You won’t be charged yet
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </>
-      )}
+                </>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 }

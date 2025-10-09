@@ -1,206 +1,113 @@
-"use client";
+import React from 'react';
+import { Star, User } from 'lucide-react';
 
-import React, { useEffect, useState } from "react";
-import { Star } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { motion, AnimatePresence } from "framer-motion";
-import { Skeleton } from "@/components/ui/skeleton";
-import Container from "./Container/Container";
+// --- MOCK REVIEW DATA (Used for static display on the landing page) ---
+const MOCK_DATA = {
+  "reviewCount": 8,
+  "averageRating": 4.8,
+  "reviews": [
+    { "_id": "rev_001", "userName": "Emily R.", "rating": 5, "comment": "Absolutely perfect stay! The place was spotless, the bed was incredibly comfortable, and the communication with the host was prompt and helpful. Highly recommend!", "createdAt": "2024-10-01T10:00:00Z", "adminReply": "" },
+    { "_id": "rev_002", "userName": "David Chen", "rating": 5, "comment": "The location is fantastic, right near all the major attractions. Check-in was super easy. The apartment looked exactly like the photos.", "createdAt": "2024-09-28T14:30:00Z", "adminReply": "Thank you, David! We are thrilled you enjoyed the convenient location." },
+    { "_id": "rev_003", "userName": "Sarah & Tom", "rating": 4, "comment": "Great experience overall. The only slight issue was the noise from the street on Friday night, but otherwise, everything was lovely and well-stocked.", "createdAt": "2024-09-25T08:15:00Z", "adminReply": "We appreciate the feedback, Sarah and Tom. We'll look into better sound insulation for the front window." },
+    { "_id": "rev_004", "userName": "Anonymous Guest", "rating": 5, "comment": "Flawless communication and exceptional cleanliness. A true gem! Would definitely stay here again when visiting the city.", "createdAt": "2024-09-20T17:00:00Z", "adminReply": "" },
+    { "_id": "rev_005", "userName": "Michael K.", "rating": 4, "comment": "The amenities were exactly as described. The coffee machine was a nice touch! Had a small issue with the Wi-Fi initially, but the host fixed it within an hour.", "createdAt": "2024-09-15T12:45:00Z", "adminReply": "We're glad we could quickly resolve the Wi-Fi for you, Michael. Thanks for your patience!" },
+    { "_id": "rev_006", "userName": "Jessica H.", "rating": 5, "comment": "Excellent value for money. Plenty of space for our family of four. The kitchen was very well-equipped for cooking meals.", "createdAt": "2024-09-10T09:00:00Z", "adminReply": "" },
+    { "_id": "rev_007", "userName": "Ravi S.", "rating": 5, "comment": "The host went above and beyond to make us feel welcome. Personalized notes and local recommendations were much appreciated!", "createdAt": "2024-09-05T19:20:00Z", "adminReply": "It was our pleasure, Ravi. We hope to welcome you back soon!" },
+    { "_id": "rev_008", "userName": "Chloe L.", "rating": 5, "comment": "The photos don't do this place justice! It's even more beautiful in person. A very stylish and cozy retreat.", "createdAt": "2024-09-01T11:55:00Z", "adminReply": "" }
+  ]
+};
 
-const reviews = [
-  {
-    name: "Justin",
-    location: "Rancho Cordova, California",
-    time: "6 days ago",
-    img: "https://i.pravatar.cc/100?img=12",
-    review:
-      "Beautiful condo home right by Gwangalli beach with attentive hosts. Very thoughtful amenities and snacks provided. Hosts communicated promptly throughout entire stay.",
-    rating: 5,
-  },
-  {
-    name: "Jacqueline",
-    location: "11 years on EasyStay",
-    time: "April 2025",
-    img: "https://i.pravatar.cc/100?img=15",
-    review:
-      "One of the best stays we’ve had in South Korea. The host designed every corner of the house with so much thought and attention to detail — very tastefully done!",
-    rating: 5,
-  },
-  {
-    name: "David",
-    location: "New York, USA",
-    time: "March 2025",
-    img: "https://i.pravatar.cc/100?img=18",
-    review:
-      "Great place to stay, very clean and comfortable. Location was perfect and close to everything. Highly recommend!",
-    rating: 4,
-  },
-  {
-    name: "Sophia",
-    location: "London, UK",
-    time: "February 2025",
-    img: "https://i.pravatar.cc/100?img=20",
-    review:
-      "Absolutely loved our stay. The host was super kind and helpful, the apartment was spotless and beautifully decorated.",
-    rating: 5,
-  },
-  {
-    name: "Michael",
-    location: "Toronto, Canada",
-    time: "January 2025",
-    img: "https://i.pravatar.cc/100?img=22",
-    review:
-      "Fantastic experience. Smooth check-in process, modern amenities, and breathtaking views. Will definitely come back again!",
-    rating: 4,
-  },
-];
+// Helper component for star visualization
+const StarRating = ({ rating = 0, size = 18 }) => {
+  const fullStars = Math.floor(rating);
+  const hasHalfStar = rating % 1 !== 0;
+  const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
 
-function Stars({ count }) {
   return (
-    <div className="flex gap-1">
-      {Array.from({ length: 5 }).map((_, i) => (
-        <Star
-          key={i}
-          className={`w-4 h-4 ${
-            i < count ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
-          }`}
-        />
+    <div className="flex items-center space-x-0.5">
+      {[...Array(fullStars)].map((_, i) => (
+        <Star key={`full-${i}`} size={size} fill="#FFC107" color="#FFC107" />
+      ))}
+      {hasHalfStar && <Star key="half" size={size} fill="#FFC107" color="#FFC107" />}
+      {[...Array(emptyStars)].map((_, i) => (
+        <Star key={`empty-${i}`} size={size} color="#B0B0B0" />
       ))}
     </div>
   );
-}
+};
 
-function ReviewCard({ r, i }) {
+// Review Card Component (Airbnb Style - adjusted for compact grid)
+const ReviewCard = ({ review }) => {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5, delay: i * 0.1 }}
-      className="flex flex-col gap-3 border font-body rounded-xl p-4 shadow-sm bg-white dark:bg-gray-800"
-    >
-      <div className="flex items-center gap-3">
-        <img
-          src={r.img}
-          alt={r.name}
-          className="w-12 h-12 rounded-full object-cover"
-        />
-        <div>
-          <p className="font-semibold">{r.name}</p>
-          <p className="text-xs text-gray-500">{r.location}</p>
-          <Stars count={r.rating} />
-        </div>
-      </div>
-      <p className="text-xs text-gray-400">{r.time}</p>
-      <p className="text-sm text-gray-700 dark:text-gray-300">{r.review}</p>
-    </motion.div>
-  );
-}
-
-// Skeleton card for loading
-function ReviewSkeleton({ i }) {
-  return (
-    <div className="flex flex-col gap-3 border rounded-xl p-4 shadow-sm bg-white dark:bg-gray-800">
-      <div className="flex items-center gap-3">
-        <Skeleton className="w-12 h-12 rounded-full" />
-        <div className="space-y-2">
-          <Skeleton className="h-4 w-24" />
-          <Skeleton className="h-3 w-32" />
-          <div className="flex gap-1">
-            {[...Array(5)].map((_, i) => (
-              <Skeleton key={i} className="h-4 w-4 rounded" />
-            ))}
+    <div className="p-5 border border-gray-100 rounded-2xl bg-white shadow-xl hover:shadow-2xl transition duration-500 h-full flex flex-col justify-between">
+      <div>
+        <div className="flex items-start mb-3">
+          {/* Placeholder for user avatar/icon */}
+          <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-3 text-blue-600 shrink-0">
+            <User size={20} />
+          </div>
+          <div className="truncate">
+            <p className="font-semibold text-gray-900">{review.userName}</p>
+            <p className="text-xs text-gray-500">
+              {new Date(review.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })}
+            </p>
           </div>
         </div>
+        <StarRating rating={review.rating} size={16} />
+        {/* Clamp text to ensure cards in the grid are of similar height */}
+        <p className="mt-3 text-gray-700 leading-snug text-sm line-clamp-4 min-h-[5rem]">
+          {review.comment}
+        </p>
       </div>
-      <Skeleton className="h-3 w-16" />
-      <Skeleton className="h-4 w-full" />
-      <Skeleton className="h-4 w-5/6" />
-      <Skeleton className="h-4 w-3/4" />
+      {review.adminReply && (
+        <div className="mt-4 pt-3 border-t border-gray-100">
+            <p className="text-xs italic text-gray-500 line-clamp-2">
+                <span className="font-medium">Host Reply:</span> {review.adminReply}
+            </p>
+        </div>
+      )}
     </div>
   );
-}
+};
 
-export default function EasyStayReviews() {
-  const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    // Simulate loading delay
-    const timer = setTimeout(() => setLoading(false), 1200);
-    return () => clearTimeout(timer);
-  }, []);
+// Main component for the Landing Page
+export default function LandingPageReviewGrid() {
+  const { averageRating, reviewCount, reviews } = MOCK_DATA;
+  
+  // Display only the top 6 reviews for a clean grid on the landing page
+  const featuredReviews = reviews.slice(0, 6);
 
   return (
-    <Container>
-    <section className=" px-4 py-24">
-      <motion.h2
-        initial={{ opacity: 0, y: -20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-        className="mb-8 text-2xl sm:text-3xl lg:text-4xl font-heading font-bold text-center p-5 text-gray-900 dark:text-white"
-      >
-        What Our <span className="text-blue-500">Guests Say</span>
-      </motion.h2>
-
-      {/* Show Skeletons or Reviews */}
-      <div className="grid sm:grid-cols-2 gap-8 mt-8">
-        {loading
-          ? [1, 2, 3, 4].map((i) => <ReviewSkeleton key={i} />)
-          : reviews.slice(0, 4).map((r, i) => <ReviewCard key={i} r={r} i={i} />)}
+    <div className="max-w-7xl mx-auto px-4 py-16">
+      
+      {/* Section Header with Overall Rating */}
+      <div className="text-center mb-12">
+        <h2 className="text-4xl font-extrabold text-gray-900 mb-3">
+          What Our Guests Are Saying
+        </h2>
+        <div className="flex items-center justify-center gap-3 text-xl text-gray-600">
+          <span className="font-bold text-blue-600">{averageRating.toFixed(1)}</span>
+          <StarRating rating={averageRating} size={22} />
+          <span className="text-gray-500">
+             • {reviewCount} verified stays
+          </span>
+        </div>
+      </div>
+      
+      {/* Reviews Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        {featuredReviews.map((review) => (
+          <ReviewCard key={review._id} review={review} />
+        ))}
       </div>
 
-      {/* See All Reviews Button */}
-      {!loading && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.3 }}
-          className="mt-10 flex justify-center"
-        >
-          <Button variant="outline" onClick={() => setOpen(true)}>
-            See all reviews
-          </Button>
-        </motion.div>
-      )}
-
-      {/* Animated Modal */}
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            className="fixed inset-0 bg-black/60 flex items-center justify-center z-50"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.8, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="bg-white dark:bg-gray-900 rounded-2xl max-w-4xl w-full max-h-[85vh] overflow-y-auto p-6 relative"
-            >
-              <button
-                onClick={() => setOpen(false)}
-                className="absolute top-4 right-4 text-gray-500 hover:text-black dark:hover:text-white"
-              >
-                ✕
-              </button>
-              <h3 className="text-xl font-semibold font-heading mb-6">
-                All Reviews
-              </h3>
-              <div className="grid sm:grid-cols-2 gap-6">
-                {reviews.map((r, i) => (
-                  <ReviewCard key={i} r={r} i={i} />
-                ))}
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </section>
-    </Container>
+      {/* Optional CTA to view all reviews */}
+      <div className="text-center mt-12">
+        <button className="px-6 py-3 bg-white text-blue-600 border-2 border-blue-600 font-semibold rounded-xl hover:bg-blue-50 transition duration-300 shadow-md">
+          View All {reviewCount} Reviews
+        </button>
+      </div>
+    </div>
   );
 }
