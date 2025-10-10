@@ -11,7 +11,7 @@ export async function GET() {
     const allProperties = await Property.find()
       .sort({ createdAt: -1 }) // newest first
       .populate("hostId", "name email") // optional: populate host info
-      .populate("amenities");           // optional: populate amenities
+      .populate("");           // optional: populate amenities
 
     return NextResponse.json({
       status: "success",

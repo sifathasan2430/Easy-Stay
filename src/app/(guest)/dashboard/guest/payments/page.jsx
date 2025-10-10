@@ -28,13 +28,8 @@ const handleInvoice = (booking) => {
   router.push(`/dashboard/guest/invoice/?bookingId=${booking._id}&amount=${booking.totalPrice}`);
 };
 const handlePayNow = (booking) => {
-<<<<<<< HEAD
   // Redirect to your payment page with query params
   router.push(`/dashboard/guest/payment/?bookingId=${booking._id}&amount=${booking.totalPrice}&propertyId=${booking.propertyId}`);
-=======
-  // Redirect to payment page with query params
-  router.push(`/dashboard/guest/payment/?bookingId=${booking._id}&amount=${booking.totalPrice}`);
->>>>>>> 64f1ae7cbcc2e86d5a63d382497dfa380caf6992
 };
 
   if (!bookings.length) return <p className="p-6">No upcoming stays found.</p>;
