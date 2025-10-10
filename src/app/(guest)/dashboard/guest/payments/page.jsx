@@ -23,9 +23,18 @@ console.log(bookings);
 
 const router = useRouter();
 
+const handleInvoice = (booking) => {
+  // Redirect to invoice page with query params
+  router.push(`/dashboard/guest/invoice/?bookingId=${booking._id}&amount=${booking.totalPrice}`);
+};
 const handlePayNow = (booking) => {
+<<<<<<< HEAD
   // Redirect to your payment page with query params
   router.push(`/dashboard/guest/payment/?bookingId=${booking._id}&amount=${booking.totalPrice}&propertyId=${booking.propertyId}`);
+=======
+  // Redirect to payment page with query params
+  router.push(`/dashboard/guest/payment/?bookingId=${booking._id}&amount=${booking.totalPrice}`);
+>>>>>>> 64f1ae7cbcc2e86d5a63d382497dfa380caf6992
 };
 
   if (!bookings.length) return <p className="p-6">No upcoming stays found.</p>;
@@ -57,10 +66,10 @@ const handlePayNow = (booking) => {
                 {b.payment_status}
               </td>
               <td className="px-4 py-2 border text-center">
-                {b.payment_status === "unpaid" ? (
-                  <Button onClick={() => handlePayNow(b)}>Pay Now</Button>
+                {b.payment_status === "paid" ? (
+                  <Button onClick={() => handleInvoice(b)}>Invoice</Button>
                 ) : (
-                  <span className="text-gray-500">Paid</span>
+                  <Button className='bg-green-600 hover:bg-green-600' onClick={() => handlePayNow(b)}>Pay</Button>
                 )}
               </td>
             </tr>
