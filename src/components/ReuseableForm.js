@@ -34,6 +34,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { LoaderOne } from "@/components/ui/loader"
 import { toast, Toaster } from "sonner"
 import propertySchema from "@/zodSchema/propertySchema"
+import { LocateFixed } from "lucide-react"
 
  
 
@@ -42,8 +43,16 @@ import propertySchema from "@/zodSchema/propertySchema"
 
 
 export default function ReuseableForm({ propertyId }) {
+
+
+
   const { data: Session } = useSession()
   const queryClient = useQueryClient()
+
+
+  const [userLocation, setUserLocation] = useState({ latitude: null, longitude: null });
+    const [isLocating, setIsLocating] = useState(false);
+    const [locationError, setLocationError] = useState(null);
 
   const defaultValue = {
     hostId: "",
@@ -53,8 +62,8 @@ export default function ReuseableForm({ propertyId }) {
     city: "Dhaka",
     state: "Dhaka Division",
     country: "Bangladesh",
-    latitude: 90.388962, // Add these
-    longitude: 23.911522, // Add these
+    latitude: 0, // Add these
+    longitude: 0, // Add these
     pricePerNight: 1200,
     roomType: "private_room",
     maxGuests: 1,
@@ -67,6 +76,73 @@ export default function ReuseableForm({ propertyId }) {
     images: [{ url: "", isPrimary: true }],
     isActive: true,
   }
+
+
+// for collecting live location data
+   
+
+ const fetchUserLocation = () => {
+   
+  setLocationError(null);
+    if (navigator.geolocation) {
+      setIsLocating(true);
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          // Success: Set location and reset page/filters
+          setUserLocation({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          });
+      // Reset page to 1 when a new location search starts
+          setIsLocating(false);
+        },
+        (error) => {
+          // Failure: Log detailed error info and handle UI state
+          console.error("Geolocation failed (Code:", error.code, "Message:", error.message, ")");
+          
+          let errorMessage;
+          if (error.code === error.PERMISSION_DENIED) {
+            errorMessage = "Location access denied. Please manually search or click 'Detect Location' again.";
+          } else if (error.code === error.TIMEOUT) {
+            errorMessage = "Location detection timed out. Try again.";
+          } else if (error.code === error.POSITION_UNAVAILABLE) {
+            errorMessage = "Location information is currently unavailable (position unavailable).";
+          } else {
+            errorMessage = "Failed to get location. Check browser settings.";
+          }
+          
+          setLocationError(errorMessage);
+          setIsLocating(false);
+          setUserLocation({ latitude: null, longitude: null }); // Clear location on error
+        },
+        { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+      );
+    } else {
+      setLocationError("Geolocation is not supported by your browser.");
+      setUserLocation({ latitude: null, longitude: null });
+    }
+  };
+  
+ useEffect(() => {
+    if (userLocation.latitude !== null && userLocation.longitude !== null) {
+      // Round to 6 decimal places for precision/cleanliness
+      form.setValue("latitude", parseFloat(userLocation.latitude.toFixed(6)), { shouldValidate: true });
+      form.setValue("longitude", parseFloat(userLocation.longitude.toFixed(6)), { shouldValidate: true });
+      toast.success("Location detected and updated.");
+    }
+  }, [userLocation]);
+
+ 
+
+
+
+
+
+
+
+
+
+
 
   // Form setup - uncomment resolver once schema matches your transformed data
   const form = useForm({
@@ -90,6 +166,7 @@ export default function ReuseableForm({ propertyId }) {
     },
     enabled: !!propertyId,
   })
+    
 
   // Reset for CREATE mode only (hostId from Session) - moved condition to avoid overriding edit
   useEffect(() => {
@@ -97,7 +174,7 @@ export default function ReuseableForm({ propertyId }) {
       form.reset({ ...defaultValue, hostId: Session.user._id })
     }
   }, [Session, propertyId])
-console.log(propertyData)
+
   // Reset for EDIT mode: Transform data to match form structure
   useEffect(() => {
     if (propertyId && propertyData) {
@@ -166,6 +243,26 @@ console.log(propertyData)
        <h2 className="text-2xl font-bold text-center">
         {propertyId ? "Edit Property" : "Create Property"}
       </h2>
+            <Button
+                      onClick={fetchUserLocation}
+                      variant="outline"
+                      className="rounded-xl flex items-center gap-2"
+                      disabled={isLocating}
+                    >
+                      <LocateFixed className="w-4 h-4" />
+                      {isLocating ? "Locating..." : "Detect Location"}
+                    </Button>
+            {locationError && (
+              <p className="mt-2 text-sm text-red-500">
+                {locationError}
+              </p>
+            )}
+            {userLocation.latitude && !locationError && (
+               <p className="mt-2 text-sm text-green-500">
+                Detection successful!
+              </p>
+            )}
+         
        
             {propertyId && propertyLoading ? (
         <p className="text-center text-gray-500">Loading property data...</p>
