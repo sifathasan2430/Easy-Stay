@@ -8,7 +8,6 @@ import { useSession } from "next-auth/react";
 import {
   IconDashboard,
   IconUsers,
-  IconHistory,
   IconCalendarEvent,
   IconCreditCard,
   IconHeart,
@@ -23,7 +22,7 @@ const navItems = [
   { title: "Dashboard", href: "/dash/admin", icon: IconDashboard },
   { title: "Profile", href: "/dash/admin/profile", icon: IconUser },
   { title: "Manage Users", href: "/dash/admin/manageusers", icon: IconUsers },
-  { title: "Manage Stays", href: "/dash/admin/managestays", icon: IconCalendarEvent },
+  { title: "Manage Bookings", href: "/dash/admin/managebookings", icon: IconCalendarEvent },
   { title: "Manage Reviews", href: "/dash/admin/managereviews", icon:  MessageSquare},
   { title: "Recent Activity", href: "/dash/admin/recentactivity", icon: Clock },
   { title: "Most Favorites", href: "/dash/admin/mostfavorites", icon: IconHeart },

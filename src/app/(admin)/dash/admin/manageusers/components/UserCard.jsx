@@ -2,6 +2,8 @@
 'use client';
 
 import { useState } from 'react';
+import Swal from 'sweetalert2';
+
 import {
     User,
     Mail,
@@ -27,49 +29,137 @@ export default function UserCard({ user, onUserUpdate, onUserDelete }) {
     const [selectedRole, setSelectedRole] = useState(user.role);
     const [isLoading, setIsLoading] = useState(false);
 
-    const handleRoleChange = async () => {
-        try {
-            setIsLoading(true);
-            const response = await fetch(`/api/users/${user._id}`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ role: selectedRole }),
-            });
 
-            if (!response.ok) throw new Error('Failed to update role');
+const handleRoleChange = async () => {
+    try {
+        setIsLoading(true);
 
-            const updatedUser = await response.json();
-            onUserUpdate(updatedUser);
-            setIsEditing(false);
-        } catch (error) {
-            console.error('Error updating role:', error);
-            alert('Failed to update role');
-        } finally {
-            setIsLoading(false);
+        const response = await fetch(`/api/user/${user._id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ role: selectedRole }),
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.error || 'Failed to update role');
         }
-    };
+
+        if (result.status === "success") {
+            // Simple success notification
+            Swal.fire({
+                icon: 'success',
+                title: 'Role Updated!',
+                text: `Role Changed to ${selectedRole}`,
+                timer: 1500,
+                showConfirmButton: false
+            });
+            onUserUpdate(result.data);
+            setIsEditing(false);
+        } else {
+            throw new Error(result.error || 'Failed to update role');
+        }
+
+    } catch (error) {
+        console.error('Error updating role:', error);
+        // Simple error notification
+        Swal.fire({
+            icon: 'error',
+            title: 'Update Failed',
+            text: error.message,
+        });
+    } finally {
+        setIsLoading(false);
+    }
+}
+
 
     const handleDeleteUser = async () => {
-        if (!confirm('Are you sure you want to delete this user? This action cannot be undone.')) return;
+        // Show confirmation dialog with SweetAlert
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel',
+            reverseButtons: true,
+            background: '#2A6478',
+            color: '#f9fafb'
+        });
+
+        if (!result.isConfirmed) return;
 
         try {
             setIsLoading(true);
-            const response = await fetch(`/api/users/${user._id}`, {
+
+            // Show loading state
+            Swal.fire({
+                title: 'Deleting User...',
+                text: 'Please wait while we delete the user',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            console.log('Attempting to delete user:', user._id);
+
+            const response = await fetch(`/api/user/${user._id}`, {
                 method: 'DELETE',
             });
 
-            if (!response.ok) throw new Error('Failed to delete user');
+            console.log('Response status:', response.status);
 
-            onUserDelete(user._id);
+            const result = await response.json();
+            console.log('Response data:', result);
+
+            if (!response.ok) {
+                throw new Error(result.error || `HTTP error! status: ${response.status}`);
+            }
+
+            if (result.status === "success") {
+                // Close loading dialog
+                Swal.close();
+
+                // Show success message
+                await Swal.fire({
+                    title: 'Deleted!',
+                    text: 'User has been deleted successfully.',
+                    icon: 'success',
+                    confirmButtonColor: '#10b981',
+                    background: '#1f2937',
+                    color: '#f9fafb',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+
+                onUserDelete(user._id);
+            } else {
+                throw new Error(result.error || 'Failed to delete user');
+            }
+
         } catch (error) {
             console.error('Error deleting user:', error);
-            alert('Failed to delete user');
+
+            // Show error message
+            await Swal.fire({
+                title: 'Error!',
+                text: `Failed to delete user: ${error.message}`,
+                icon: 'error',
+                confirmButtonColor: '#ef4444',
+                background: '#1f2937',
+                color: '#f9fafb'
+            });
         } finally {
             setIsLoading(false);
         }
-    };
+    }
 
     const formatDate = (dateString) => {
         return new Date(dateString).toLocaleDateString('en-US', {
@@ -185,7 +275,7 @@ export default function UserCard({ user, onUserUpdate, onUserDelete }) {
             {/* User Details */}
             <div className="p-6 space-y-4">
                 {/* Contact Information */}
-                <div className="space-y-3">
+                <div className="space-y-3 mb-2">
                     <div className="flex items-center space-x-3 text-gray-700">
                         <Mail size={18} className="text-gray-400" />
                         <span className="text-sm">{user.email}</span>
@@ -208,7 +298,7 @@ export default function UserCard({ user, onUserUpdate, onUserDelete }) {
                     <div className="flex flex-col gap-3 text-gray-700">
                         <div className='flex space-x-3'>
                             <CalendarClock size={18} className="text-gray-400" />
-                            <span className="text-sm">Joined {formatDate(user.updatedAt)}</span>
+                            <span className="text-sm">Joined {isFieldAvailable(user.createdAt) ? formatDate(user.createdAt) : <span className='text-gray-400'>Not Available</span>}</span>
                         </div>
                         <div className='flex space-x-3'>
                             <CalendarCheck size={18} className="text-gray-400" />
@@ -218,7 +308,7 @@ export default function UserCard({ user, onUserUpdate, onUserDelete }) {
                 </div>
 
                 {/* Languages */}
-                <div className="">
+                <div className="mb-0">
                     <div className="flex items-center space-x-2 mb-2">
                         <Languages size={16} className="text-gray-400" />
                         <span className="text-sm font-medium text-gray-700">Languages</span>
@@ -281,7 +371,7 @@ export default function UserCard({ user, onUserUpdate, onUserDelete }) {
                                 ) : (
                                     <>
                                         <Check size={16} />
-                                        <span>Save Changes</span>
+                                        <span>Save</span>
                                     </>
                                 )}
                             </button>
