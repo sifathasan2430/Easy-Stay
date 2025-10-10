@@ -6,8 +6,10 @@ const reviewSchema = new Schema({
   bookingId: { type: Schema.Types.ObjectId, ref: 'Booking' },
   rating: { type: Number, required: true, min: 1, max: 5 },
   comment: { type: String, trim: true, maxlength: 500 },
-  photos: { type: [String], default: []},
-  verified: { type: Boolean, default: false }
-}, { timestamps:true });
+  photos: { type: [String], default: [] },
+  verified: { type: Boolean, default: false },
+  adminReply: { type: String, trim: true, default: "" }
 
-export const Review=mongoose.models.Review || mongoose.model('Review',reviewSchema)
+}, { timestamps: true });
+
+export const Review = mongoose.models.Review || mongoose.model('Review', reviewSchema)

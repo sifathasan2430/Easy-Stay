@@ -8,18 +8,19 @@ export async function GET(request) {
 
     const queries = request.nextUrl.searchParams;
     const userId = queries.get("userId");
+    console.log(userId)
     const limit = parseInt(queries.get("limit")) || 0;
     const skip = parseInt(queries.get("skip")) || 0;
 
-    const today = new Date();
+   let query = {}; // upcoming bookings
 
-    // Build query for upcoming bookings
-    const query = { checkInDate: { $gte: today } };
     if (userId) query.userId = userId;
 
     // Fetch upcoming bookings sorted by check-in date ascending
-    const bookingsQuery = Booking.find(query).sort({ checkInDate: 1 });
+    const bookingsQuery = Booking.find(query).sort({createdAt:-1})
+    
 
+    ; // most recent first
     if (limit > 0) bookingsQuery.limit(limit);
     if (skip > 0) bookingsQuery.skip(skip);
 
