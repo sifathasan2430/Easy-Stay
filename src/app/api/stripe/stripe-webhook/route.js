@@ -1,7 +1,7 @@
 import Stripe from "stripe";
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect";
-import Payment from "@/models/Payment";
+import Payment from "@/models/payment.models";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
