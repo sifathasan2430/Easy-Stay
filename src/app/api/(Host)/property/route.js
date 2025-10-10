@@ -35,7 +35,7 @@ export async function GET(request) {
     const page = parseInt(searchParams.get("page") || "1", 10);
     const limit = parseInt(searchParams.get("limit") || "8", 10); 
     const skipValue = (page - 1) * limit;
-    const radiusInMiles = 15; // Search radius set to 15 miles (adjust as needed)
+    const radiusInMiles = 100; // Search radius set to 15 miles (adjust as needed)
 
     
     // --- 2. Handle 'mostReviewed' Override (User's existing logic) ---
@@ -55,94 +55,7 @@ export async function GET(request) {
     let properties = [];
     let totalCount = 0;
     
-    if (latitude && longitude) {
-        // Case A: Geospatial Search (Uses Aggregation)
-        
-        // Match stage for filtering (like roomType) before skip/limit
-        let matchCriteria = {};
-        if (roomType) {
-            matchCriteria.roomType = roomType;
-        }
-
-        const pipeline = [
-            {
-                $geoNear: {
-                    near: { 
-                        type: "Point", 
-                        // MongoDB GeoJSON coordinates are [longitude, latitude]
-                        coordinates: [parseFloat(longitude), parseFloat(latitude)] 
-                    },
-                    distanceField: "distance", // Output distance in meters
-                    // maxDistance in meters (1 mile ≈ 1609.34 meters)
-                    maxDistance: radiusInMiles * 1609.34, 
-                    spherical: true,
-                    // Apply filters directly to $geoNear query if needed, or use $match after
-                    query: matchCriteria // Applying roomType filter here
-                }
-            },
-            // Count total matching documents before pagination
-            { $group: { _id: null, total: { $sum: 1 }, results: { $push: "$$ROOT" } } },
-            // Deconstruct the group result to separate total and paged results
-            { $unwind: "$results" }, 
-            
-            // --- Pagination ---
-            { $skip: skipValue },
-            { $limit: limit },
-
-            // --- Manual Population ($lookup) ---
-            // Populate hostId (assuming collection name 'users')
-            {
-                $lookup: {
-                    from: 'users', 
-                    localField: 'results.hostId',
-                    foreignField: '_id',
-                    as: 'results.hostId'
-                }
-            },
-            // Unwind hostId
-            { $unwind: { path: "$results.hostId", preserveNullAndEmptyArrays: true } },
-            
-            // Populate amenities (assuming collection name 'amenities')
-            {
-                $lookup: {
-                    from: 'amenities', 
-                    localField: 'results.amenities',
-                    foreignField: '_id',
-                    as: 'results.amenities'
-                }
-            },
-            
-            // Project the results back into a clean structure
-            { $replaceRoot: { newRoot: "$results" } }
-        ];
-
-        
-        const aggregationResult = await Property.aggregate(pipeline);
-        
-        // Re-run a simple count query for accurate total, as the aggregation above is complex
-        // This is a common practice to get accurate total counts in GeoNear scenarios
-        const countPipeline = [
-            {
-                $geoNear: {
-                    near: { 
-                        type: "Point", 
-                        coordinates: [parseFloat(longitude), parseFloat(latitude)] 
-                    },
-                    distanceField: "distance", 
-                    maxDistance: radiusInMiles * 1609.34, 
-                    spherical: true,
-                    query: matchCriteria
-                }
-            },
-            { $count: "total" }
-        ];
-
-        const totalResult = await Property.aggregate(countPipeline);
-        totalCount = totalResult.length > 0 ? totalResult[0].total : 0;
-        properties = aggregationResult;
-
-    } else {
-        
+    
         
         let findCriteria = {};
 
@@ -161,7 +74,7 @@ export async function GET(request) {
             findCriteria.roomType = roomType;
         }
         
-        // 1. Get total count
+     
         totalCount = await Property.countDocuments(findCriteria);
         
         // 2. Get paged results

@@ -19,13 +19,13 @@ export default function PaymentStatusTable() {
         .catch(() => toast.error("Failed to fetch bookings"));
     }
   }, [session]);
-
+console.log(bookings);
 
 const router = useRouter();
 
 const handlePayNow = (booking) => {
   // Redirect to your payment page with query params
-  router.push(`/dashboard/guest/payment/?bookingId=${booking._id}&amount=${booking.totalPrice}`);
+  router.push(`/dashboard/guest/payment/?bookingId=${booking._id}&amount=${booking.totalPrice}&propertyId=${booking.propertyId}`);
 };
 
   if (!bookings.length) return <p className="p-6">No upcoming stays found.</p>;

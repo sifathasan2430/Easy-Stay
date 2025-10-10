@@ -121,7 +121,7 @@ export default function ExploreProperties() {
     }
   }, [search, roomType]);
 
-
+console.log(userLocation,'this is user location')
   return (
     <div className="max-w-7xl mx-auto px-4 my-40">
       {/* Header */}
