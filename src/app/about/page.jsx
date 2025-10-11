@@ -30,7 +30,7 @@ export default function AboutPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col transition-colors duration-300">
-      {/* ✅ Hero Section */}
+      {/*  Hero Section */}
       <section className="relative bg-gradient-to-r from-primary/90 to-primary/70 text-white py-10">
         <div className="max-w-[1280px] mx-auto px-6 py-20 text-center">
           <motion.h1
@@ -52,7 +52,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ✅ Mission Section */}
+      {/*  Mission Section */}
       <section className="max-w-[1280px] mx-auto px-6 py-16">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-4">
@@ -88,12 +88,12 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ✅ Our Team Section */}
+      {/*  Our Team Section */}
       <section className="max-w-[1280px] mx-auto px-6">
         <OurTeam />
       </section>
 
-      {/* ✅ Closing Statement */}
+      {/*  Closing Statement */}
       <section className="bg-gray-50 dark:bg-gray-900 py-16 transition-colors duration-300">
         <div className="max-w-[1280px] mx-auto px-6 text-center">
           <motion.h3
