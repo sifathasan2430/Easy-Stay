@@ -6,6 +6,10 @@ const PaymentSchema = new mongoose.Schema({
   amount: Number,
   currency: String,
   status: String,
+  propertyId: String,
+  userId: String,
+  email: String,
+  stripeSessionId: String,
   createdAt: { type: Date, default: Date.now }
 });
 

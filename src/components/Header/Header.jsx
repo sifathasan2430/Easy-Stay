@@ -54,10 +54,6 @@ export default function Header() {
       link: "/stays",
     },
     {
-      name: "Services",
-      link: "/services",
-    },
-    {
       name: "About",
       link: "/about",
     },
