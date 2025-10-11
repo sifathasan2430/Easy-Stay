@@ -32,14 +32,14 @@ const team = [
 
 export default function OurTeam() {
   return (
-    <section className="bg-gray-100 dark:bg-gray-800 py-16 transition-colors duration-300">
-      {/* ✅ Fixed width 1280px container */}
+    <section className="py-16 transition-colors duration-300">
+      {/* container */}
       <div className="max-w-[1280px] mx-auto px-6 text-center">
         <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-10">
           Meet <span className="text-blue-500">Our Team</span>
         </h2>
 
-        {/* ✅ Responsive grid for members */}
+        {/*Responsive grid for members */}
         <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3">
           {team.map((member, index) => (
             <motion.div
