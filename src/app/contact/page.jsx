@@ -19,7 +19,8 @@ export default function ContactPage() {
 
   return (
     <section className="min-h-screen bg-background py-24">
-      <div className="max-w-6xl mx-auto px-6">
+      {/* Fixed max width 1280px container */}
+      <div className="w-full max-w-[1280px] mx-auto px-6">
         <motion.h1
           variants={fadeInUp}
           initial="hidden"
