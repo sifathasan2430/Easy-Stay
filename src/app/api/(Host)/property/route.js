@@ -1,97 +1,112 @@
 import dbConnect from '@/lib/dbConnect';
 import { Property } from '@/models/propertie.models';
-import '@/models/index'
+import '@/models/index';
 import mongoose from 'mongoose';
 import { NextResponse } from 'next/server';
 
-// Removed 'next' import as it was unused and might cause issues.
-
+// ✅ POST: Create Property
 export async function POST(request) {
-    await dbConnect()
-    try {
-        const reqBody = await request.json();
-        const user=await Property.create(reqBody)
-        return NextResponse.json({ status: 'success', message:'Property created successfully',user }, { status: 201 });
-    } catch (error) {
-        // Log the error for debugging on the server side
-        console.error("POST Error:", error.message);
-        return NextResponse.json({ status: 'error', message: error.message }, { status: 400 });
-    }
+  await dbConnect();
+  try {
+    const reqBody = await request.json();
+    const user = await Property.create(reqBody);
+    return NextResponse.json(
+      { status: 'success', message: 'Property created successfully', user },
+      { status: 201 }
+    );
+  } catch (error) {
+    console.error("POST Error:", error.message);
+    return NextResponse.json(
+      { status: 'error', message: error.message },
+      { status: 400 }
+    );
+  }
 }
 
+// ✅ GET: Fetch Properties (with filters + location + pagination)
 export async function GET(request) {
-    await dbConnect();
+  await dbConnect();
 
-    const { searchParams } = new URL(request.url);
-    
-    // --- 1. Extract All Parameters (including location params) ---
-    const search = searchParams.get("search") || "";
-    const roomType = searchParams.get("roomType");
-    const mostReviewed = searchParams.get("mostReviewed"); 
-    const latitude = searchParams.get("latitude");
-    const longitude = searchParams.get("longitude");
-    
-    // Pagination
-    const page = parseInt(searchParams.get("page") || "1", 10);
-    const limit = parseInt(searchParams.get("limit") || "8", 10); 
-    const skipValue = (page - 1) * limit;
-    const radiusInMiles = 100; // Search radius set to 15 miles (adjust as needed)
+  const { searchParams } = new URL(request.url);
 
-    
-    // --- 2. Handle 'mostReviewed' Override (User's existing logic) ---
-    if (mostReviewed) {
-        const properties = await Property.find()
-            .populate("hostId", "email")
-            .populate("amenities")
-            .sort({ reviews: -1 }) // Sort by reviews in descending order
-            .limit(8);
-        
-        const total = await Property.countDocuments(); // Get total count for pagination info
-        return NextResponse.json({ status: "success", data: properties, total });
-    }
-    
-    // --- 3. Conditional Query Building: Geospatial vs. Standard ---
+  // --- 1. Extract All Parameters ---
+  const search = searchParams.get("search") || "";
+  const roomType = searchParams.get("roomType");
+  const mostReviewed = searchParams.get("mostReviewed");
+  const latitude = parseFloat(searchParams.get("latitude"));
+  const longitude = parseFloat(searchParams.get("longitude"));
 
-    let properties = [];
-    let totalCount = 0;
-    
-    
-        
-        let findCriteria = {};
+  // Pagination
+  const page = parseInt(searchParams.get("page") || "1", 10);
+  const limit = parseInt(searchParams.get("limit") || "8", 10);
+  const skipValue = (page - 1) * limit;
 
-        if (search) {
-            const searchRegex = new RegExp(search, 'i'); // Case-insensitive regex
-            // Search across multiple relevant fields: city, address, title
-            findCriteria.$or = [
-                { city: searchRegex },
-                { address: searchRegex },
-                { title: searchRegex }
-            ];
-        }
+  const radiusInMeters = 5000; // 5 km radius (adjust as needed)
 
-        if (roomType) {
-            // Apply roomType filter to standard search criteria
-            findCriteria.roomType = roomType;
-        }
-        
-     
-        totalCount = await Property.countDocuments(findCriteria);
-        
-        // 2. Get paged results
-        properties = await Property.find(findCriteria)
-            .sort({ createdAt: -1 }) // Default sort by newest first
-            .skip(skipValue)
-            .limit(limit)
-            .populate("hostId", "email") 
-            .populate("amenities"); 
-    }
-    
-    
-    return NextResponse.json({ 
-        status: "success", 
-        data: properties,
-        total: totalCount,
-        page,
-        limit
-    });
+  // --- 2. Handle 'mostReviewed' logic (unchanged) ---
+  if (mostReviewed) {
+    const properties = await Property.find()
+      .populate("hostId", "email")
+      .populate("amenities")
+      .sort({ reviews: -1 })
+      .limit(8);
+
+    const total = await Property.countDocuments();
+    return NextResponse.json({ status: "success", data: properties, total });
+  }
+
+  // --- 3. Build Dynamic Query ---
+  let findCriteria = {};
+
+  // 🔍 Text search
+  if (search) {
+    const searchRegex = new RegExp(search, 'i');
+    findCriteria.$or = [
+      { city: searchRegex },
+      { address: searchRegex },
+      { title: searchRegex }
+    ];
+  }
+
+  // 🏠 Room type filter
+  if (roomType) {
+    findCriteria.roomType = roomType;
+  }
+
+  // 📍 Geolocation search (if latitude & longitude provided)
+  if (!isNaN(latitude) && !isNaN(longitude)) {
+    findCriteria.location = {
+      $near: {
+        $geometry: {
+          type: "Point",
+          coordinates: [longitude, latitude],
+        },
+        $maxDistance: radiusInMeters, // within radius
+      },
+    };
+  }
+
+  // --- 4. Fetch Data with Pagination ---
+  const totalCount = await Property.countDocuments(findCriteria);
+
+let query = Property.find(findCriteria);
+
+if (!findCriteria.location) {
+  // Only sort by date when NOT using $near
+  query = query.sort({ createdAt: -1 });
+}
+
+const properties = await query
+  .skip(skipValue)
+  .limit(limit)
+  .populate("hostId", "email")
+  .populate("amenities");
+  // --- 5. Return Response ---
+  return NextResponse.json({
+    status: "success",
+    data: properties,
+    total: totalCount,
+    page,
+    limit,
+  });
 }

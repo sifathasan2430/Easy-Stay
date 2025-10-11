@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { FaHome, FaGlobe, FaUsers, FaHandshake } from "react-icons/fa";
 import OurTeam from "../Components/OurTeam";
 
-
 export default function AboutPage() {
   const values = [
     {
@@ -31,9 +30,9 @@ export default function AboutPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col transition-colors duration-300">
-      {/* Hero Section */}
+      {/* ✅ Hero Section */}
       <section className="relative bg-gradient-to-r from-primary/90 to-primary/70 text-white py-10">
-        <div className="max-w-5xl mx-auto px-6 py-20 text-center">
+        <div className="max-w-[1280px] mx-auto px-6 py-20 text-center">
           <motion.h1
             className="text-4xl font-heading md:text-5xl font-bold mb-4"
             initial={{ opacity: 0, y: 20 }}
@@ -53,8 +52,8 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Mission Section */}
-      <section className="max-w-5xl mx-auto px-6 py-16">
+      {/* ✅ Mission Section */}
+      <section className="max-w-[1280px] mx-auto px-6 py-16">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-4">
             Our <span className="text-blue-500">Mission</span>
@@ -90,11 +89,13 @@ export default function AboutPage() {
       </section>
 
       {/* ✅ Our Team Section */}
-      <OurTeam />
+      <section className="max-w-[1280px] mx-auto px-6">
+        <OurTeam />
+      </section>
 
-      {/* Closing Statement */}
+      {/* ✅ Closing Statement */}
       <section className="bg-gray-50 dark:bg-gray-900 py-16 transition-colors duration-300">
-        <div className="max-w-3xl mx-auto px-6 text-center">
+        <div className="max-w-[1280px] mx-auto px-6 text-center">
           <motion.h3
             className="text-2xl md:text-3xl font-heading font-bold text-gray-800 dark:text-gray-100 mb-4"
             initial={{ opacity: 0 }}
