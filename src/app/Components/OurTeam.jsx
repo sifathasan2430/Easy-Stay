@@ -32,16 +32,19 @@ const team = [
 
 export default function OurTeam() {
   return (
-    <section className="bg-gray-100 dark:bg-gray-800 py-16 transition-colors duration-300">
-      <div className="max-w-5xl mx-auto px-6 text-center">
+    <section className="py-16 transition-colors duration-300">
+      {/* container */}
+      <div className="max-w-[1280px] mx-auto px-6 text-center">
         <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-10">
           Meet <span className="text-blue-500">Our Team</span>
         </h2>
+
+        {/*Responsive grid for members */}
         <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3">
           {team.map((member, index) => (
             <motion.div
               key={member.name}
-              className="bg-[#efefef] hover:shadow-2xl dark:bg-gray-600 p-6 rounded-2xl shadow-md flex flex-col items-center"
+              className="bg-[#efefef] hover:shadow-2xl dark:bg-gray-600 p-6 rounded-2xl shadow-md flex flex-col items-center transition-transform duration-300"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}

@@ -18,7 +18,7 @@ const Terms = () => {
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.5 }}
       >
-        Terms & Conditions
+        Terms & <span className="text-blue-500">Conditions</span>
       </motion.h1>
 
       {/* Intro Paragraphs */}

@@ -1,4 +1,4 @@
-import { Property } from "@/models/propertie.models"
+
 import mongoose from "mongoose"
 
 
