@@ -12,12 +12,15 @@ import { MapPin, LocateFixed, XCircle } from "lucide-react";
 import { motion } from "framer-motion";
 
 // Reverting to root-based path aliases
-import MapView from "@/components/MapView/MapView";
+
 import { LoaderOne } from "@/components/ui/loader";
 import ReuseableCard from "@/components/reuseableCard/ReuseableCard";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 
 
+
+ const MapView = dynamic(() => import("@/components/MapView/MapView"), { ssr: false });
 export default function ExploreProperties() {
   const [search, setSearch] = useState("");
   const [roomType, setRoomType] = useState("");
@@ -121,7 +124,7 @@ export default function ExploreProperties() {
     }
   }, [search, roomType]);
 
-console.log(userLocation,'this is user location')
+
   return (
     <div className="max-w-7xl mx-auto px-4 my-40">
       {/* Header */}

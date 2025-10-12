@@ -28,4 +28,5 @@ const propertySchema = new Schema({
   averageRating: { type: Number, default: 0, min: 0, max: 5 },
   reviewCount: { type: Number, default: 0, min: 0 }
 }, { timestamps: true });
+propertySchema.index({ location: '2dsphere' }); // Geospatial index
 export const Property=mongoose.models.Property || mongoose.model('Property',propertySchema)
