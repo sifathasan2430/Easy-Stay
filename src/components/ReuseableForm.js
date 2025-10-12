@@ -50,7 +50,7 @@ export default function ReuseableForm({ propertyId }) {
   const queryClient = useQueryClient()
 
 
-  const [userLocation, setUserLocation] = useState({ latitude: null, longitude: null });
+  const [userLocation, setUserLocation] = useState({  longitude: null,latitude: null });
     const [isLocating, setIsLocating] = useState(false);
     const [locationError, setLocationError] = useState(null);
 
@@ -81,53 +81,74 @@ export default function ReuseableForm({ propertyId }) {
 // for collecting live location data
    
 
- const fetchUserLocation = () => {
-   
+const fetchUserLocation = () => {
+  if (isLocating) return; // prevent multiple requests
+
   setLocationError(null);
-    if (navigator.geolocation) {
-      setIsLocating(true);
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          // Success: Set location and reset page/filters
-          setUserLocation({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-          });
-      // Reset page to 1 when a new location search starts
-          setIsLocating(false);
-        },
-        (error) => {
-          // Failure: Log detailed error info and handle UI state
-          console.error("Geolocation failed (Code:", error.code, "Message:", error.message, ")");
-          
-          let errorMessage;
-          if (error.code === error.PERMISSION_DENIED) {
-            errorMessage = "Location access denied. Please manually search or click 'Detect Location' again.";
-          } else if (error.code === error.TIMEOUT) {
-            errorMessage = "Location detection timed out. Try again.";
-          } else if (error.code === error.POSITION_UNAVAILABLE) {
-            errorMessage = "Location information is currently unavailable (position unavailable).";
-          } else {
-            errorMessage = "Failed to get location. Check browser settings.";
-          }
-          
-          setLocationError(errorMessage);
-          setIsLocating(false);
-          setUserLocation({ latitude: null, longitude: null }); // Clear location on error
-        },
-        { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
-      );
-    } else {
-      setLocationError("Geolocation is not supported by your browser.");
-      setUserLocation({ latitude: null, longitude: null });
-    }
-  };
+  setIsLocating(true);
+
+  if (!navigator.geolocation) {
+    setLocationError("Geolocation is not supported by your browser.");
+    setUserLocation({ latitude: null, longitude: null });
+    setIsLocating(false);
+    return;
+  }
+
+  let errorTimeout;
+
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      clearTimeout(errorTimeout);
+      const { latitude, longitude } = position.coords;
+      console.log("✅ Location fetched:", latitude, longitude);
+
+      if (latitude && longitude) {
+        setUserLocation({ latitude, longitude });
+      
+        setLocationError(null);
+      } else {
+        setLocationError("Could not determine valid coordinates. Please try again.");
+        setUserLocation({ latitude: null, longitude: null });
+      }
+
+      setIsLocating(false);
+    },
+    (error) => {
+      console.error(" Geolocation failed:", error);
+
+      // Delay showing error for 1 second to give success callback a chance to override it
+      errorTimeout = setTimeout(() => {
+        let errorMessage = "Failed to get location. Check browser settings.";
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            errorMessage = "Location access denied. Please allow access in browser settings.";
+            break;
+          case error.TIMEOUT:
+            errorMessage = "Location request timed out. Please try again.";
+            break;
+          case error.POSITION_UNAVAILABLE:
+            errorMessage = "Location information unavailable.";
+            break;
+        }
+
+        // Only show error if success didn't already run
+        setLocationError((prev) =>
+          userLocation.latitude && userLocation.longitude ? prev : errorMessage
+        );
+        setIsLocating(false);
+      }, 1000);
+    },
+    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+  );
+};
   
  useEffect(() => {
     if (userLocation.latitude !== null && userLocation.longitude !== null) {
       // Round to 6 decimal places for precision/cleanliness
-      form.setValue("latitude", parseFloat(userLocation.latitude.toFixed(6)), { shouldValidate: true });
+     
       form.setValue("longitude", parseFloat(userLocation.longitude.toFixed(6)), { shouldValidate: true });
+       form.setValue("latitude", parseFloat(userLocation.latitude.toFixed(6)), { shouldValidate: true });
+     ;
       toast.success("Location detected and updated.");
     }
   }, [userLocation]);
@@ -174,6 +195,7 @@ export default function ReuseableForm({ propertyId }) {
       form.reset({ ...defaultValue, hostId: Session.user._id })
     }
   }, [Session, propertyId])
+  
 
   // Reset for EDIT mode: Transform data to match form structure
   useEffect(() => {
@@ -182,13 +204,14 @@ export default function ReuseableForm({ propertyId }) {
         ...propertyData,
          hostId: propertyData.hostId?._id || "", // Extract string ID from object
         amenities: propertyData.amenities?.map(a => a._id) || [], // Extract array of string IDs
-        latitude: propertyData.location?.coordinates?.[0] || 0, // Map from location object
-        longitude: propertyData.location?.coordinates?.[1] || 0, // Map from location object
+       // Map from location object
+          longitude: propertyData.location?.coordinates?.[0] || 0, // Map from location object
+          latitude: propertyData.location?.coordinates?.[1] || 0,
         // Add type conversions if needed, e.g., parseFloat for numbers
       }
       form.reset(transformedData)
     }
-  }, [propertyId, propertyData])
+  }, [propertyId, propertyData,userLocation])
 
   const {data: amenitiesArray, isLoading: amenitiesArrayLoading, isError: amenitiesArrayError} = useQuery({ 
     queryKey: ['amenities'],
@@ -225,12 +248,12 @@ export default function ReuseableForm({ propertyId }) {
 
   // Transform values before submit to match backend (e.g., build location object)
   const handleSubmitForm = (values) => {
-    console.log("Form values before transform:", values)
+ 
     const transformedValues = {
       ...values,
       location: {
         type: "Point",
-        coordinates: [parseFloat(values.latitude || 0), parseFloat(values.longitude || 0)],
+        coordinates: [parseFloat(values.longitude || 0), parseFloat(values.latitude || 0)],
       },
     }
     // Remove temp fields
@@ -319,7 +342,7 @@ export default function ReuseableForm({ propertyId }) {
         </div>
          <div className="mb-4 grid grid-cols-1 gap-5 md:gap-10 md:grid-cols-5 overflow-x-hidden">
           {
-            [{name:"address",text:"Address",placeholder:'12 sector Uttora',type:'text'},{name:"city",text:"City",placeholder:'Dhaka',type:'text'},{name:"state",text:"State",placeholder:'Dhaka',type:'text'},{name:"country",text:"Country",placeholder:'Usa',type:'text'},{name:"latitude",text:"Latitude",placeholder:50,type:'number'},{name:"longitude",text:"Longitude",placeholder:60,type:'number'},{ name: "pricePerNight", text: "Price Per Night", placeholder: 0 ,type:'number'},{ name: "bathrooms", text: "Bathrooms", placeholder: 1,type:'number' },
+            [{name:"address",text:"Address",placeholder:'12 sector Uttora',type:'text'},{name:"city",text:"City",placeholder:'Dhaka',type:'text'},{name:"state",text:"State",placeholder:'Dhaka',type:'text'},{name:"country",text:"Country",placeholder:'Usa',type:'text'},{name:"longitude",text:"Longitude",placeholder:50,type:'number'},{name:"latitude",text:"Latitude",placeholder:60,type:'number'},{ name: "pricePerNight", text: "Price Per Night", placeholder: 0 ,type:'number'},{ name: "bathrooms", text: "Bathrooms", placeholder: 1,type:'number' },
   { name: "beds", text: "Beds", placeholder: 1,type:'number' },
   { name: "bedrooms", text: "Bedrooms", placeholder: 1 ,type:'number'},
   { name: "maxGuests", text: "Max Guests", placeholder: 1 ,type:'number'},{name: "checkOutTime", text: "Check Out Time", placeholder: '' ,type:'time'},{name: "checkInTime", text: "Check In Time", placeholder: '' ,type:'time'}].map((items,index)=>(  <LabelInputContainer key={index+1} ><FormField

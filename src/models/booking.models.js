@@ -11,6 +11,11 @@ const bookingSchema = new Schema({
     ref: 'User',
     required: true 
   },
+    hostId: {  // 🏠 The property owner
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true 
+  },
   checkInDate: {
     type: Date,
     required: true

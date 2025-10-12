@@ -5,37 +5,63 @@ import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation"; // Next.js 13 app router
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
+import { LoaderOne } from "@/components/ui/loader";
 
 
 export default function PaymentStatusTable() {
   const { data: session } = useSession();
-  const [bookings, setBookings] = useState([]);
+  
+ 
 
-  useEffect(() => {
-    if (session?.user?._id) {
-      fetch(`/api/bookings/upcoming?userId=${session.user._id}`)
-        .then((res) => res.json())
-        .then((data) => setBookings(data.data || []))
-        .catch(() => toast.error("Failed to fetch bookings"));
-    }
-  }, [session]);
-console.log(bookings);
 
+const {data:bookings,isLoading:bookingsLoading,isError}=useQuery({
+  queryKey:['bookings',session?.user?._id],
+  queryFn:async()=>{
+    const res=await axios.get(`/api/bookings/upcoming?userId=${session.user._id}`);
+     return res.data.data || [];
+  },
+  enabled:!!session?.user?._id,
+  })
 const router = useRouter();
 
 const handleInvoice = (booking) => {
   // Redirect to invoice page with query params
   router.push(`/dashboard/guest/invoice/?bookingId=${booking._id}&amount=${booking.totalPrice}`);
 };
-const handlePayNow = (booking) => {
-  // Redirect to your payment page with query params
-  router.push(`/dashboard/guest/payment/?bookingId=${booking._id}&amount=${booking.totalPrice}&propertyId=${booking.propertyId}`);
-};
 
-  if (!bookings.length) return <p className="p-6">No upcoming stays found.</p>;
 
+  const handleCheckout = async (propertyId,amount,bookingId) => {
+
+    
+    try {
+      const response = await axios.post('/api/checkout', {
+        bookingId,
+        amount: parseFloat(amount),
+        userId:session?.user?._id,
+        email:session?.user?.email,
+        propertyId
+      });
+      const { url } = response.data;
+      console.log(response.data, 'Checkout URL:', url);
+      if (url) window.location.href = url;
+    } catch (error) {
+      console.log(error)
+      console.error('Checkout error:', error.response?.data?.error || error.message);
+      toast.error('Failed to initiate payment. Please try again.');
+  }
+  }
+ 
+  if (isError) return <div> <p className="p-6 text-red-700 text-center text-4xl">Failed to load bookings. Please try again later.</p></div>;
+  
+  if (bookingsLoading) {
+  return (<div className="flex items-center justify-center min-h-[50vh]">
+      <LoaderOne />
+    </div>)}
   return (
-    <div className="p-6">
+    
+     <div className="p-6">
       <h1 className="text-2xl font-semibold mb-4">Upcoming Stays</h1>
       <table className="min-w-full border-collapse border border-gray-300">
         <thead className="bg-gray-100">
@@ -50,7 +76,7 @@ const handlePayNow = (booking) => {
           </tr>
         </thead>
         <tbody>
-          {bookings.map((b) => (
+          {bookings && bookings.map((b) => (
             <tr key={b._id} className="hover:bg-gray-50">
               <td className="px-4 py-2 border">{b.propertyId}</td>
               <td className="px-4 py-2 border">{new Date(b.checkInDate).toLocaleDateString()}</td>
@@ -61,10 +87,10 @@ const handlePayNow = (booking) => {
                 {b.payment_status}
               </td>
               <td className="px-4 py-2 border text-center">
-                {b.payment_status === "paid" ? (
+                {b.payment_status === "success" ? (
                   <Button onClick={() => handleInvoice(b)}>Invoice</Button>
                 ) : (
-                  <Button className='bg-green-600 hover:bg-green-600' onClick={() => handlePayNow(b)}>Pay</Button>
+                  <Button className='bg-green-600 cursor-pointer hover:bg-green-600' onClick={() => handleCheckout(b?.propertyId,b.totalPrice,b._id)}>Pay</Button>
                 )}
               </td>
             </tr>

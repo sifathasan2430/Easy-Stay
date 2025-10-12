@@ -11,7 +11,9 @@ import { ThemeProvider } from "@/app/Components/ThemeProvider";
 import Footer from "./Components/Footer";
 import TanstackProvider from "./Components/tanstackProvider/tanstackProvider";
 import ConditionalLayout from "@/components/ConditionalLayout";
-
+import { getServerSession } from "next-auth";
+import { authOptions } from "./api/auth/[...nextauth]/options";
+  
 
 
 const poppins = Poppins({
@@ -31,8 +33,8 @@ export const metadata = {
   description: "Developed by Team DevOps",
 };
 
-export default function RootLayout({ children }) {
-    
+export  default async function RootLayout({ children }) {
+    const session = await getServerSession(authOptions);
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${poppins.variable} ${roboto.variable} antialiased font-sans`}>
