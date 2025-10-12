@@ -93,7 +93,7 @@ export default function HeroSection() {
                     {slide.subtitle}
                   </p>
                    <button className="bg-blue-500 text-white hover:text-black font-semibold px-4 font-heading sm:px-6 py-2 sm:py-3 rounded-2xl shadow-md hover:bg-gray-200 transition">
-                   <Link href="/services">Get Started</Link> 
+                   <Link href="/stays">Get Started</Link> 
                   </button>
                  
                 </motion.div>
