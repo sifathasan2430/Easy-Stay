@@ -2,7 +2,7 @@
 @import "tw-animate-css";
 @import "leaflet/dist/leaflet.css";
 
-@custom-variant dark (&:is(.dark *));
+/* @custom-variant dark (&:is(.dark *)); */
 
 @theme inline {
   --color-background: var(--background);
@@ -134,49 +134,7 @@
   --sidebar-ring: #2563EB;
 }
 
-/* 🌙 Dark Mode */
-.dark {
-  --background: #1a2335;
-  --foreground: #F9FAFB;
 
-  --card: #1F2937;
-  --card-foreground: #F9FAFB;
-
-  --popover: #1F2937;
-  --popover-foreground: #F9FAFB;
-
-  --primary: #60A5FA; /* Blue 400 for better contrast in dark mode */
-  --primary-foreground: #1E3A8A;
-
-  --secondary: #1E3A8A;
-  --secondary-foreground: #E0F2FE;
-
-  --muted: #374151;
-  --muted-foreground: #9CA3AF;
-
-  --accent: #FCD34D; /* Amber 300 (slightly lighter in dark mode) */
-  --accent-foreground: #1E1B4B;
-
-  --destructive: #F87171;
-  --border: #374151;
-  --input: #4B5563;
-  --ring: #60A5FA;
-
-  --chart-1: #60A5FA;
-  --chart-2: #FCD34D;
-  --chart-3: #34D399;
-  --chart-4: #A78BFA;
-  --chart-5: #F87171;
-
-  --sidebar: #1F2937;
-  --sidebar-foreground: #F9FAFB;
-  --sidebar-primary: #60A5FA;
-  --sidebar-primary-foreground: #1E3A8A;
-  --sidebar-accent: #374151;
-  --sidebar-accent-foreground: #F9FAFB;
-  --sidebar-border: #374151;
-  --sidebar-ring: #60A5FA;
-}
 
 @layer base {
   * {
