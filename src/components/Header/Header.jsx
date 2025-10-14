@@ -21,7 +21,7 @@ import { useRouter } from "next/navigation";
 
 export default function Header() {
   const { data: session, status } = useSession();
-  console.log(session?.user);
+ 
   const router=useRouter()
   const userNotExits = (
     <>
