@@ -3,6 +3,7 @@ import { Property } from '@/models/propertie.models';
 import '@/models/index';
 import mongoose from 'mongoose';
 import { NextResponse } from 'next/server';
+import { findDimensionValueType } from 'framer-motion';
 
 // ✅ POST: Create Property
 export async function POST(request) {
@@ -26,6 +27,7 @@ export async function POST(request) {
 // ✅ GET: Fetch Properties (with filters + location + pagination)
 export async function GET(request) {
   await dbConnect();
+    await Property.syncIndexes();
 
   const { searchParams } = new URL(request.url);
 
@@ -39,9 +41,12 @@ export async function GET(request) {
   // Pagination
   const page = parseInt(searchParams.get("page") || "1", 10);
   const limit = parseInt(searchParams.get("limit") || "8", 10);
+  const skip = parseInt(searchParams.get("skip") || "0", 10);
+ 
   const skipValue = (page - 1) * limit;
+  const hostId=searchParams.get('host')
 
-  const radiusInMeters = 5000; // 5 km radius (adjust as needed)
+  const radiusInMeters = 50000; // 5 km radius (adjust as needed)
 
   // --- 2. Handle 'mostReviewed' logic (unchanged) ---
   if (mostReviewed) {
@@ -57,6 +62,10 @@ export async function GET(request) {
 
   // --- 3. Build Dynamic Query ---
   let findCriteria = {};
+  if (hostId){
+
+    findCriteria.hostId=hostId
+  }
 
   // 🔍 Text search
   if (search) {
@@ -86,9 +95,14 @@ export async function GET(request) {
     };
   }
 
-  // --- 4. Fetch Data with Pagination ---
-  const totalCount = await Property.countDocuments(findCriteria);
 
+    const hostDocCount={}
+    if (hostId){
+      hostDocCount.hostId=hostId
+    }
+  // --- 4. Fetch Data with Pagination ---
+  const totalCount = await Property.countDocuments(hostDocCount);
+// todo write findDimensionValueType
 let query = Property.find(findCriteria);
 
 if (!findCriteria.location) {
@@ -97,14 +111,15 @@ if (!findCriteria.location) {
 }
 
 const properties = await query
-  .skip(skipValue)
+  .skip(skip ? skip : skipValue)
   .limit(limit)
   .populate("hostId", "email")
   .populate("amenities");
-  // --- 5. Return Response ---
+ 
   return NextResponse.json({
     status: "success",
     data: properties,
+  
     total: totalCount,
     page,
     limit,

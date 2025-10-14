@@ -163,12 +163,7 @@ const ReviewCard = ({ data = mockReviewData }) => {
       </div>
 
       {/* 4. CTA Button */}
-      <Button 
-        className="w-full mt-6 shadow-md hover:shadow-lg transition-shadow"
-        onClick={() => console.log('Write a review clicked')}
-      >
-        Write a review
-      </Button>
+   
       
     </Card>
   );

@@ -95,7 +95,7 @@ await dbConnect()
    const {id}=await params
    const body=await request.json()
    delete body._id
-
+console.log(id,body)
   try {
    
     const response=await Property.findByIdAndUpdate(id,body,{new:true}, {overwrite: true})

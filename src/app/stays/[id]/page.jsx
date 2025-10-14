@@ -147,6 +147,7 @@ const GuestSelector = ({ numGuests, setNumGuests, maxGuests }) => {
 // 3. MAIN COMPONENT
 // ==============================================================================
 export default function PropertyDetails() {
+  const Router = useRouter();
   const { id } = useParams();
   const { data: session } = useSession();
   const [loading, setLoading] = useState(false);
@@ -211,6 +212,7 @@ export default function PropertyDetails() {
 
       if (bookingResponse.data.booking) {
         toast.success("Booking created successfully!");
+        Router.push('/dashboard/guest/payments');
       }
     } catch (error) {
       console.error("Failed to create booking or Stripe session:", error);

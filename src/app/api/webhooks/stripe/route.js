@@ -41,7 +41,8 @@ export async function POST(request) {
       // Update booking payment status
       await Booking.findByIdAndUpdate(
         bookingId,
-        { payment_status: "success", updated_at: new Date() },
+        { payment_status: "success", updatedAt: new Date(),status:"completed", },
+        
         { new: true }
       );
 
@@ -57,7 +58,7 @@ export async function POST(request) {
         { upsert: true, new: true }
       );
 
-      console.log(`Updated booking ${bookingId} payment to success`);
+   
     }
 
     return NextResponse.json({ received: true });
