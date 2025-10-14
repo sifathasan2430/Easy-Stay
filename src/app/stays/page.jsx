@@ -40,46 +40,66 @@ export default function ExploreProperties() {
   };
 
   // Function to get user's current location
-  const fetchUserLocation = () => {
-    setLocationError(null);
-    if (navigator.geolocation) {
-      setIsLocating(true);
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          // Success: Set location and reset page/filters
-          setUserLocation({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-          });
-          setPage(1); // Reset page to 1 when a new location search starts
-          setIsLocating(false);
-        },
-        (error) => {
-          // Failure: Log detailed error info and handle UI state
-          console.error("Geolocation failed (Code:", error.code, "Message:", error.message, ")");
-          
-          let errorMessage;
-          if (error.code === error.PERMISSION_DENIED) {
-            errorMessage = "Location access denied. Please manually search or click 'Detect Location' again.";
-          } else if (error.code === error.TIMEOUT) {
-            errorMessage = "Location detection timed out. Try again.";
-          } else if (error.code === error.POSITION_UNAVAILABLE) {
-            errorMessage = "Location information is currently unavailable (position unavailable).";
-          } else {
-            errorMessage = "Failed to get location. Check browser settings.";
-          }
-          
-          setLocationError(errorMessage);
-          setIsLocating(false);
-          setUserLocation({ latitude: null, longitude: null }); // Clear location on error
-        },
-        { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
-      );
-    } else {
-      setLocationError("Geolocation is not supported by your browser.");
-      setUserLocation({ latitude: null, longitude: null });
-    }
-  };
+ const fetchUserLocation = () => {
+  if (isLocating) return; // prevent multiple requests
+
+  setLocationError(null);
+  setIsLocating(true);
+
+  if (!navigator.geolocation) {
+    setLocationError("Geolocation is not supported by your browser.");
+    setUserLocation({ latitude: null, longitude: null });
+    setIsLocating(false);
+    return;
+  }
+
+  let errorTimeout;
+
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      clearTimeout(errorTimeout);
+      const { latitude, longitude } = position.coords;
+      console.log("✅ Location fetched:", latitude, longitude);
+
+      if (latitude && longitude) {
+        setUserLocation({ latitude, longitude });
+        setPage(1);
+        setLocationError(null);
+      } else {
+        setLocationError("Could not determine valid coordinates. Please try again.");
+        setUserLocation({ latitude: null, longitude: null });
+      }
+
+      setIsLocating(false);
+    },
+    (error) => {
+      console.error("❌ Geolocation failed:", error);
+
+      // Delay showing error for 1 second to give success callback a chance to override it
+      errorTimeout = setTimeout(() => {
+        let errorMessage = "Failed to get location. Check browser settings.";
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            errorMessage = "Location access denied. Please allow access in browser settings.";
+            break;
+          case error.TIMEOUT:
+            errorMessage = "Location request timed out. Please try again.";
+            break;
+          case error.POSITION_UNAVAILABLE:
+            errorMessage = "Location information unavailable.";
+            break;
+        }
+
+        // Only show error if success didn't already run
+        setLocationError((prev) =>
+          userLocation.latitude && userLocation.longitude ? prev : errorMessage
+        );
+        setIsLocating(false);
+      }, 1000);
+    },
+    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+  );
+};
   
   // Logic to determine if we should send location data to the API
   // Location is active only if coords are present AND no manual search/filter is applied

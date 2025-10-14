@@ -81,6 +81,7 @@ export async function GET() {
     }
   }
 ])
+
 const totalBookings=await Booking.aggregate(
     [
   {
@@ -184,7 +185,7 @@ const totalProperty=await Property.aggregate([
       // externalStats, // uncomment if using external API
     };
 
-    return NextResponse.json(analytics, { status: 200 });
+    return NextResponse.json({analytics}, { status: 200 });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: error.message }, { status: 500 });

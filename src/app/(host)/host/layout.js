@@ -20,6 +20,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import SessionProviderWrapper from "@/app/Components/SessionProvider/SessionProviderWrapper";
 
 export default function DashboardLayout({ children }) {
   const pathname = usePathname();
@@ -80,7 +81,9 @@ export default function DashboardLayout({ children }) {
       </div>
 
       {/* Main Content */}
+       
       <main className="flex-1 overflow-y-auto p-6 pt-16 md:pt-6">{children}</main>
+
     </div>
   );
 }
