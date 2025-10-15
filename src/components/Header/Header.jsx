@@ -17,10 +17,12 @@ import Link from "next/link";
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
   const { data: session, status } = useSession();
-  console.log(session?.user);
+ 
+  const router=useRouter()
   const userNotExits = (
     <>
       <div className="flex items-center gap-4">
@@ -33,6 +35,8 @@ export default function Header() {
   const userExits = (
     <>
       <div className="flex justify-center items-center gap-4">
+         
+       
         <Avatar>
           <AvatarImage src="https://github.com/shadcn.png" />
           <AvatarFallback>PF</AvatarFallback>
@@ -53,15 +57,27 @@ export default function Header() {
       name: "Stays",
       link: "/stays",
     },
+         ...(session?.user?.role === 'user'
+    ? [{ name: "Dashboard", link: "/dashboard/guest" }]
+    : session?.user?.role === 'host'
+    ? [{ name: "Dashboard", link: "/host" }]
+    : [] // Add nothing if the role is neither 'user' nor 'host'
+  ),
     {
       name: "About",
       link: "/about",
     },
+     
     {
       name: "Contact",
       link: "/contact",
     },
+    {
+      name: "Be a Host",
+      link: "/become-a-host",
+    },
   ];
+
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -72,7 +88,7 @@ export default function Header() {
         <NavBody className={""}>
           <NavbarLogo />
           <NavItems className="text-xl" items={navItems} />
-
+            
           {session ? userExits : userNotExits}
         </NavBody>
 

@@ -1,9 +1,10 @@
-import dbConnect from '@/lib/dbConnect';
+
 import { Property } from '@/models/propertie.models';
 import '@/models/index';
 import mongoose from 'mongoose';
 import { NextResponse } from 'next/server';
 import { findDimensionValueType } from 'framer-motion';
+import dbConnect from '@/lib/dbConnect';
 
 // ✅ POST: Create Property
 export async function POST(request) {

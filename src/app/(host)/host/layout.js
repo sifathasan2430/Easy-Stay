@@ -42,7 +42,7 @@ export default function DashboardLayout({ children }) {
           className={cn(
             "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
             pathname === href
-              ? "bg-gray-200 font-medium dark:bg-neutral-700"
+              ? "bg-gray-200 font-medium "
               : "text-neutral-700 hover:bg-gray-200 dark:text-neutral-300 dark:hover:bg-neutral-700"
           )}
           onClick={() => setOpen(false)}
@@ -57,7 +57,7 @@ export default function DashboardLayout({ children }) {
   return (
     <div className="flex min-h-screen">
       {/* Desktop Sidebar */}
-      <aside className="sticky top-0 hidden h-screen w-64 shrink-0 border-r border-neutral-200 bg-gray-100 dark:border-neutral-700 dark:bg-neutral-800 md:block">
+      <aside className="sticky top-0 hidden h-screen w-64 shrink-0 border-r border-neutral-200 bg-gray-100  md:block">
         <div className="p-6 font-bold text-lg">EasyStay</div>
         <SidebarLinks />
       </aside>
