@@ -43,11 +43,11 @@ export default function UserAnalytics() {
   const totalProperties = data?.totalProperty?.[0]?.totalProperty || 0;
   const totalBookings = data?.totalBookings?.[0]?.totalBookings || 0;
   const bookingsAnalytics = data?.bookingsAnalytics || [];
-
+console.log(data)
   // Find the most active month (highest revenue)
-  const popularMonth = bookingsAnalytics.reduce((max, current) =>
-    current.totalRevenue > max.totalRevenue ? current : max
-  );
+  //   const popularMonth =  bookingsAnalytics.reduce((max, current) =>
+  //   current.totalRevenue > max.totalRevenue ? current : max
+  // );
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-4">
@@ -88,7 +88,7 @@ export default function UserAnalytics() {
           <CardTitle className="text-yellow-700 text-lg">Most Popular Month</CardTitle>
         </CardHeader>
         <CardContent className='ml-4'>
-          <p className="text-2xl font-semibold text-yellow-800">{popularMonth.month}</p>
+          {/* <p className="text-2xl font-semibold text-yellow-800">{popularMonth.month}</p> */}
           <p className="text-sm text-yellow-700 mt-1">
             This month had the highest booking activity on our platform.
           </p>

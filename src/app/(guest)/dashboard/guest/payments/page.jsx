@@ -6,13 +6,13 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation"; // Next.js 13 app router
 import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { LoaderOne } from "@/components/ui/loader";
 
 
 export default function PaymentStatusTable() {
   const { data: session } = useSession();
-  
+  const queryClient = useQueryClient();
  
 
 
@@ -28,9 +28,8 @@ const router = useRouter();
 
 const handleInvoice = (booking) => {
   // Redirect to invoice page with query params
-  router.push(`/dashboard/guest/invoice/?bookingId=${booking._id}&amount=${booking.totalPrice}`);
+  router.push(`/dashboard/guest/invoice/${booking}`);
 };
-
 
   const handleCheckout = async (propertyId,amount,bookingId) => {
 
@@ -52,7 +51,23 @@ const handleInvoice = (booking) => {
       toast.error('Failed to initiate payment. Please try again.');
   }
   }
+ const { mutate: deleteBooking, isPending: isDeleting } = useMutation({
+  mutationFn: async (bookingId) => {
+    const res = await axios.delete(`/api/bookings/upcoming?id=${bookingId}`);
+    return res.data;
+  },
+  onSuccess: () => {
+    toast.success('Booking deleted successfully.');
+    // Refetch bookings after delete
+    queryClient.invalidateQueries(['bookings']);
+  },
+  onError: (error) => {
+    console.error(error);
+    toast.error('Failed to delete booking.');
+  },
+});
  
+
   if (isError) return <div> <p className="p-6 text-red-700 text-center text-4xl">Failed to load bookings. Please try again later.</p></div>;
   
   if (bookingsLoading) {
@@ -73,6 +88,7 @@ const handleInvoice = (booking) => {
             <th className="px-4 py-2 border">Total Price</th>
             <th className="px-4 py-2 border">Payment Status</th>
             <th className="px-4 py-2 border">Action</th>
+            <th className="px-4 py-2 border">Delete</th>
           </tr>
         </thead>
         <tbody>
@@ -88,11 +104,18 @@ const handleInvoice = (booking) => {
               </td>
               <td className="px-4 py-2 border text-center">
                 {b.payment_status === "success" ? (
-                  <Button onClick={() => handleInvoice(b)}>Invoice</Button>
+                  <Button className="cursor-pointer" onClick={() => handleInvoice(b._id)}>Invoice</Button>
                 ) : (
                   <Button className='bg-green-600 cursor-pointer hover:bg-green-600' onClick={() => handleCheckout(b?.propertyId,b.totalPrice,b._id)}>Pay</Button>
                 )}
               </td>
+              <td className="px-4 py-2 border text-center"><Button
+  className="cursor-pointer"
+  variant="destructive"
+  onClick={() => deleteBooking(b._id)}
+>
+  Delete
+</Button>   </td>
             </tr>
           ))}
         </tbody>
