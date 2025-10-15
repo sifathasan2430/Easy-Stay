@@ -33,3 +33,26 @@ export async function GET(request) {
     return NextResponse.json({ error: "Failed to fetch upcoming bookings" }, { status: 500 });
   }
 }
+export async function DELETE(request) {
+  try {
+    await dbConnect();
+
+    const queries = request.nextUrl.searchParams;
+    const bookingId = queries.get("id");
+
+    if (!bookingId) {
+      return NextResponse.json({ error: "Booking ID is required" }, { status: 400 });
+    }
+
+    const deleted = await Booking.findByIdAndDelete(bookingId);
+
+    if (!deleted) {
+      return NextResponse.json({ error: "Booking not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ message: "Booking deleted successfully" }, { status: 200 });
+  } catch (error) {
+    console.error("DELETE /bookings/upcoming error:", error);
+    return NextResponse.json({ error: "Failed to delete booking" }, { status: 500 });
+  }
+}

@@ -13,8 +13,8 @@ import TanstackProvider from "./Components/tanstackProvider/tanstackProvider";
 import ConditionalLayout from "@/components/ConditionalLayout";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]/options";
-  
 
+  
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -38,13 +38,19 @@ export  default async function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${poppins.variable} ${roboto.variable} antialiased font-sans`}>
+     
         <TanstackProvider>
           <SessionProviderWrapper>
-            <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+            <ThemeProvider 
+              attribute="class"  
+        defaultTheme="light"
+        enableSystem={false}
+        forcedTheme="light"  >
               <ConditionalLayout>{children}</ConditionalLayout>
             </ThemeProvider>
           </SessionProviderWrapper>
         </TanstackProvider>
+       
       </body>
     </html>
   );

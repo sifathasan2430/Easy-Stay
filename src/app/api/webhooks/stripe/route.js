@@ -33,6 +33,8 @@ export async function POST(request) {
       const paymentIntentId = session.payment_intent;
       const bookingId = session.metadata?.booking_id;
       const propertyId = session.metadata?.propertyId;
+      const email = session.metadata?.email;
+      const amount = session.metadata?.amount;
 
       console.log("💡 Metadata received:", session.metadata);
 
@@ -54,6 +56,8 @@ export async function POST(request) {
           status: "succeeded",
           createdAt: new Date(),
           propertyId,
+          email,
+          amount
         },
         { upsert: true, new: true }
       );
