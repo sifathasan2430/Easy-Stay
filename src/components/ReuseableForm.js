@@ -237,7 +237,10 @@ const fetchUserLocation = () => {
         // In edit mode, reset to updated data instead of defaults to avoid "refresh without changes"
         form.reset(response.data.data) // Assume API returns updated property; transform if needed
       } else {
-        form.reset(defaultValue) // Reset only in create mode
+          form.reset({
+      ...defaultValue,
+      hostId: Session?.user?._id || "",
+    })
       }
       queryClient.invalidateQueries({ queryKey: ["property", Session?.user._id,'list'] }) // Fix key to match fetch
     },
