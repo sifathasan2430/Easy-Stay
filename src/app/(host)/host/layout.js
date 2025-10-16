@@ -21,6 +21,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import SessionProviderWrapper from "@/app/Components/SessionProvider/SessionProviderWrapper";
+import { ChartBarIcon } from "lucide-react";
 
 export default function DashboardLayout({ children }) {
   const pathname = usePathname();
@@ -30,6 +31,7 @@ export default function DashboardLayout({ children }) {
     { label: "Analytics", href: "/host", icon: IconBrandTabler },
     { label: "Property Management", href: "/host/property/management", icon: IconUserBolt },
     { label: "Bookings", href: "/host/bookings", icon: IconSettings },
+      { label: "Chat", href: "/host/chat", icon: ChartBarIcon },
     { label: "Logout", href: "/logout", icon: IconArrowLeft },
   ];
 
