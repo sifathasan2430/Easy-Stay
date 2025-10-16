@@ -51,7 +51,7 @@ export async function GET(request) {
 
   // --- 2. Handle 'mostReviewed' logic (unchanged) ---
   if (mostReviewed) {
-    const properties = await Property.find()
+    const properties = await Property.find({ _id: { $type: "objectId" } })
       .populate("hostId", "email")
       .populate("amenities")
       .sort({ reviews: -1 })
@@ -63,6 +63,7 @@ export async function GET(request) {
 
   // --- 3. Build Dynamic Query ---
   let findCriteria = {};
+  findCriteria._id = { $type: "objectId" };
   if (hostId){
 
     findCriteria.hostId=hostId
@@ -115,8 +116,8 @@ const properties = await query
   .skip(skip ? skip : skipValue)
   .limit(limit)
   .populate("hostId", "email")
-  .populate("amenities");
- 
+  .populate("amenities").lean()
+
   return NextResponse.json({
     status: "success",
     data: properties,

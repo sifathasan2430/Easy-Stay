@@ -24,6 +24,7 @@ import ReviewsList from "@/components/ReviewsList"; // Assuming ReviewsList is i
 import { useSession } from "next-auth/react";
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
+import ChatBox from "@/components/Chatbox/Chatbox";
 
 
 // ==============================================================================
@@ -147,10 +148,13 @@ const GuestSelector = ({ numGuests, setNumGuests, maxGuests }) => {
 // 3. MAIN COMPONENT
 // ==============================================================================
 export default function PropertyDetails() {
+  
   const Router = useRouter();
   const { id } = useParams();
   const { data: session } = useSession();
   const [loading, setLoading] = useState(false);
+   const [showChat, setShowChat] = useState(false);
+   console.log(session?.user._id)
   
   // State for Booking Widget
   const [dateRange, setDateRange] = useState({ from: undefined, to: undefined });
@@ -164,7 +168,8 @@ export default function PropertyDetails() {
       return response.data.data
     }
   });
-
+console.log(typeof(property?.hostId.toString()),'this is hostid')
+console.log(typeof(session?.user._id.toString()),'this userid')
   const { data: reviewsData } = useQuery({
     queryKey: ["property-reviews", id],
     queryFn: async () => {
@@ -237,6 +242,9 @@ export default function PropertyDetails() {
 
   const primaryImage = property.images?.find(img => img.isPrimary) || property.images?.[0];
   const secondaryImages = property.images?.filter(img => img !== primaryImage);
+console.log(property)
+const userId=session?.user._id.toString()
+const hostId=property.hostId._id.toString()
 
   return (
     <div className="max-w-[1300px] mx-auto px-6 md:px-10 my-10 md:my-20">
@@ -415,6 +423,34 @@ export default function PropertyDetails() {
           </Card>
         </div>
       </div>
+
+
+
+      {/* -------------------------------chat app-------------------------- */}
+         <div className="p-6">
+      <h1 className="text-2xl font-semibold">{property.title}</h1>
+
+      <button
+        onClick={() => setShowChat(!showChat)}
+        className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg"
+      >
+        {showChat ? "Close Chat" : "💬 Chat with Owner"}
+      </button>
+
+      {showChat && (
+        <div className="mt-6">
+          <ChatBox
+            apiKey={process.env.NEXT_PUBLIC_STREAM_API_KEY}
+            userId={userId}
+            userName={"Guest"}
+            hostId={hostId}
+            hostName={"Owner"}
+          />
+        </div>
+      )}
+    </div>
+
+
     </div>
   );
 }

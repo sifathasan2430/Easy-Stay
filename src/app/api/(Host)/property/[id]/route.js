@@ -18,7 +18,7 @@ export const GET=async(req,{params})=>{
   
  
    try {
-    const property=await Property.findById(id).lean().populate("hostId", "email").populate("amenities");
+    const property=await Property.findById(id).populate("hostId", "email").populate("amenities").lean();
    
  if (property._id) property._id = property._id.toString();
 
