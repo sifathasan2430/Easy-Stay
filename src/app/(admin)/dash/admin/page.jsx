@@ -45,8 +45,12 @@ export default function UserAnalytics() {
   const bookingsAnalytics = data?.bookingsAnalytics || [];
 
   // Find the most active month (highest revenue)
-  // const popularMonth = bookingsAnalytics.reduce((max, current) =>
-    // current.totalRevenue > max.totalRevenue ? current : max);
+//   const popularMonth = bookingsAnalytics.reduce(
+//   (max, current) =>
+//     current.totalRevenue > max.totalRevenue ? current : max,
+//   { totalRevenue: 0 } // initial fallback value
+// );
+
   
 
   return (

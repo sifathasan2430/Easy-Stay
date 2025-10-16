@@ -14,13 +14,35 @@ import {
   MobileNavMenu,
 } from "@/components/ui/resizable-navbar";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 export default function Header() {
   const { data: session, status } = useSession();
+    const [userData, setUserData] = useState(null);
+
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (session?.user?._id) {
+        try {
+          const res = await axios.get(`/api/user/${session.user._id}`);
+          setUserData(res.data.data); // Assuming your API returns { user: {...} }
+        } catch (err) {
+          console.error("Failed to fetch user data, falling back to session", err);
+          setUserData(session.user);
+        }
+      }
+    };
+    fetchUser();
+  }, [session]);
+
+  const currentUser = userData || session?.user;
+  console.log("Current User",currentUser);
+
  
   const router=useRouter()
   const userNotExits = (
@@ -57,11 +79,13 @@ export default function Header() {
       name: "Stays",
       link: "/stays",
     },
-         ...(session?.user?.role === 'user'
+    ...(currentUser?.role === 'user'
     ? [{ name: "Dashboard", link: "/dashboard/guest" }]
-    : session?.user?.role === 'host'
+    : currentUser?.role === 'host'
     ? [{ name: "Dashboard", link: "/host" }]
-    : [] // Add nothing if the role is neither 'user' nor 'host'
+    : currentUser?.role === 'admin'
+    ? [{ name: "Dashboard", link: "/dash/admin" }]
+    : []
   ),
     {
       name: "About",
@@ -77,7 +101,6 @@ export default function Header() {
       link: "/become-a-host",
     },
   ];
-
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
