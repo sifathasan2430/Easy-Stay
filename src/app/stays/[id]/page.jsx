@@ -154,8 +154,8 @@ export default function PropertyDetails() {
   const { data: session } = useSession();
   const [loading, setLoading] = useState(false);
    const [showChat, setShowChat] = useState(false);
-   console.log(session?.user._id)
   
+  console.log(id,'this is for cheack')
   // State for Booking Widget
   const [dateRange, setDateRange] = useState({ from: undefined, to: undefined });
   const [numGuests, setNumGuests] = useState(1); 
@@ -168,8 +168,7 @@ export default function PropertyDetails() {
       return response.data.data
     }
   });
-console.log(typeof(property?.hostId.toString()),'this is hostid')
-console.log(typeof(session?.user._id.toString()),'this userid')
+
   const { data: reviewsData } = useQuery({
     queryKey: ["property-reviews", id],
     queryFn: async () => {
@@ -242,9 +241,9 @@ console.log(typeof(session?.user._id.toString()),'this userid')
 
   const primaryImage = property.images?.find(img => img.isPrimary) || property.images?.[0];
   const secondaryImages = property.images?.filter(img => img !== primaryImage);
-console.log(property)
+
 const userId=session?.user._id.toString()
-const hostId=property.hostId._id.toString()
+const hostId=property?.hostId._id.toString()
 
   return (
     <div className="max-w-[1300px] mx-auto px-6 md:px-10 my-10 md:my-20">
