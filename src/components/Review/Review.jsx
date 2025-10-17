@@ -1,107 +1,150 @@
-"use client"
+import React from 'react';
+import { Star, CheckCircle } from 'lucide-react';
+
+/**
+ * Helper component to render the star rating based on the score (1-5).
+ * Airbnb reviews often show stars without fractional fill, so we stick to rounding.
+ * @param {number} rating - The numerical rating.
+ */
+const StarRating = ({ rating, size = 'w-4 h-4' }) => {
+  const fullStars = Math.round(rating);
+  const stars = [];
+
+  for (let i = 1; i <= 5; i++) {
+    stars.push(
+      <Star
+        key={i}
+        className={`${size} ${i <= fullStars ? 'text-black fill-black' : 'text-gray-300'}`}
+        fill={i <= fullStars ? 'currentColor' : 'none'}
+        strokeWidth={2}
+        aria-hidden="true"
+      />
+    );
+  }
+  return <div className="flex space-x-0.5">{stars}</div>;
+};
+
+/**
+ * Formats a date string into a readable, subtle format (e.g., October 2024).
+ * @param {string} dateString - The date string from timestamps.
+ */
+const formatDate = (dateString) => {
+  if (!dateString) return 'Unknown Date';
+  return new Date(dateString).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+  });
+};
+
+/**
+ * The main Review Card component, styled to resemble an Airbnb review using Tailwind CSS.
+ */
 const ReviewCard = ({ review }) => {
-    const review= review || {
-"reviewCount": 8,
-"averageRating": 4.8,
-"reviews": [
-{
-"_id": "rev_001",
-"propertyId": "demo-property-xyz",
-"userName": "Emily R.",
-"rating": 5,
-"comment": "Absolutely perfect stay! The place was spotless, the bed was incredibly comfortable, and the communication with the host was prompt and helpful. Highly recommend!",
-"createdAt": "2024-10-01T10:00:00Z",
-"adminReply": ""
-},
-{
-"_id": "rev_002",
-"propertyId": "demo-property-xyz",
-"userName": "David Chen",
-"rating": 5,
-"comment": "The location is fantastic, right near all the major attractions. Check-in was super easy. The apartment looked exactly like the photos.",
-"createdAt": "2024-09-28T14:30:00Z",
-"adminReply": "Thank you, David! We are thrilled you enjoyed the convenient location."
-},
-{
-"_id": "rev_003",
-"propertyId": "demo-property-xyz",
-"userName": "Sarah & Tom",
-"rating": 4,
-"comment": "Great experience overall. The only slight issue was the noise from the street on Friday night, but otherwise, everything was lovely and well-stocked.",
-"createdAt": "2024-09-25T08:15:00Z",
-"adminReply": "We appreciate the feedback, Sarah and Tom. We'll look into better sound insulation for the front window."
-},
-{
-"_id": "rev_004",
-"propertyId": "demo-property-xyz",
-"userName": "Anonymous Guest",
-"rating": 5,
-"comment": "Flawless communication and exceptional cleanliness. A true gem! Would definitely stay here again when visiting the city.",
-"createdAt": "2024-09-20T17:00:00Z",
-"adminReply": ""
-},
-{
-"_id": "rev_005",
-"propertyId": "demo-property-xyz",
-"userName": "Michael K.",
-"rating": 4,
-"comment": "The amenities were exactly as described. The coffee machine was a nice touch! Had a small issue with the Wi-Fi initially, but the host fixed it within an hour.",
-"createdAt": "2024-09-15T12:45:00Z",
-"adminReply": "We're glad we could quickly resolve the Wi-Fi for you, Michael. Thanks for your patience!"
-},
-{
-"_id": "rev_006",
-"propertyId": "demo-property-xyz",
-"userName": "Jessica H.",
-"rating": 5,
-"comment": "Excellent value for money. Plenty of space for our family of four. The kitchen was very well-equipped for cooking meals.",
-"createdAt": "2024-09-10T09:00:00Z",
-"adminReply": ""
-},
-{
-"_id": "rev_007",
-"propertyId": "demo-property-xyz",
-"userName": "Ravi S.",
-"rating": 5,
-"comment": "The host went above and beyond to make us feel welcome. Personalized notes and local recommendations were much appreciated!",
-"createdAt": "2024-09-05T19:20:00Z",
-"adminReply": "It was our pleasure, Ravi. We hope to welcome you back soon!"
-},
-{
-"_id": "rev_008",
-"propertyId": "demo-property-xyz",
-"userName": "Chloe L.",
-"rating": 5,
-"comment": "The photos don't do this place justice! It's even more beautiful in person. A very stylish and cozy retreat.",
-"createdAt": "2024-09-01T11:55:00Z",
-"adminReply": ""
-}
-]
-}
+  // Mock data for demonstration purposes, replace with actual state/prop later
+  const mockReview = {
+    reviewerName: 'Alice Johnson', 
+    rating: 4.5,
+    comment: 'The apartment was spotless and the check-in process was seamless. Great natural light! We thoroughly enjoyed our stay. Highly recommend for short-term rentals, although the parking was a bit tight.',
+    // Photos section is removed as requested
+    photos: [], 
+    verified: true,
+    adminReply: 'Thank you so much for your kind words, Alice! We are delighted you enjoyed your stay and hope to welcome you back soon!',
+    createdAt: new Date('2024-10-26T10:00:00Z').toISOString(),
+    updatedAt: new Date('2024-10-27T12:30:00Z').toISOString(),
+  };
+
+  const data = review || mockReview;
+
   return (
-    <div className="p-4 border border-gray-200 rounded-xl bg-white shadow-sm hover:shadow-md transition duration-300">
-      <div className="flex items-start mb-3">
-        {/* Placeholder for user avatar/icon */}
-        <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-3 text-blue-600">
-          <User size={20} />
-        </div>
+    <div className="max-w-xl w-full mx-auto bg-white rounded-xl p-0 shadow-none border-b border-gray-200">
+      
+      {/* HEADER: Avatar, Name, and Date (Classic Airbnb layout) */}
+      <div className="flex items-center space-x-4 mb-4">
+        
+        {/* Avatar */}
+        <img 
+          className="h-14 w-14 rounded-full object-cover flex-shrink-0" 
+          src={`https://placehold.co/56x56/D3D3D3/000?text=${data.reviewerName.charAt(0)}`}
+          alt={`${data.reviewerName} avatar`}
+        />
+        
+        {/* Name and Date */}
         <div>
-          <p className="font-semibold text-gray-900">{review.userName}</p>
-          <p className="text-xs text-gray-500">
-            {new Date(review.createdAt).toLocaleDateString()}
-          </p>
+          <p className="font-semibold text-gray-900 text-base">{data.reviewerName}</p>
+          <p className="text-sm text-gray-500">{formatDate(data.createdAt)}</p>
         </div>
       </div>
-      <StarRating rating={review.rating} size={16} />
-      <p className="mt-3 text-gray-700 leading-relaxed text-sm">
-        {review.comment}
-      </p>
-      {review.adminReply && (
-        <div className="mt-3 p-3 bg-gray-50 border-l-4 border-gray-300 text-gray-600 text-xs italic rounded-r-lg">
-          <span className="font-semibold block mb-1">Host Reply:</span>
-          {review.adminReply}
+
+      {/* REVIEW BODY: Comment and Rating */}
+      <div className="review-body">
+        {/* Comment Text (Primary Focus) */}
+        <p className="text-gray-700 text-base leading-relaxed mb-4">
+          {data.comment}
+        </p>
+
+        {/* Rating and Verification Badge (Subtle and inline) */}
+        <div className="flex items-center space-x-3 text-sm text-gray-700 font-medium pb-4">
+            <div className="flex items-center space-x-1">
+                <StarRating rating={data.rating} size="w-3.5 h-3.5" />
+                <span className="ml-1">{data.rating.toFixed(1)}</span>
+            </div>
+            
+            <span className="text-gray-400">|</span>
+
+            {data.verified && (
+                <span className="inline-flex items-center text-green-700">
+                    <CheckCircle className="w-3.5 h-3.5 mr-1" aria-hidden="true" />
+                    Verified Stay
+                </span>
+            )}
         </div>
-      )}
+      </div>
     </div>
   );
 };
+
+// Exporting the component and the mock data for easy use in an App wrapper
+export default function App() {
+  const mockReviewData = {
+    reviewerName: 'Alice Johnson',
+    rating: 4.5,
+    comment: 'The apartment was spotless and the check-in process was seamless. Great natural light! We thoroughly enjoyed our stay. Highly recommend for short-term rentals, although the parking was a bit tight.',
+    photos: [],
+    verified: true,
+    adminReply: 'Thank you so much for your kind words, Alice! We are delighted you enjoyed your stay and hope to welcome you back soon!',
+    createdAt: new Date('2024-10-26T10:00:00Z').toISOString(),
+    updatedAt: new Date('2024-10-27T12:30:00Z').toISOString(),
+  };
+  
+  const unverifiedReview = {
+    reviewerName: 'Bob Smith',
+    rating: 2.0,
+    comment: 'The heating did not work properly and the Wi-Fi was very slow. It needs maintenance, but the location was good.',
+    photos: [],
+    verified: false,
+    adminReply: '', // Empty reply
+    createdAt: new Date('2024-10-20T10:00:00Z').toISOString(),
+    updatedAt: new Date('2024-10-21T09:00:00Z').toISOString(),
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 p-4 sm:p-8">
+        <h1 className="text-3xl font-extrabold text-gray-800 text-center mb-8">Property Reviews</h1>
+        
+        <div className="space-y-6 max-w-lg mx-auto">
+            <ReviewCard review={mockReviewData} />
+            <ReviewCard review={unverifiedReview} />
+            <ReviewCard review={{
+                reviewerName: 'Charlie Brown',
+                rating: 5.0,
+                comment: 'Perfect location and exactly as described. The host was very communicative and helpful. Five stars!',
+                photos: [],
+                verified: true,
+                adminReply: '',
+                createdAt: new Date('2024-10-01T10:00:00Z').toISOString(),
+                updatedAt: new Date('2024-10-01T10:00:00Z').toISOString(),
+            }} />
+        </div>
+    </div>
+  );
+}
