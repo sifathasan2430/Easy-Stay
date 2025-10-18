@@ -54,7 +54,7 @@ export async function GET(request) {
    
 
 
-    const properties = await Property.find({ _id: { $type: "objectId"},averageRating:{$gt:4}})
+    const properties = await Property.find({ _id: { $type: "objectId"}})
       .populate("hostId", "email")
       .populate("amenities")
       .sort({ reviews: -1 })

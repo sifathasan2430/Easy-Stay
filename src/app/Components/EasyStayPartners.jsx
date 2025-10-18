@@ -56,7 +56,7 @@ export default function EasyStayPartners() {
       </Marquee>
 
       {/* Gradient Fade Effect for smoother edges */}
-      <div className="pointer-events-none absolute inset-y-0 left-0 w-1/5 sm:w-1/6 bg-gradient-to-r from-white dark:from-gray-900"></div>
+      <div className="pointer-events-none absolute inset-y-0 left-0 w-1/5 sm:w-1/6  "></div>
     </section>
     </Container>
     
