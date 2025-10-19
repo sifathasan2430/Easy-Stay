@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect";
 import { Booking } from "@/models/booking.models";
 
+
 export async function PATCH(request, { params }) {
   try {
     await dbConnect();
