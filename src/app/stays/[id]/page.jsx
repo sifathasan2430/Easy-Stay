@@ -155,7 +155,7 @@ export default function PropertyDetails() {
   const [loading, setLoading] = useState(false);
    const [showChat, setShowChat] = useState(false);
   
-  console.log(id,'this is for cheack')
+ 
   // State for Booking Widget
   const [dateRange, setDateRange] = useState({ from: undefined, to: undefined });
   const [numGuests, setNumGuests] = useState(1); 

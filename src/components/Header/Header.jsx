@@ -22,6 +22,7 @@ import axios from "axios";
 
 export default function Header() {
   const { data: session, status } = useSession();
+  
     const [userData, setUserData] = useState(null);
 
 
@@ -30,7 +31,7 @@ export default function Header() {
       if (session?.user?._id) {
         try {
           const res = await axios.get(`/api/user/${session.user._id}`);
-          setUserData(res.data.data); // Assuming your API returns { user: {...} }
+          setUserData(res.data.data); 
         } catch (err) {
           console.error("Failed to fetch user data, falling back to session", err);
           setUserData(session.user);
