@@ -146,7 +146,7 @@ export default function ExploreProperties() {
 
 
   return (
-    <div className="max-w-7xl mx-auto px-4 my-40">
+    <div className="max-w-7xl  mx-auto px-4 my-40">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
         <h1 className="text-2xl font-semibold text-gray-900">Explore Homes</h1>

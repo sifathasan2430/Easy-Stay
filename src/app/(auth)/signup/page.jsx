@@ -65,7 +65,7 @@ export default function SignupForm() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen md:pt-16 px-4">
+    <div className="flex justify-center dark:bg-[#0d1117] items-center min-h-screen md:pt-16 px-4">
      <div className="w-full max-w-md bg-white dark:bg-black shadow-lg rounded-xl p-6 md:p-8">
        <h2 className="text-3xl font-heading sm:text-4xl text-center font-bold text-neutral-800 dark:text-neutral-200">
         Signup Now
@@ -81,7 +81,7 @@ export default function SignupForm() {
             name="username"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-sm sm:text-base font-body">Username</FormLabel>
+                <FormLabel className="text-sm sm:text-base dark:text-white font-body">Username</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="jhon"
@@ -99,7 +99,7 @@ export default function SignupForm() {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-sm sm:text-base font-body">Email</FormLabel>
+                <FormLabel className="text-sm dark:text-white sm:text-base font-body">Email</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="jhon@gmail.com"
@@ -117,7 +117,7 @@ export default function SignupForm() {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-sm sm:text-base font-body">Password</FormLabel>
+                <FormLabel className="text-sm dark:text-white sm:text-base font-body">Password</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="*****"
