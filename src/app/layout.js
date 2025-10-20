@@ -46,7 +46,7 @@ export  default async function RootLayout({ children }) {
         defaultTheme="light"
         enableSystem={false}
         forcedTheme="light"  >
-              <ConditionalLayout>{children}</ConditionalLayout>
+              <ConditionalLayout >{children}</ConditionalLayout>
             </ThemeProvider>
           </SessionProviderWrapper>
         </TanstackProvider>

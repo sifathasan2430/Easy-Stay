@@ -4,7 +4,7 @@ import { signIn } from "next-auth/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { loginSchema } from "@/zodSchema/userSchema";
 
 import { cn } from "@/lib/utils";
@@ -24,7 +24,12 @@ import { IconBrandGithub, IconBrandGoogle } from "@tabler/icons-react";
 export default function SignupForm() {
   const [isSignupLoading, setIsSignupLoading] = useState(false);
   const router = useRouter();
+  const searchParams=useSearchParams()
 
+  const callBackUrl= searchParams.get("callbackUrl") || "/"
+
+  
+ 
   const form = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -38,9 +43,11 @@ export default function SignupForm() {
       try {
       setIsSignupLoading(true)
       const response=await signIn("credentials",{
-    redirect:false,
+    redirect:true,
     email:data?.email,
-    password:data?.password
+    password:data?.password,
+    callbackUrl:callBackUrl
+    
    })
    toast("Welcome to our family",{
          title:'Success',
@@ -74,8 +81,8 @@ export default function SignupForm() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen  md:pt-16  px-4">
-        <div className="w-full max-w-md bg-white dark:bg-black shadow-lg rounded-xl p-6 md:p-8">
+    <div className="flex justify-center dark:bg-[#0d1117] items-center min-h-screen  md:pt-16  px-4">
+        <div className="w-full max-w-md bg-white dark:bg-black/90 shadow-lg rounded-xl p-6 md:p-8">
         <h2 className="text-center text-3xl sm:text-4xl font-bold text-neutral-800 dark:text-neutral-200 mb-6">
 
   
@@ -92,7 +99,7 @@ export default function SignupForm() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="my-1 font-body">Email</FormLabel>
+                  <FormLabel className="my-1 font-body dark:text-white">Email</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="jhon@gmail.com"
@@ -110,7 +117,7 @@ export default function SignupForm() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="mt-4 font-body">Password</FormLabel>
+                  <FormLabel className="mt-4 dark:text-white font-body">Password</FormLabel>
                   <FormControl>
                     <Input
                       type="password"
@@ -145,7 +152,7 @@ export default function SignupForm() {
           </Link>
         </p>
          <div className="my-4 space-y-4 sm:space-y-0 md:flex md:justify-center md:items-center md:gap-4 ">
-        <button onClick={()=>signIn('google', { callbackUrl: "/" })}
+        <button onClick={()=>signIn('google', { callbackUrl: callBackUrl })}
                     className="group/btn shadow-input relative flex h-10 w-full items-center justify-start space-x-2 rounded-md bg-gray-50 px-4 font-medium text-black dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_#262626]"
                     type="submit"
                   >
@@ -155,7 +162,7 @@ export default function SignupForm() {
                     </span>
                     <BottomGradient />
                   </button>
-                    <button onClick={()=>signIn('github', { callbackUrl: "/" })}
+                    <button onClick={()=>signIn('github', { callbackUrl: callBackUrl })}
                     className="group/btn shadow-input relative flex h-10 w-full items-center justify-start space-x-2 rounded-md bg-gray-50 px-4 font-medium text-black dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_#262626]"
                     type="submit"
                   >
