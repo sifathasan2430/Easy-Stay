@@ -51,11 +51,14 @@ export async function GET(request) {
 
   // --- 2. Handle 'mostReviewed' logic (unchanged) ---
   if (mostReviewed) {
-    const properties = await Property.find({ _id: { $type: "objectId" } })
+   
+
+
+    const properties = await Property.find({ _id: { $type: "objectId"}})
       .populate("hostId", "email")
       .populate("amenities")
       .sort({ reviews: -1 })
-      .limit(8);
+      .limit(8).lean()
 
     const total = await Property.countDocuments();
     return NextResponse.json({ status: "success", data: properties, total });

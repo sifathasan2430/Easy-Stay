@@ -13,7 +13,8 @@ import {
   IconHeart,
   IconMoneybag,
   IconInnerShadowTop,
-  IconUser
+  IconUser,
+  IconAlbum
 } from "@tabler/icons-react";
 import {  Clock, MessageSquare } from "lucide-react";
 
@@ -23,9 +24,10 @@ const navItems = [
   { title: "Profile", href: "/dash/admin/profile", icon: IconUser },
   { title: "Manage Users", href: "/dash/admin/manageusers", icon: IconUsers },
   { title: "Manage Bookings", href: "/dash/admin/managebookings", icon: IconCalendarEvent },
+  { title: "Approve Hosts", href: "/dash/admin/approvehosts", icon: IconAlbum },
   { title: "Manage Reviews", href: "/dash/admin/managereviews", icon:  MessageSquare},
   { title: "Recent Activity", href: "/dash/admin/recentactivity", icon: Clock },
-  { title: "Most Favorites", href: "/dash/admin/mostfavorites", icon: IconHeart },
+  // { title: "Most Favorites", href: "/dash/admin/mostfavorites", icon: IconHeart },
 ];
 
 export function AdminAppSidebar() {
