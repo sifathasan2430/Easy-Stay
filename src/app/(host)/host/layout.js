@@ -59,23 +59,23 @@ export default function DashboardLayout({ children }) {
   return (
     <div className="flex min-h-screen">
       {/* Desktop Sidebar */}
-      <aside className="sticky top-0 hidden h-screen w-64 shrink-0 border-r border-neutral-200 bg-gray-100  md:block">
-        <div className="p-6 font-bold text-lg">EasyStay</div>
+      <aside className="sticky top-0 hidden h-screen w-64 shrink-0 border-r border-neutral-200 bg-white dark:bg-black   md:block">
+        <div className="p-6 font-bold dark:text-neutral-300 text-lg">EasyStay</div>
         <SidebarLinks />
       </aside>
 
       {/* Mobile Top Navbar + Sheet Menu */}
       <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between border-b bg-white px-4 py-3 dark:bg-neutral-900 md:hidden">
-        <div className="font-bold text-lg">EasyStay</div>
+        <div className="font-bold dark:text-neutral-300 text-lg">EasyStay</div>
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
-            <Button variant="outline" size="icon">
-              <IconMenu2 className="h-5 w-5" />
+            <Button variant="primary" size="icon">
+              <IconMenu2  className="h-5  w-5" />
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="w-64 p-0">
+          <SheetContent side="left" className="w-64 dark:bg-black  p-0">
             <SheetHeader>
-              <SheetTitle className="px-4 pt-4 text-lg font-bold">EasyStay</SheetTitle>
+              <SheetTitle className="px-4 pt-4 text- dark:text-neutral-300 font-bold">EasyStay</SheetTitle>
             </SheetHeader>
             <SidebarLinks />
           </SheetContent>
@@ -84,7 +84,7 @@ export default function DashboardLayout({ children }) {
 
       {/* Main Content */}
        
-      <main className="flex-1 overflow-y-auto p-6 pt-16 md:pt-6">{children}</main>
+      <main className="flex-1 overflow-y-auto dark:bg-black dark:text-neutral-300 p-6 pt-16 md:pt-6">{children}</main>
 
     </div>
   );

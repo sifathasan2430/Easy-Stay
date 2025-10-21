@@ -26,7 +26,20 @@ const propertySchema = new Schema({
     isPrimary: { type: Boolean, default: false }
   }],
   averageRating: { type: Number, default: 0, min: 0, max: 5 },
-  reviewCount: { type: Number, default: 0, min: 0 }
+  reviewCount: { type: Number, default: 0, min: 0 },
+  serviceCharge:{
+    type:Number,
+    min:50,
+    required:true
+
+  },
+  
+  guestsIncluded:{type:Number,default:0, required:true},
+  discount:{
+    type:Number, default:0, min:0, max:100
+  },
+  extraGuestFee: { type: Number, default: 0, min: 0 },
+  cleaningFee: { type: Number, default: 0, min: 0 }
 }, { timestamps: true });
 propertySchema.index({location:"2dsphere"}) // Geospatial index
 export const Property=mongoose.models.Property || mongoose.model('Property',propertySchema)

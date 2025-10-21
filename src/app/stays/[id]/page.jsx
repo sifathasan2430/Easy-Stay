@@ -13,11 +13,11 @@ import { cn } from "@/lib/utils";
 import { format, differenceInDays } from "date-fns"; // For formatting and date calculation
 
 // Icon Imports
-import { MapPin, Star, Users, Bed, Bath, ChevronDown, Minus, Plus } from "lucide-react"; 
+import { MapPin, Star, Users, Bed, Bath, ChevronDown, Minus, Plus, Cross, CrossIcon, X } from "lucide-react"; 
 
 // Custom/External Imports
 import { motion } from "framer-motion";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { LoaderOne } from "@/components/ui/loader"; // Assuming LoaderOne is imported/available
 import ReviewsList from "@/components/ReviewsList"; // Assuming ReviewsList is imported/available
@@ -154,13 +154,14 @@ export default function PropertyDetails() {
   const { data: session } = useSession();
   const [loading, setLoading] = useState(false);
    const [showChat, setShowChat] = useState(false);
+   const [total ,setTotal]=useState("0")
   
  
   // State for Booking Widget
   const [dateRange, setDateRange] = useState({ from: undefined, to: undefined });
-  const [numGuests, setNumGuests] = useState(1); 
+  const [numGuests, setNumGuests] = useState(0); 
   
-  
+ 
   const { data: property, isLoading } = useQuery({
     queryKey: ['property', id],
     queryFn: async () => {
@@ -177,17 +178,55 @@ export default function PropertyDetails() {
     },
   });
 
-  // Derived Values
+  
   const pricePerNight = property?.pricePerNight || 0;
   const maxGuests = property?.maxGuests || 1;
   
-  const nights = dateRange?.from && dateRange?.to 
-    ? differenceInDays(dateRange.to, dateRange.from) 
-    : 0;
+  // const nights = dateRange?.from && dateRange?.to 
+  //   ? differenceInDays(dateRange.to, dateRange.from) 
+  //   : 0;
+  const nights= dateRange?.from && dateRange?.to ? differenceInDays(dateRange?.to,dateRange?.from):0
+const queryClient = useQueryClient()
+    const {mutate,isPending,isError,error} = useMutation({
+    mutationFn:async ()=>{
+   const response=   await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/property/${id}/calculate-price`,{
+   checkIn: dateRange.from.toISOString(),
+   checkOut: dateRange.to.toISOString(),
+   guest:numGuests
+  })
+    return response.data
+    },
+    onSuccess: (data) => {
+    setTotal(data?.basePrice)
 
-  const subtotal = pricePerNight * nights;
-  const serviceFee = nights > 0 ? Math.ceil(subtotal * 0.15) : 0; // 15% service fee
-  const total = subtotal + serviceFee;
+      queryClient.invalidateQueries({ queryKey: ['total'] })
+    },
+  })
+
+
+
+
+const checkTotal=async()=>{
+
+
+   if (!session) {
+        toast.error("You must be logged in to to calculate a property.");
+        return;
+    }
+    if (!dateRange?.from || !dateRange?.to  ) {
+        toast.error("Please select valid check-in/check-out dates.");
+        return;
+    }
+  mutate()
+  
+  
+    
+}
+
+
+
+
+
 
   const handleReserve = async () => {
     if (!session) {
@@ -246,24 +285,25 @@ const userId=session?.user._id.toString()
 const hostId=property?.hostId._id.toString()
 
   return (
-    <div className="max-w-[1300px] mx-auto px-6 md:px-10 my-10 md:my-20">
+    <div className="dark:bg-black">
+    <div className="max-w-[1300px]  mx-auto px-6 md:px-10 p-10 md:py-20">
       {/* Title & Info Section */}
       <div className="mb-6">
-        <h1 className="text-3xl font-semibold text-gray-900">
+        <h1 className="text-3xl font-semibold text-gray-900   dark:text-neutral-300">
           {property.title}
         </h1>
         <div className="flex items-center text-gray-700 mt-2 text-base">
-          <Star className="w-4 h-4 text-gray-800 mr-1" fill="currentColor" />
-          <span className="font-semibold mr-1">
+          <Star color="orange" className="w-4 h-4  mr-1" fill="currentColor" />
+          <span className="font-semibold   dark:text-neutral-300 mr-1">
             {averageRating.toFixed(2)}
           </span>
           <span className="mx-1">•</span>
-          <span className="underline cursor-pointer hover:text-gray-900">
+          <span className="underline cursor-pointer   dark:text-neutral-300 hover:text-gray-900">
             {reviewCount} reviews
           </span>
           <span className="mx-1">•</span>
           <MapPin className="w-4 h-4 mr-1" />
-          <span className="underline cursor-pointer hover:text-gray-900">
+          <span className="underline cursor-pointer hover:text-gray-900   dark:text-neutral-300">
             {property.city}, {property.country}
           </span>
         </div>
@@ -300,11 +340,11 @@ const hostId=property?.hostId._id.toString()
         {/* Left: Property Info & Reviews */}
         <div className="lg:col-span-2">
             <div className="pb-6">
-                <h2 className="text-xl font-semibold text-gray-900">
+                <h2 className="text-xl font-semibold   dark:text-neutral-300 text-gray-900">
                     Entire place hosted by Host Name
                 </h2>
-                <div className="flex flex-wrap gap-4 text-gray-700 text-base mt-2">
-                  <div className="flex items-center gap-1">
+                <div className="flex flex-wrap gap-4 text-gray-700 dark:text-neutral-300 text-base mt-2">
+                  <div className="flex   dark:text-neutral-300 items-center gap-1">
                     {property.maxGuests} guests
                   </div>
                   <span className="text-gray-400">•</span>
@@ -318,16 +358,16 @@ const hostId=property?.hostId._id.toString()
                 </div>
             </div>
             <Separator className="my-6" />
-            <p className="text-gray-800 leading-relaxed">{property.description}</p>
+            <p className="text-gray-800   dark:text-neutral-300 leading-relaxed">{property.description}</p>
             <Separator className="my-6" />
             
             {/* Amenities, ReviewsList, Map sections */}
-            <h2 className="text-lg font-semibold mt-8 mb-3">What this place offers</h2>
+            <h2 className="text-lg font-semibold mt-8 mb-3  dark:text-neutral-300 ">What this place offers</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
               {property.amenities?.map((a) => (
                 <div
                   key={a._id}
-                  className="flex items-center gap-2 text-sm text-gray-700"
+                  className="flex items-center gap-2 text-sm dark:text-neutral-300 text-gray-700"
                 >
                   <span>• {a.name}</span>
                 </div>
@@ -335,10 +375,10 @@ const hostId=property?.hostId._id.toString()
             </div>
 
             <Separator className="my-6" />
-            <ReviewsList propertyId={id}></ReviewsList>
+            <ReviewsList  propertyId={id}></ReviewsList>
             <Separator className="my-6" />
             
-            <h2 className="text-lg font-semibold mt-8 mb-3">Where you’ll be</h2>
+            <h2 className="text-lg dark:text-neutral-300 font-semibold mt-8 mb-3">Where you’ll be</h2>
               <div className="rounded-xl overflow-hidden border">
                 <iframe
                   title="map"
@@ -351,19 +391,19 @@ const hostId=property?.hostId._id.toString()
 
         {/* Right: Booking Card (Sticky) */}
         <div>
-          <Card className="shadow-2xl sticky top-28 border rounded-xl p-6">
+          <Card className="shadow-2xl sticky dark:bg-black dark:text-neutral-300 top-28 border rounded-xl p-6">
             <CardContent className="p-0">
               {/* Price and Rating Header */}
               <div className="flex items-baseline justify-between mb-4">
                 <p className="text-2xl font-semibold">
                   ${pricePerNight}
-                  <span className="text-base text-gray-600 font-normal"> / night</span>
+                  <span className="text-base text-gray-600 dark:text-neutral-300 font-normal"> / night</span>
                 </p>
-                <div className="flex items-center text-sm text-gray-700">
+                <div className="flex items-center text-sm text-gray-700 dark:text-neutral-300">
                   <Star className="w-4 h-4 text-gray-900 mr-1" fill="currentColor" />
                   <span className="font-medium">{averageRating.toFixed(2)}</span>
                   <span className="mx-1">•</span>
-                  <span className="underline">{reviewCount} reviews</span>
+                  <span className="underline dark:text-neutral-300">{reviewCount} reviews</span>
                 </div>
               </div>
 
@@ -380,44 +420,136 @@ const hostId=property?.hostId._id.toString()
                         maxGuests={maxGuests}
                     />
                 </div>
-              </div>
+                <div className="flex justify-between border-t  border-gray-300">
+                   <div 
+                        className={cn(
+                            " p-3 pl-2 pt-3 flex-1 text-left   rounded-tr-xl "
+                        )}
+                    >
+                        <span className="text-xs font-bold uppercase">Service fee</span>
+                      
+                    </div>
+                     <div 
+                        className={cn(
+                            " p-3 pl-2 pt-3 flex-1 text-left border-l border-gray-300 rounded-tr-xl"
+                        )}
+                    >
+                        <span className="text-xs font-bold uppercase">{property?.
+serviceCharge || 0}$</span>
+                      
+                    </div>
+                </div>
+                 <div className="flex justify-between border-t  border-gray-300">
+                   <div 
+                        className={cn(
+                            " p-3 pl-2 pt-3 flex-1 text-left   rounded-tr-xl "
+                        )}
+                    >
+                        <span className="text-xs font-bold uppercase"> 
+Cleaning fee</span>
+                      
+                    </div>
+                     <div 
+                        className={cn(
+                            " p-3 pl-2 pt-3 flex-1 text-left border-l border-gray-300 rounded-tr-xl"
+                        )}
+                    >
+                        <span className="text-xs font-bold uppercase"> {property.
+cleaningFee || 0}
+$</span>
+                      
+                    </div>
+                </div>
+                 <div className="flex justify-between border-t  border-gray-300">
+                   <div 
+                        className={cn(
+                            " p-3 pl-2 pt-3 flex-1 text-left   rounded-tr-xl "
+                        )}
+                    >
+                        <span className="text-xs font-bold uppercase">
+Extra Guest Fee</span>
+                      
+                    </div>
+                     <div 
+                        className={cn(
+                            " p-3 pl-2 pt-3 flex-1 text-left border-l border-gray-300 rounded-tr-xl"
+                        )}
+                    >
+                        <span className="text-xs font-bold uppercase">{property.
+extraGuestFee || 0}$ <X  className="inline-block"  size={10}/>  {numGuests} </span>
+                      
+                    </div>
+                </div>
+                 <div className="flex justify-between border-t  border-gray-300">
+                   <div 
+                        className={cn(
+                            " p-3 pl-2 pt-3 flex-1 text-left   rounded-tr-xl "
+                        )}
+                    >
+                        <span className="text-xs font-bold uppercase">Discount</span>
+                      
+                    </div>
+                     <div 
+                        className={cn(
+                            " p-3 pl-2 pt-3 flex-1 text-left border-l border-gray-300 rounded-tr-xl"
+                        )}
+                    >
+                        <span className="text-xs font-bold uppercase">{property.discount ||0}%</span>
+                      
+                    </div>
+                </div>
+                 <div className="flex justify-between border-t  border-gray-300">
+                   <div 
+                        className={cn(
+                            " p-3 pl-2 pt-3 flex-1 text-left   rounded-tr-xl "
+                        )}
+                    >
+                        <span className="text-xs font-bold uppercase">Total</span>
+                      
+                    </div>
+                     <div 
+                        className={cn(
+                            " p-3 pl-2 pt-3 flex-1 text-left border-l border-gray-300 rounded-tr-xl"
+                        )}
+                    >
+                        <span className="text-xs font-bold uppercase">${total}</span>
+                      
+                    </div>
+                </div>
 
+
+
+
+
+              </div>
+     {isError && <p className="text-red-500 my-4 ">{error?.message}</p>}
               {/* Reserve Button */}
+              <div className='flex justify-between items-center gap-4'>
               <Button
-                className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-3 text-lg rounded-lg transition duration-200"
+                className="w-40 bg-red-500 hover:bg-red-600 text-white font-semibold py-3 text-lg rounded-lg transition duration-200"
+                onClick={checkTotal}
+                disabled={ !session || nights <= 0}
+              >
+                {isPending 
+                    ? 'Calculating...' 
+                    : (  (session ? 'Check Total' : 'Unauthorize'))}
+              </Button>
+              
+                         
+              <Button
+                className="w-40 bg-red-500 hover:bg-red-600 text-white font-semibold py-3 text-lg rounded-lg transition duration-200"
                 onClick={handleReserve}
-                disabled={loading || !session || nights <= 0}
+                disabled={isPending || !session || nights <= 0}
               >
                 {loading 
-                    ? 'Reserving...' 
-                    : (nights > 0 ? `Reserve for ${nights} night${nights > 1 ? 's' : ''}` : (session ? 'Check availability' : 'Log in to Reserve'))}
+                    ? 'Booking...' 
+                    : (nights > 0 ? `Book` : (session ? 'Book' : 'Log in to Book'))}
               </Button>
-
-              <p className="text-sm text-gray-500 mt-3 text-center">
-                You won’t be charged yet
-              </p>
+</div>
+             
               
               {/* Price Calculation */}
-              {nights > 0 && (
-                <>
-                  <Separator className="my-4" />
-                  <div className="space-y-2 text-gray-800 text-base">
-                    <div className="flex justify-between">
-                        <span className="underline">${pricePerNight} x {nights} night{nights > 1 ? 's' : ''}</span>
-                        <span>${subtotal.toFixed(2)}</span>
-                    </div>
-                    <div className="flex justify-between">
-                        <span className="underline">Service fee</span>
-                        <span>${serviceFee.toFixed(2)}</span>
-                    </div>
-                    <Separator className="my-4" />
-                    <div className="flex justify-between font-bold text-lg">
-                        <span>Total before taxes</span>
-                        <span>${total.toFixed(2)}</span>
-                    </div>
-                  </div>
-                </>
-              )}
+            
             </CardContent>
           </Card>
         </div>
@@ -427,7 +559,7 @@ const hostId=property?.hostId._id.toString()
 
       {/* -------------------------------chat app-------------------------- */}
          <div className="p-6">
-      <h1 className="text-2xl font-semibold">{property.title}</h1>
+      <h1 className="text-2xl dark:text-neutral-300 font-semibold">{property.title}</h1>
 
       <button
         onClick={() => setShowChat(!showChat)}
@@ -450,6 +582,7 @@ const hostId=property?.hostId._id.toString()
     </div>
 
 
+    </div>
     </div>
   );
 }
