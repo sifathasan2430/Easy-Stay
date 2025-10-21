@@ -33,7 +33,7 @@ export default function Stats() {
   ];
 
   return (
-    <Container className="bg-gray-50 dark:bg-gray-900 py-24">
+    <Container className="bg-gray-50 py-24">
       <div className=" text-center px-4">
         {/* Heading */}
         <motion.h2
@@ -45,7 +45,7 @@ export default function Stats() {
         >
           We Make <span className="text-blue-500">Every Stay Memorable</span> 
         </motion.h2>
-        <p className="text-gray-600 text-gray-300 mb-10">
+        <p className="text-gray-600 mb-10">
           From cozy apartments to luxurious villas, EasyStay helps travelers book safe, verified, and comfortable stays — anytime, anywhere.
         </p>
 
