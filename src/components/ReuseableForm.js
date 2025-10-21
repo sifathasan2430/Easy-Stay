@@ -75,6 +75,12 @@ export default function ReuseableForm({ propertyId }) {
     amenities: [],
     images: [{ url: "", isPrimary: true }],
     isActive: true,
+    cleaningFee:0,
+    extraGuestFee:0,
+    guestsIncluded:0,
+    serviceCharge:0,
+    discount:0
+
   }
 
 
@@ -348,7 +354,16 @@ const fetchUserLocation = () => {
             [{name:"address",text:"Address",placeholder:'12 sector Uttora',type:'text'},{name:"city",text:"City",placeholder:'Dhaka',type:'text'},{name:"state",text:"State",placeholder:'Dhaka',type:'text'},{name:"country",text:"Country",placeholder:'Usa',type:'text'},{name:"longitude",text:"Longitude",placeholder:50,type:'number'},{name:"latitude",text:"Latitude",placeholder:60,type:'number'},{ name: "pricePerNight", text: "Price Per Night", placeholder: 0 ,type:'number'},{ name: "bathrooms", text: "Bathrooms", placeholder: 1,type:'number' },
   { name: "beds", text: "Beds", placeholder: 1,type:'number' },
   { name: "bedrooms", text: "Bedrooms", placeholder: 1 ,type:'number'},
-  { name: "maxGuests", text: "Max Guests", placeholder: 1 ,type:'number'},{name: "checkOutTime", text: "Check Out Time", placeholder: '' ,type:'time'},{name: "checkInTime", text: "Check In Time", placeholder: '' ,type:'time'}].map((items,index)=>(  <LabelInputContainer key={index+1} ><FormField
+  
+   {name: "checkInTime", text: "CheckIn Time", placeholder: '' ,type:'time'},
+  {name: "checkOutTime", text: "CheckOut Time", placeholder: '' ,type:'time'},
+  {name: "serviceCharge", text: "Service Charge", placeholder: '' ,type:'number'},
+  {name: "cleaningFee", text: "Cleaning Fee", placeholder: '' ,type:'number'},
+  { name: "maxGuests", text: "Max Guests", placeholder: 1 ,type:'number'},
+    {name: "guestsIncluded", text: "Guests Included", placeholder: '' ,type:'number'},
+      {name: "extraGuestFee", text: "Extra GuestFee", placeholder: '' ,type:'number'},
+      {name:"discount",text:"Discount",type:"number"}
+].map((items,index)=>(  <LabelInputContainer key={index+1} ><FormField
          control={form.control}
           name={items.name}
           render={({ field }) => (

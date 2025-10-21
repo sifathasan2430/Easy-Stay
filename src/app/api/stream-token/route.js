@@ -9,7 +9,8 @@ const serverClient = StreamChat.getInstance(
   process.env.STREAM_API_KEY,
   process.env.STREAM_API_SECRET
 );
-
+console.log(process.env.STREAM_API_KEY,"this is test in vercel")
+console.log(process.env.STREAM_API_SECRET,"this is test in vercel for")
 export async function POST(req) {
   try {
     await dbConnect();

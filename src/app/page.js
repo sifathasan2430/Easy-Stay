@@ -15,7 +15,7 @@ export default function Home() {
 
   
   return (
-    <main className="min-h-screen  md:pt-16">
+    <main className="min-h-screen dark:bg-black  md:pt-16">
       {/* Do not Code Here */}
       <HeroSection></HeroSection>
       <div className="mx-auto w-11/12">
