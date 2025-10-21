@@ -6,7 +6,7 @@ import { TfiWorld } from "react-icons/tfi";
 const Footer = () => {
   return (
     <div>
-      <footer className="bg-primary text-white dark:bg-gray-900">
+      <footer className="bg-primary text-white dark:bg-blue-500">
         <div className="max-w-7xl mx-auto py-12 px-4">
           {/* Top section */}
           <div className="md:flex md:justify-between md:items-start">
