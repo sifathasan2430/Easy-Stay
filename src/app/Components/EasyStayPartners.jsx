@@ -35,7 +35,7 @@ export default function EasyStayPartners() {
     <Container>
     <section className="relative flex  flex-col items-center justify-center overflow-hidden py-24 sm:py-12 md:py-16 ">
       {/* Heading */}
-      <h2 className="mb-6 text-xl sm:text-3xl md:text-4xl font-bold text-black dark:text-white p-5 text-center">
+      <h2 className="mb-6 text-xl sm:text-3xl md:text-4xl font-bold text-black p-5 text-center">
         Trusted by Leading <span className="text-blue-500">Travel Platforms</span>
       </h2>
 
