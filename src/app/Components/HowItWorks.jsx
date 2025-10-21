@@ -49,7 +49,7 @@ export default function HowItWorks() {
           />
         ) : (
           <motion.h2
-            className="text-3xl sm:text-4xl font-bold text-gray-900 p-5 font-heading dark:text-white mb-4"
+            className="text-3xl sm:text-4xl font-bold text-gray-900 p-5 font-heading mb-4"
             initial={{ opacity: 0, y: -20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
@@ -70,7 +70,7 @@ export default function HowItWorks() {
           />
         ) : (
           <motion.p
-            className="text-gray-600 dark:text-gray-400 max-w-2xl font-body mx-auto mb-12"
+            className="text-gray-600 max-w-2xl font-body mx-auto mb-12"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ delay: 0.2, duration: 0.5 }}
@@ -89,7 +89,7 @@ export default function HowItWorks() {
                 .map((_, idx) => (
                   <div
                     key={idx}
-                    className="flex flex-col items-center text-center p-6 rounded-xl bg-white shadow-sm dark:bg-gray-800"
+                    className="flex flex-col items-center text-center p-6 rounded-xl bg-white shadow-sm"
                   >
                     <Skeleton circle height={64} width={64} className="mb-4" />
                     <Skeleton height={20} width={120} className="mb-2" />
@@ -99,7 +99,7 @@ export default function HowItWorks() {
             : steps.map((step, idx) => (
                 <motion.div
                   key={idx}
-                  className="flex flex-col items-center text-center p-6 rounded-xl bg-white shadow-sm hover:shadow-lg transition dark:bg-gray-800"
+                  className="flex flex-col items-center text-center p-6 rounded-xl bg-white shadow-sm hover:shadow-lg transition"
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ delay: idx * 0.2, duration: 0.6 }}
@@ -109,10 +109,10 @@ export default function HowItWorks() {
                   <div className="flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
                     {step.icon}
                   </div>
-                  <h3 className="text-lg font-heading font-semibold text-gray-900 dark:text-white">
+                  <h3 className="text-lg font-heading font-semibold text-gray-900 ">
                     {step.title}
                   </h3>
-                  <p className="text-sm font-body text-gray-600 dark:text-gray-400 mt-2">
+                  <p className="text-sm font-body text-gray-600 mt-2">
                     {step.desc}
                   </p>
                 </motion.div>
