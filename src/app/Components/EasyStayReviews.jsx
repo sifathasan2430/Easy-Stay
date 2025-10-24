@@ -39,7 +39,7 @@ const StarRating = ({ rating = 0, size = 18 }) => {
 // Review Card Component (Airbnb Style - adjusted for compact grid)
 const ReviewCard = ({ review }) => {
   return (
-    <div className="p-5 border border-gray-100 rounded-2xl bg-white shadow-xl hover:shadow-2xl transition duration-500 h-full flex flex-col justify-between">
+    <div className="p-5 border border-gray-100 rounded-2xl bg-white dark:bg-black shadow-xl hover:shadow-2xl transition duration-500 h-full flex flex-col justify-between">
       <div>
         <div className="flex items-start mb-3">
           {/* Placeholder for user avatar/icon */}
@@ -47,7 +47,7 @@ const ReviewCard = ({ review }) => {
             <User size={20} />
           </div>
           <div className="truncate">
-            <p className="font-semibold text-gray-900">{review.userName}</p>
+            <p className="font-semibold text-gray-900 dark:text-neutral-300 ">{review.userName}</p>
             <p className="text-xs text-gray-500">
               {new Date(review.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })}
             </p>
@@ -55,14 +55,14 @@ const ReviewCard = ({ review }) => {
         </div>
         <StarRating rating={review.rating} size={16} />
         {/* Clamp text to ensure cards in the grid are of similar height */}
-        <p className="mt-3 text-gray-700 leading-snug text-sm line-clamp-4 min-h-[5rem]">
+        <p className="mt-3 text-gray-700 dark:text-neutral-300 leading-snug text-sm line-clamp-4 min-h-[5rem]">
           {review.comment}
         </p>
       </div>
       {review.adminReply && (
         <div className="mt-4 pt-3 border-t border-gray-100">
-            <p className="text-xs italic text-gray-500 line-clamp-2">
-                <span className="font-medium">Host Reply:</span> {review.adminReply}
+            <p className="text-xs italic  text-gray-500 line-clamp-2">
+                <span className="font-medium dark:text-neutral-300">Host Reply:</span> {review.adminReply}
             </p>
         </div>
       )}
@@ -83,7 +83,7 @@ export default function LandingPageReviewGrid() {
       
       {/* Section Header with Overall Rating */}
       <div className="text-center mb-12">
-        <h2 className="text-4xl font-extrabold text-gray-900 mb-3">
+        <h2 className="text-4xl font-extrabold text-gray-900 dark:text-neutral-300 mb-3">
           What Our Guests Are Saying
         </h2>
         <div className="flex items-center justify-center gap-3 text-xl text-gray-600">
@@ -104,7 +104,7 @@ export default function LandingPageReviewGrid() {
 
       {/* Optional CTA to view all reviews */}
       <div className="text-center mt-12">
-        <button className="px-6 py-3 bg-white text-blue-600 border-2 border-blue-600 font-semibold rounded-xl hover:bg-blue-50 transition duration-300 shadow-md">
+        <button className="px-6 py-3 bg-white dark:bg-black text-blue-600 border-2 border-blue-600 font-semibold rounded-xl hover:bg-blue-50 transition duration-300 shadow-md">
           View All {reviewCount} Reviews
         </button>
       </div>

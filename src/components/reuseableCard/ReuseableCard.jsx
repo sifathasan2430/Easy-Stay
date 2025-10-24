@@ -18,27 +18,27 @@ const ReuseableCard = ({
                   <div className="p-4 flex flex-col flex-grow">
                     
                     {/* Review Information */}
-                    <div className="flex items-center text-sm mb-1 text-gray-800">
+                    <div className="flex items-center text-sm mb-1 text-gray-800 ">
                       <Star className="text-yellow-500 mr-1" />
-                      <span className="font-semibold">{property.averageRating}</span>
-                      <span className="text-gray-500">
+                      <span className="font-semibold dark:text-neutral-300">{property.averageRating}</span>
+                      <span className="text-gray-500 dark:text-neutral-300">
                         ({property.reviewCount || 0} reviews)
                       </span>
                     </div>
                     
                     {/* Title with line-clamp for consistent height */}
-                    <h3 className="font-semibold text-lg line-clamp-2 min-h-[3rem]">
+                    <h3 className="font-semibold text-lg dark:text-neutral-300  line-clamp-2 min-h-[3rem]">
                       {property.title}
                     </h3>
                     
                     {/* Location and Price pushed to bottom */}
                     <div className="mt-auto">
-                      <div className="flex items-center mt-2 text-sm text-gray-600">
+                      <div className="flex items-center mt-2 text-sm text-gray-600 dark:text-neutral-300">
                         <Map className="mr-1" /> {property.city}
                       </div>
-                      <p className="font-bold mt-2">
+                      <p className="font-bold dark:text-neutral-300 mt-2">
                         ${property.pricePerNight}{' '}
-                        <span className="font-normal text-gray-600">/ night</span>
+                        <span className="font-normal text-gray-600 dark:text-neutral-300">/ night</span>
                       </p>
                     </div>
                   </div>

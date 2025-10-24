@@ -29,7 +29,7 @@ const LatestStaysInHome = () => {
   return (
     <Container>
     <div className=" py-24">
-      <h2 className="text-4xl font-bold mb-6 text-center p-5">
+      <h2 className="text-4xl dark:text-neutral-300 font-bold mb-6 text-center p-5">
         Latest <span className="text-blue-500">Stays</span>
       </h2>
 
