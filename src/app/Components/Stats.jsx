@@ -41,9 +41,9 @@ export default function Stats() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="text-3xl md:text-4xl font-bold text-gray-900 p-5 mb-3"
+          className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-neutral-300 p-5 mb-3"
         >
-          We Make <span className="text-blue-500">Every Stay Memorable</span> 
+          We Make <span className="text-blue-500 ">Every Stay Memorable</span> 
         </motion.h2>
         <p className="text-gray-600 mb-10">
           From cozy apartments to luxurious villas, EasyStay helps travelers book safe, verified, and comfortable stays — anytime, anywhere.
@@ -58,12 +58,12 @@ export default function Stats() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.2 }}
               viewport={{ once: true }}
-              className="bg-[#efefef] p-6 rounded-2xl shadow text-center"
+              className="bg-[#efefef] p-6 rounded-2xl dark:bg-black shadow text-center"
             >
               <div className="flex justify-center mb-4">
                 <img src={item.icon} alt={item.label} className="w-12 h-12" />
               </div>
-              <h3 className="text-3xl font-bold text-gray-900">
+              <h3 className="text-3xl font-bold text-gray-900 dark:text-neutral-300">
                 <CountUp end={item.value} duration={2.5} />+
               </h3>
               <p className="text-gray-600 mt-1">{item.label}</p>

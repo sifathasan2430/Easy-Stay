@@ -3,33 +3,24 @@
 import { useState, useEffect } from 'react';
 import { Search, Users, Filter, Trash2, CheckCircle2, XCircle, Loader2 } from 'lucide-react';
 import Swal from 'sweetalert2';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
 
 export default function ManageUsers() {
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+ 
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState('all');
 
-  // Fetch Users
-  const fetchUsers = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch('/api/users');
-      if (!response.ok) throw new Error('Failed to fetch users');
-      const data = await response.json();
-      setUsers(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch users');
-    } finally {
-      setLoading(false);
+
+
+  const {data:users,isError,error,isLoading:loading}=useQuery({
+    queryKey:['users',"list"],
+    queryFn:async()=>{
+      const response=await axios.get("/api/users")
+      return response.data
+
     }
-  };
-
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-
+  })
   // Delete User
   const handleUserDelete = async (id) => {
     const confirm = await Swal.fire({
@@ -81,7 +72,7 @@ export default function ManageUsers() {
   };
 
   // Filtered Users
-  const filteredUsers = users.filter((user) => {
+  const filteredUsers = users && users.filter((user) => {
     const matchesSearch =
       user.fullName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||

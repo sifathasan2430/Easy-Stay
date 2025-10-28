@@ -2,6 +2,8 @@ import dbConnect from "@/lib/dbConnect";
 import { Review } from "@/models/review.models";
 import { User } from "@/models/user.models";
 import { Property } from "@/models/propertie.models"; 
+import { NextResponse } from "next/server";
+import { Aggregate } from "mongoose";
 
 // GET: Fetch reviews (all or by propertyId)
 export async function GET(req) {
@@ -9,12 +11,43 @@ export async function GET(req) {
     await dbConnect();
     const url = new URL(req.url);
     const propertyId = url.searchParams.get("propertyId");
+    const latestReview=url.searchParams.get("latest-review");
+    if (latestReview){
+      const latestReviews=await Review.find().populate('userId',"username").limit(6)
+      const averageReview=await Review.aggregate([
+  {
+    $group: {
+      _id:null,
+      averageRating: {
+        $avg:"$rating"
+      },
+       reviewCount:{
+        $sum:1
+      }
+    }
+        
+  },
+  {
+    $project: {
+      _id:0,  averageRating:1,reviewCount:1
+    }
+  }
+])
+
+      return NextResponse.json({
+        reviews:latestReviews,
+        reviewCount:averageReview[0].reviewCount,
+        averageRating:averageReview[0].averageRating
+        
+      },{
+        status:200
+      })
+    }
 
     if (propertyId) {
       // fetch verified reviews for a property
       const reviews = await Review.find({ propertyId, verified: true })
-        .populate("userId", "fullName email")
-        .sort({ createdAt: -1 });
+        .populate("userId", "fullName email").sort({ createdAt: -1 }).limit(6);
 
       const averageRating =
         reviews.length > 0

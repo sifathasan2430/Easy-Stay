@@ -24,6 +24,7 @@ import ReviewsList from "@/components/ReviewsList"; // Assuming ReviewsList is i
 import { useSession } from "next-auth/react";
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
+
 import ChatBox from "@/components/Chatbox/Chatbox";
 
 
@@ -155,6 +156,7 @@ export default function PropertyDetails() {
   const [loading, setLoading] = useState(false);
    const [showChat, setShowChat] = useState(false);
    const [total ,setTotal]=useState("0")
+   const [disableBooking,setDisable]=useState(true)
   
  
   // State for Booking Widget
@@ -186,6 +188,7 @@ export default function PropertyDetails() {
   //   ? differenceInDays(dateRange.to, dateRange.from) 
   //   : 0;
   const nights= dateRange?.from && dateRange?.to ? differenceInDays(dateRange?.to,dateRange?.from):0
+  console.log(nights)
 const queryClient = useQueryClient()
     const {mutate,isPending,isError,error} = useMutation({
     mutationFn:async ()=>{
@@ -197,9 +200,13 @@ const queryClient = useQueryClient()
     return response.data
     },
     onSuccess: (data) => {
-    setTotal(data?.basePrice)
+    setTotal(data?.totalPrice)
+  
+   
+    
 
       queryClient.invalidateQueries({ queryKey: ['total'] })
+         setDisable(false)
     },
   })
 
@@ -233,7 +240,7 @@ const checkTotal=async()=>{
         toast.error("You must be logged in to reserve a property.");
         return;
     }
-    if (!dateRange?.from || !dateRange?.to || nights <= 0 || numGuests === 0) {
+    if (!dateRange?.from || !dateRange?.to || nights <= 0 ) {
         toast.error("Please select valid check-in/check-out dates.");
         return;
     }
@@ -255,7 +262,7 @@ const checkTotal=async()=>{
 
       if (bookingResponse.data.booking) {
         toast.success("Booking created successfully!");
-        Router.push('/dashboard/guest/payments');
+        Router.push('/dashboard/guest/payments?limit=5&skip=0');
       }
     } catch (error) {
       console.error("Failed to create booking or Stripe session:", error);
@@ -268,7 +275,7 @@ const checkTotal=async()=>{
   // --- Render Logic ---
   if (isLoading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 my-20 md:my-40 min-h-screen flex items-center justify-center">
+      <div className="max-w-7xl mx-auto px-4 py-20 md:py-40 min-h-screen flex items-center dark:bg-black justify-center">
         <LoaderOne />
       </div>
     );
@@ -282,7 +289,7 @@ const checkTotal=async()=>{
   const secondaryImages = property.images?.filter(img => img !== primaryImage);
 
 const userId=session?.user._id.toString()
-const hostId=property?.hostId._id.toString()
+const hostId=property?.hostId?._id.toString()
 
   return (
     <div className="dark:bg-black">
@@ -498,6 +505,30 @@ extraGuestFee || 0}$ <X  className="inline-block"  size={10}/>  {numGuests} </sp
                       
                     </div>
                 </div>
+  <div className="flex justify-between border-t  border-gray-300">
+                   <div 
+                        className={cn(
+                            " p-3 pl-2 pt-3 flex-1 text-left   rounded-tr-xl "
+                        )}
+                    >
+                        <span className="text-xs font-bold uppercase">Free Guest</span>
+                      
+                    </div>
+                     <div 
+                        className={cn(
+                            " p-3 pl-2 pt-3 flex-1 text-left border-l border-gray-300 rounded-tr-xl"
+                        )}
+                    >
+                        <span className="text-xs font-bold uppercase">{property.guestsIncluded} FREE</span>
+                      
+                    </div>
+                </div>
+
+
+
+
+
+
                  <div className="flex justify-between border-t  border-gray-300">
                    <div 
                         className={cn(
@@ -526,9 +557,9 @@ extraGuestFee || 0}$ <X  className="inline-block"  size={10}/>  {numGuests} </sp
               {/* Reserve Button */}
               <div className='flex justify-between items-center gap-4'>
               <Button
-                className="w-40 bg-red-500 hover:bg-red-600 text-white font-semibold py-3 text-lg rounded-lg transition duration-200"
+                className="w-40 bg-red-500 cursor-pointer hover:bg-red-600 text-white font-semibold py-3 text-lg rounded-lg transition duration-200"
                 onClick={checkTotal}
-                disabled={ !session || nights <= 0}
+                disabled={ !session || nights <= 0 }
               >
                 {isPending 
                     ? 'Calculating...' 
@@ -536,15 +567,15 @@ extraGuestFee || 0}$ <X  className="inline-block"  size={10}/>  {numGuests} </sp
               </Button>
               
                          
-              <Button
-                className="w-40 bg-red-500 hover:bg-red-600 text-white font-semibold py-3 text-lg rounded-lg transition duration-200"
+          {!disableBooking &&  ( <Button
+                className="w-40 bg-red-500 cursor-pointer hover:bg-red-600 text-white font-semibold py-3 text-lg rounded-lg transition duration-200"
                 onClick={handleReserve}
-                disabled={isPending || !session || nights <= 0}
+                disabled={ disableBooking || isPending || !session || nights <= 0 }
               >
                 {loading 
                     ? 'Booking...' 
                     : (nights > 0 ? `Book` : (session ? 'Book' : 'Log in to Book'))}
-              </Button>
+              </Button>)  }
 </div>
              
               

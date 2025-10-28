@@ -20,13 +20,20 @@ import dynamic from "next/dynamic";
 
 
 
+
+
  const MapView = dynamic(() => import("@/components/MapView/MapView"), { ssr: false });
 export default function ExploreProperties() {
-  const [search, setSearch] = useState("");
+ const [search,setSearch]=useState('')
+  
+ 
   const [roomType, setRoomType] = useState("");
   const [page, setPage] = useState(1);
   const [showMap, setShowMap] = useState(false);
-  const limit = 8;
+  
+ 
+  const limit = 8
+
 
   const [userLocation, setUserLocation] = useState({ latitude: null, longitude: null });
   const [isLocating, setIsLocating] = useState(false);
@@ -36,7 +43,7 @@ export default function ExploreProperties() {
   const clearUserLocation = () => {
     setUserLocation({ latitude: null, longitude: null });
     setLocationError(null);
-    setPage(1); // Reset page to 1
+    setPage(1); 
   };
 
   // Function to get user's current location
@@ -59,7 +66,7 @@ export default function ExploreProperties() {
     (position) => {
       clearTimeout(errorTimeout);
       const { latitude, longitude } = position.coords;
-      console.log("✅ Location fetched:", latitude, longitude);
+      
 
       if (latitude && longitude) {
         setUserLocation({ latitude, longitude });
@@ -105,10 +112,8 @@ export default function ExploreProperties() {
   // Location is active only if coords are present AND no manual search/filter is applied
   const isLocationActive = userLocation.latitude !== null && userLocation.longitude !== null && search === "" && roomType === "";
 
-  // Fetch data using React Query
-  const { data:properties =[], isLoading } = useQuery({
-    queryKey: ["properties", search, roomType, page, userLocation],
-    queryFn: async () => {
+
+const apiCall= async () => {
       // API call parameters
       const params = {
         search,
@@ -124,22 +129,24 @@ export default function ExploreProperties() {
       
       const res = await axios.get("/api/property", { params });
       return res.data.data || []; 
-    },
-    // Prevent the query from running while actively locating to avoid race conditions
+    }
+
+
+
+
+  // Fetch data using React Query
+  const { data:properties =[], isLoading } = useQuery({
+    queryKey: ["properties", search, roomType, page, userLocation,limit],
+    queryFn: apiCall,
+   
     enabled: !isLocating, 
     staleTime:1000*60*5
   });
 
-  // The location detection is now triggered ONLY by the button click (fetchUserLocation).
-  // The properties will load normally on mount based on initial empty search/filter states.
-
-
-  // Reset location state if user starts a manual search or filter
   useEffect(() => {
     if (search.length > 0 || roomType) {
       setUserLocation({ latitude: null, longitude: null });
-      setLocationError(null); // Clear error if user starts manual search
-      // IMPORTANT: Reset page to 1 whenever search or roomType changes
+      setLocationError(null); 
       if (page !== 1) setPage(1);
     }
   }, [search, roomType]);

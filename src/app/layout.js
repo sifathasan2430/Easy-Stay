@@ -37,6 +37,7 @@ export  default async function RootLayout({ children }) {
     const session = await getServerSession(authOptions);
   return (
     <html lang="en" suppressHydrationWarning>
+   
       <body className={`${poppins.variable} ${roboto.variable} antialiased font-sans`}>
      
         <TanstackProvider>
@@ -44,10 +45,10 @@ export  default async function RootLayout({ children }) {
             <ThemeProvider 
               attribute="class"  
         defaultTheme="light"
-        enableSystem
+        enableSystems
          >
               <ConditionalLayout >
-               <main className="dark:b">
+               <main className="dark:bg-black">
                  {children}
                </main>
                 </ConditionalLayout>

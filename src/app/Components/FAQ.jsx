@@ -55,7 +55,7 @@ export default function FAQ() {
         </div>
       ) : (
         <motion.h2
-          className="text-3xl md:text-4xl font-bold text-center font-heading mb-8 text-gray-900 p-5"
+          className="text-3xl md:text-4xl font-bold text-center font-heading mb-8 text-gray-900 dark:text-neutral-300 p-5"
           initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -88,10 +88,10 @@ export default function FAQ() {
           <Accordion type="single" collapsible className="w-full space-y-4">
             {faqs.map((faq, index) => (
               <AccordionItem key={index} value={`item-${index}`}>
-                <AccordionTrigger className="font-heading text-lg text-black">
+                <AccordionTrigger className="font-heading text-lg text-black dark:text-neutral-300">
                   {faq.question}
                 </AccordionTrigger>
-                <AccordionContent className="font-body text-gray-600">
+                <AccordionContent className="font-body text-gray-600 dark:text-neutral-300">
                   {faq.answer}
                 </AccordionContent>
               </AccordionItem>

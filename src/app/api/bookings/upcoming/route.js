@@ -8,7 +8,7 @@ export async function GET(request) {
 
     const queries = request.nextUrl.searchParams;
     const userId = queries.get("userId");
-    console.log(userId)
+  
     const limit = parseInt(queries.get("limit")) || 0;
     const skip = parseInt(queries.get("skip")) || 0;
 
