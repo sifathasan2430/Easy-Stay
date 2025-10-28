@@ -29,13 +29,13 @@ export default function Navbar() {
     <header
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 
       ${scrolled
-        ? "bg-primary/50 dark:bg-gray-900/50 shadow-md backdrop-blur-lg"
-        : "bg-primary dark:bg-gray-900"
+        ? "bg-primary/50 shadow-md backdrop-blur-lg"
+        : "bg-primary"
       }`}
     >
       <div className="container mx-auto flex items-center justify-between p-4">
         {/* Logo */}
-        <Link href="/" className="text-2xl text-white font-heading font-bold">
+        <Link href="/" className="text-2xl text-black font-heading font-bold">
           EasyStay
         </Link>
 
@@ -73,7 +73,7 @@ export default function Navbar() {
 
       {/* Mobile menu with animation */}
       <div
-        className={`md:hidden absolute top-full left-0 w-full bg-primary/95 dark:bg-gray-900/95 border-t border-border backdrop-blur-md transform transition-transform duration-300 ease-in-out
+        className={`md:hidden absolute top-full left-0 w-full bg-primary/95 dark:bg-[#efefef]/95 border-t border-border backdrop-blur-md transform transition-transform duration-300 ease-in-out
         ${mobileOpen ? "translate-y-0 opacity-100" : "-translate-y-5 opacity-0 pointer-events-none"}
         `}
       >
