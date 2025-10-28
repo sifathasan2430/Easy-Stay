@@ -19,6 +19,11 @@ const propertySchema = z.object({
   checkInTime: z.string().optional(),
   checkOutTime: z.string().optional(),
   amenities: z.array(z.string()).optional(),
+   cleaningFee: z.coerce.number().min(5, "Cleaning fee is compulsory not less then 5 dollar"),
+    extraGuestFee: z.coerce.number().min(0, ),
+     guestsIncluded: z.coerce.number().min(0, ),
+      serviceCharge: z.coerce.number().min(50, " At least 50 dollar"),
+      discount:z.coerce.number(),
   images: z.array(
     z.object({
       url: z.string().url("Invalid URL").nonempty("Image URL is required"),

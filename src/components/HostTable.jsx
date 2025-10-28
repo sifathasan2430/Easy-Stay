@@ -92,16 +92,16 @@ const mutation=useMutation({
   )}
 
   {/* Table wrapper for scroll */}
-  <div className="max-h-[500px] overflow-y-auto border rounded-md">
-    <Table>
-      <TableHeader>
-        <TableRow className="text-center">
-          <TableHead className="w-[100px]">ID</TableHead>
-          <TableHead>Title</TableHead>
-          <TableHead>IsActive</TableHead>
+  <div className="max-h-[500px] overflow-y-auto dark:bg-black dark:text-neutral-300  border rounded-md">
+    <Table >
+      <TableHeader className={'p-10 '}>
+        <TableRow className="text-center ">
+          <TableHead className="w-[100px] dark:text-neutral-300">ID</TableHead>
+          <TableHead className="dark:text-neutral-300">Title</TableHead>
+          <TableHead className="dark:text-neutral-300">IsActive</TableHead>
          
-          <TableHead>Edit</TableHead>
-          <TableHead>Delete</TableHead>
+          <TableHead className="dark:text-neutral-300">Edit</TableHead>
+          <TableHead className="dark:text-neutral-300">Delete</TableHead>
         </TableRow>
       </TableHeader>
 

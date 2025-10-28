@@ -146,22 +146,23 @@ export default function ExploreProperties() {
 
 
   return (
-    <div className="max-w-7xl  mx-auto px-4 my-40">
+    <div className="dark:bg-black">
+    <div className="max-w-7xl  mx-auto px-4 py-40">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
-        <h1 className="text-2xl font-semibold text-gray-900">Explore Homes</h1>
+        <h1 className="text-2xl font-semibold text-gray-900 dark:text-neutral-300">Explore Homes</h1>
         <div className="flex flex-wrap gap-3">
-          <Input
+          <Input 
             placeholder="Search city or area..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-48 sm:w-60"
+            className="w-48 dark:bg-black dark:text-neutral-300 font-medium text-lg sm:w-60"
           />
-          <Select onValueChange={setRoomType} value={roomType || ""}>
-            <SelectTrigger className="w-40">
+          <Select className='dark:bg-black dark:text-neutral-300'  onValueChange={setRoomType} value={roomType || ""}>
+            <SelectTrigger className="w-40 dark:hover:bg-black text-sm font-medium  dark:bg-black dark:text-neutral-300">
               <SelectValue placeholder="Room Type" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="dark:bg-black dark:text-neutral-300">
               <SelectItem value="entire_place">Entire place</SelectItem>
               <SelectItem value="private_room">Private room</SelectItem>
               <SelectItem value="shared_room">Shared room</SelectItem>
@@ -171,8 +172,8 @@ export default function ExploreProperties() {
           {/* Location Detection Button */}
           <Button
             onClick={fetchUserLocation}
-            variant="outline"
-            className="rounded-xl flex items-center gap-2"
+            variant="primary"
+            className="rounded-xl border dark:text-neutral-300 flex items-center gap-2"
             disabled={isLocating}
           >
             <LocateFixed className="w-4 h-4" />
@@ -184,7 +185,7 @@ export default function ExploreProperties() {
             <Button
               onClick={clearUserLocation}
               variant="ghost"
-              className="rounded-xl flex items-center gap-2 text-red-500 hover:text-red-600"
+              className="rounded-xl  border dark:hover:bg-black dark:text-neutral-300 flex items-center gap-2 text-red-500 hover:text-red-600"
             >
               <XCircle className="w-4 h-4" />
               Clear Location Search
@@ -193,8 +194,8 @@ export default function ExploreProperties() {
 
           <Button
             onClick={() => setShowMap((prev) => !prev)}
-            variant="outline"
-            className="rounded-xl"
+            variant="primary"
+            className="rounded-xl dark:hover:bg-black    border dark:text-neutral-300 "
           >
             {showMap ? "Hide Map" : "Show Map"}
           </Button>
@@ -206,7 +207,7 @@ export default function ExploreProperties() {
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-4 p-3 bg-blue-50 border border-blue-200 text-blue-700 rounded-lg text-sm"
+          className="mb-4 p-3 bg-blue-50 dark:bg-black border border-blue-200 text-blue-700 rounded-lg text-sm"
         >
           <MapPin className="inline-block w-4 h-4 mr-2" />
           Showing properties near your current location. Type or filter to override.
@@ -227,7 +228,7 @@ export default function ExploreProperties() {
 
       {/* Map View Toggle (rest of your component) */}
       {showMap ? (
-        <div className="h-[600px] rounded-2xl overflow-hidden mb-8 border">
+        <div className="h-[600px] rounded-2xl overflow-hidden my-20 ">
           <MapView properties={properties} /> 
         </div>
       ) : (
@@ -252,21 +253,22 @@ export default function ExploreProperties() {
             <Button
               disabled={page === 1}
               onClick={() => setPage((prev) => prev - 1)}
-              variant="outline"
+              variant="secondary"
             >
               Prev
             </Button>
-            <span className="text-gray-600 text-sm">Page {page}</span>
+            <span className="text-gray-900 dark:text-neutral-300 text-lg">Page {page}</span>
             <Button
               disabled={properties.length < limit} 
               onClick={() => setPage((prev) => prev + 1)}
-              variant="outline"
+              variant="secondary"
             >
               Next
             </Button>
           </div>
         </div>
       )}
+    </div>
     </div>
   )
 }
