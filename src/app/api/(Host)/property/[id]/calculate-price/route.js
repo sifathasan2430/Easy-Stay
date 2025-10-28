@@ -42,11 +42,12 @@ export const POST=async(request,{params})=>{
       propertyId: property._id,
       title: property.title,
       night,
-      basePrice: property.pricePerNight * night,
+      freeGuest:property.guestsIncluded,
+
       cleaningFee: property.cleaningFee,
       serviceCharge: property.serviceCharge,
       discount: property.discount,
-      basePrice: Number(basePrice.toFixed(2)),
+      totalPrice: Number(basePrice.toFixed(2)),
       },
       {status:201}
 )

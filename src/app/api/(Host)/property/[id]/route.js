@@ -43,9 +43,9 @@ if (property.hostId && property.hostId._id) {
           },
         {status:200})
    } catch (error) {
-    console.log(error.message)
+
         return NextResponse.json({
-            status:'fail',
+            success:'false',
             message:`Fail to connect the database ${error.message}`
         },
     {

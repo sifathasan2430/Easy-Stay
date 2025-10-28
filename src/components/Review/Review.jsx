@@ -1,11 +1,7 @@
 import React from 'react';
 import { Star, CheckCircle } from 'lucide-react';
 
-/**
- * Helper component to render the star rating based on the score (1-5).
- * Airbnb reviews often show stars without fractional fill, so we stick to rounding.
- * @param {number} rating - The numerical rating.
- */
+
 const StarRating = ({ rating, size = 'w-4 h-4' }) => {
   const fullStars = Math.round(rating);
   const stars = [];
@@ -24,10 +20,7 @@ const StarRating = ({ rating, size = 'w-4 h-4' }) => {
   return <div className="flex space-x-0.5">{stars}</div>;
 };
 
-/**
- * Formats a date string into a readable, subtle format (e.g., October 2024).
- * @param {string} dateString - The date string from timestamps.
- */
+
 const formatDate = (dateString) => {
   if (!dateString) return 'Unknown Date';
   return new Date(dateString).toLocaleDateString('en-US', {
@@ -36,11 +29,9 @@ const formatDate = (dateString) => {
   });
 };
 
-/**
- * The main Review Card component, styled to resemble an Airbnb review using Tailwind CSS.
- */
+
 const ReviewCard = ({ review }) => {
-  // Mock data for demonstration purposes, replace with actual state/prop later
+ 
   const mockReview = {
     reviewerName: 'Alice Johnson', 
     rating: 4.5,

@@ -85,12 +85,13 @@ export const authOptions = {
       return true; //
     },
     async jwt({ token, user, account }) {
-      console.log(account)
+      
       if (account) { // Only on initial sign-in
         await dbConnect();
         const dbUser = await User.findOne({ email: user.email });
       
         if (dbUser) {
+          console.log("this is cheak for middleware",dbUser?.role,"email:",user?.email)
           token._id = dbUser._id.toString();
           token.username = dbUser.username;
           token.isVerified = dbUser.isVerified;
