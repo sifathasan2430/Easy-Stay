@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useSession } from "next-auth/react";
@@ -9,32 +9,51 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
+import { LoaderThree } from "./ui/loader";
+import { Pagination, PaginationContent, PaginationItem } from "./ui/pagination";
+import { useSearchParams,useRouter } from "next/navigation";
 
-export default function PastBookings() {
-  const { data: session } = useSession();
-  const [bookings, setBookings] = useState([]);
-  const [loading, setLoading] = useState(true);
+
+export default function ReviewTable({session}) {
+   const searchParams=useSearchParams()
+  const router=useRouter()
+
+  const limit=Number(searchParams.get('limit') || 4)
+  const skip=Number(searchParams.get('skip') || 0 )
+  const query=new URLSearchParams(searchParams)
+  
+  const queryClient = useQueryClient()
+
+  useEffect(()=>{
+     
+      if (!searchParams.get('limit') || !searchParams.get('skip') ){
+        query.set("limit",limit)
+        query.set("skip",skip)
+        router.replace(`?${query.toString()}`)
+      }
+  },[])
+  
   const [showModal, setShowModal] = useState(false);
   const [currentBooking, setCurrentBooking] = useState(null);
   const [reviewData, setReviewData] = useState({ rating: 0, comment: "", photos: [] });
 
   const userId = session?.user?._id;
 
-  useEffect(() => {
-    async function fetchBookings() {
-      try {
-        const res = await fetch(`/api/bookings/past?userId=${userId}`);
-        const data = await res.json();
-        setBookings(data.data || []);
-      } catch (err) {
-        console.error("Failed to fetch past bookings:", err);
-      } finally {
-        setLoading(false);
-      }
-    }
+ 
 
-    if (userId) fetchBookings();
-  }, [userId]);
+  const {data:bookings,isLoading:loading,isError,error:bookingsError}=useQuery({
+    queryKey:['reviewBookings', userId,limit,skip, 'list'],
+    queryFn:async()=>{
+      const response=await axios.get(`/api/bookings/past?userId=${userId}`,{params:{limit,skip}})
+      return response.data
+
+
+    },
+    enabled:!!userId
+  })
+
 
   const openReviewModal = (booking) => {
     setCurrentBooking(booking);
@@ -47,37 +66,43 @@ export default function PastBookings() {
     setReviewData((prev) => ({ ...prev, [name]: value }));
   };
 
+   const mutation=useMutation({
+    mutationFn:async(data)=>{
+      const response=await axios.post('/api/reviews',data)
+
+    },
+    onSuccess:()=>{
+      toast.success('Review send successfully')
+       setShowModal(false);
+         
+
+    },
+    onError:(error)=>{
+       toast.error(data.error || "Failed to add review");
+
+    }
+  
+    
+   })
+
+
+
   const handleAddReview = async () => {
     if (!reviewData.rating || !reviewData.comment) {
       toast.error("Please enter rating and comment");
       return;
     }
 
-    try {
-      const res = await fetch("/api/reviews", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+    mutation.mutate({
           propertyId: currentBooking.propertyId,
           bookingId: currentBooking._id,
           userId,
           rating: parseFloat(reviewData.rating),
           comment: reviewData.comment,
-          photos: reviewData.photos, // optional: array of photo URLs
-        }),
-      });
+          photos: reviewData.photos, 
+        })
 
-      const data = await res.json();
-      if (res.ok) {
-        toast.success("Review added successfully!");
-        setShowModal(false);
-      } else {
-        toast.error(data.error || "Failed to add review");
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to add review");
-    }
+     
   };
 
   const getStatusBadge = (status) => {
@@ -91,8 +116,10 @@ export default function PastBookings() {
     }
   };
 
-  if (loading) return <p className="text-center py-4">Loading...</p>;
-  if (bookings.length === 0) return <p className="text-center py-4">No past bookings found.</p>;
+  if (loading) return <div className="min-h-screen flex  justify-center items-center ">
+<LoaderThree/>
+  </div>
+  if (bookings?.data.length === 0) return <p className="text-center  font-bold py-4">No past bookings found.</p>;
 
   return (
     <>
@@ -115,7 +142,7 @@ export default function PastBookings() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {bookings.map((booking) => (
+                {bookings && bookings?.data.map((booking) => (
                   <TableRow key={booking._id} className="hover:bg-gray-50">
                     <TableCell className="font-medium">{booking.propertyId}</TableCell>
                     <TableCell>{new Date(booking.checkInDate).toLocaleDateString()}</TableCell>
@@ -124,7 +151,7 @@ export default function PastBookings() {
                     <TableCell className="text-center">{getStatusBadge(booking.status)}</TableCell>
                     <TableCell className="text-right font-semibold">${booking.totalPrice.toLocaleString()}</TableCell>
                     <TableCell className="text-center">
-                      <Button size="sm" onClick={() => openReviewModal(booking)}>Review</Button>
+                      <Button disabled={booking.status !=="completed"} size="sm" className={ booking.status !=="completed" ? 'cursor-not-allowed opacity-50':"cursor-pointer"} onClick={() => openReviewModal(booking)}>Review</Button>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -132,6 +159,34 @@ export default function PastBookings() {
             </Table>
           </ScrollArea>
         </CardContent>
+        <CardFooter>
+           <Pagination>
+      <PaginationContent>
+        <PaginationItem>
+          <Button  className={`${skip !==0 ?"cursor-pointer" :"cursor-not-allowed opacity-45"}  `} disabled={skip===0} onClick={()=>{
+            query.set('skip', Math.max(0,skip-limit) )
+            router.push(`?${query.toString()}`)
+
+          }}>
+Prev
+          </Button>
+        </PaginationItem>
+
+      
+        <PaginationItem>
+          <Button variant={'default'} disabled={bookings?.total <= skip+limit}   className="cursor-pointer" onClick={()=>{
+            if (bookings?.total <= skip+limit) return
+        
+            query.set('skip', skip+limit )
+            router.push(`?${query.toString()}`)
+
+          }} >
+             Next
+            </Button>
+        </PaginationItem>
+      </PaginationContent>
+    </Pagination>
+        </CardFooter>
       </Card>
 
       {/* Review Modal */}

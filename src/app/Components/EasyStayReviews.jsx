@@ -1,5 +1,9 @@
+'use client'
 import React from 'react';
 import { Star, User } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+import { LoaderOne } from '@/components/ui/loader';
 
 // --- MOCK REVIEW DATA (Used for static display on the landing page) ---
 const MOCK_DATA = {
@@ -16,6 +20,7 @@ const MOCK_DATA = {
     { "_id": "rev_008", "userName": "Chloe L.", "rating": 5, "comment": "The photos don't do this place justice! It's even more beautiful in person. A very stylish and cozy retreat.", "createdAt": "2024-09-01T11:55:00Z", "adminReply": "" }
   ]
 };
+
 
 // Helper component for star visualization
 const StarRating = ({ rating = 0, size = 18 }) => {
@@ -38,6 +43,7 @@ const StarRating = ({ rating = 0, size = 18 }) => {
 
 // Review Card Component (Airbnb Style - adjusted for compact grid)
 const ReviewCard = ({ review }) => {
+  console.log(review)
   return (
     <div className="p-5 border border-gray-100 rounded-2xl bg-white dark:bg-black shadow-xl hover:shadow-2xl transition duration-500 h-full flex flex-col justify-between">
       <div>
@@ -47,7 +53,7 @@ const ReviewCard = ({ review }) => {
             <User size={20} />
           </div>
           <div className="truncate">
-            <p className="font-semibold text-gray-900 dark:text-neutral-300 ">{review.userName}</p>
+            <p className="font-semibold text-gray-900 dark:text-neutral-300 ">{review.userId?.username}</p>
             <p className="text-xs text-gray-500">
               {new Date(review.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })}
             </p>
@@ -73,13 +79,34 @@ const ReviewCard = ({ review }) => {
 
 // Main component for the Landing Page
 export default function LandingPageReviewGrid() {
-  const { averageRating, reviewCount, reviews } = MOCK_DATA;
+const {data:reviewData,isPending,isLoading,isError,error}=useQuery({
+  queryKey:["reviews",'list'],
+  queryFn:async()=>{
+    const response=await axios.get("/api/reviews?latest-review=true")
+    return response.data
+
+  },
+  staleTime:10000
+})
+
+if (isLoading) {
+  return <div className='flex justify-center items-center'><LoaderOne/></div>;
+}
+
+// Handle error state
+if (isError) {
+  return <div>Error loading reviews: {error.message}</div>;
+}
+
+  const { averageRating, reviewCount, reviews } =reviewData ;
+  
   
   // Display only the top 6 reviews for a clean grid on the landing page
-  const featuredReviews = reviews.slice(0, 6);
+  
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-16">
+    
+  <div className="max-w-7xl mx-auto px-4 py-16">
       
       {/* Section Header with Overall Rating */}
       <div className="text-center mb-12">
@@ -97,17 +124,13 @@ export default function LandingPageReviewGrid() {
       
       {/* Reviews Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-        {featuredReviews.map((review) => (
+        {reviews.map((review) => (
           <ReviewCard key={review._id} review={review} />
         ))}
       </div>
 
       {/* Optional CTA to view all reviews */}
-      <div className="text-center mt-12">
-        <button className="px-6 py-3 bg-white dark:bg-black text-blue-600 border-2 border-blue-600 font-semibold rounded-xl hover:bg-blue-50 transition duration-300 shadow-md">
-          View All {reviewCount} Reviews
-        </button>
-      </div>
+    
     </div>
   );
 }

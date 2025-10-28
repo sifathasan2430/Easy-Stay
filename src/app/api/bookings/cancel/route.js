@@ -7,8 +7,9 @@ export async function PATCH(request) {
   try {
     await dbConnect();
 
-    const body = await request.json();
-    const { id } = body;
+    const searchParams = request.nextUrl.searchParams;
+  const id = searchParams.get('id')
+  console.log(id,'this id')
 
     if (!id) {
       return NextResponse.json({ error: "Booking ID is required" }, { status: 400 });

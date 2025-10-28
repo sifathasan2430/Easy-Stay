@@ -19,6 +19,7 @@ import { useState } from "react";
 
 export default function Header() {
   const { data: session } = useSession();
+  
   const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -32,7 +33,7 @@ export default function Header() {
   const userExits = (
     <div className="flex justify-center items-center gap-4">
       <Avatar>
-        <AvatarImage src="https://github.com/shadcn.png" />
+        <AvatarImage src={session?.user?.image || '' } />
         <AvatarFallback>PF</AvatarFallback>
       </Avatar>
       <SignOutBtn onClick={() => signOut()} href="#">
@@ -45,10 +46,9 @@ export default function Header() {
     { name: "Home", link: "/" },
     { name: "Stays", link: "/stays" },
     ...(session?.user?.role === "user"
-      ? [{ name: "Dashboard", link: "/dashboard/guest" }]
-      : session?.user?.role === "host"
+      ? [{ name: "Dashboard", link: "/dashboard/guest" }] : session?.user?.role === "host"
       ? [{ name: "Dashboard", link: "/host" }]
-      : []),
+      : [{name:"Dashboard",link:"/dash/admin"}]),
     { name: "About", link: "/about" },
     { name: "Contact", link: "/contact" },
     { name: "Be a Host", link: "/become-a-host" },

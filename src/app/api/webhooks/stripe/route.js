@@ -4,37 +4,32 @@ import { Booking } from "@/models/booking.models";
 import { Payment } from "@/models/payment.models";
 import Stripe from "stripe";
 
-export const config = {
-  api: {
-    bodyParser: false, // Required for raw body
-  },
-};
-
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export async function POST(request) {
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+  console.log(webhookSecret,"this is webhook secret",process.env.STRIPE_SECRET_KEY,"this is secret key")
+
+  let event;
+
   try {
-    const rawBody = await request.text();
+    // ✅ Use raw bytes instead of text
+    const rawBody = Buffer.from(await request.arrayBuffer());
     const signature = request.headers.get("stripe-signature");
-    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
-    let event;
-    try {
-      event = stripe.webhooks.constructEvent(rawBody, signature, webhookSecret);
-    } catch (err) {
-      console.error(" Webhook signature verification failed:", err.message);
-      return NextResponse.json({ error: "Invalid webhook signature" }, { status: 400 });
-    }
+    // ✅ Verify signature
+    event = stripe.webhooks.constructEvent(rawBody, signature, webhookSecret);
+    console.log(" Verified Stripe webhook:", event.type);
+  } catch (err) {
+    console.error(" Webhook signature verification failed:", err.message);
+    return NextResponse.json({ error: "Invalid webhook signature" }, { status: 400 });
+  }
 
-    console.log("✅ Received Stripe webhook:", event.type);
-
+  // Handle events
+  try {
     if (event.type === "checkout.session.completed") {
       const session = event.data.object;
-      const paymentIntentId = session.payment_intent;
-      const bookingId = session.metadata?.booking_id;
-      const propertyId = session.metadata?.propertyId;
-      const email = session.metadata?.email;
-      const amount = session.metadata?.amount;
+      const { booking_id, propertyId, email, amount } = session.metadata || {};
 
       console.log("💡 Metadata received:", session.metadata);
 
@@ -42,32 +37,33 @@ export async function POST(request) {
 
       // Update booking payment status
       await Booking.findByIdAndUpdate(
-        bookingId,
-        { payment_status: "success", updatedAt: new Date(),status:"completed", },
-        
+        booking_id,
+        {
+          payment_status: "success",
+          status: "completed",
+          updatedAt: new Date(),
+        },
         { new: true }
       );
 
       // Record payment
       await Payment.findOneAndUpdate(
-        { bookingId },
+        { bookingId: booking_id },
         {
-          stripePaymentIntentId: paymentIntentId,
+          stripePaymentIntentId: session.payment_intent,
           status: "succeeded",
           createdAt: new Date(),
           propertyId,
           email,
-          amount
+          amount,
         },
         { upsert: true, new: true }
       );
-
-   
     }
 
     return NextResponse.json({ received: true });
   } catch (error) {
-    console.error("Webhook error:", error);
+    console.error(" Webhook processing error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

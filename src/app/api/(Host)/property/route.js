@@ -43,6 +43,7 @@ export async function GET(request) {
   const page = parseInt(searchParams.get("page") || "1", 10);
   const limit = parseInt(searchParams.get("limit") || "8", 10);
   const skip = parseInt(searchParams.get("skip") || "0", 10);
+  
  
   const skipValue = (page - 1) * limit;
   const hostId=searchParams.get('host')
