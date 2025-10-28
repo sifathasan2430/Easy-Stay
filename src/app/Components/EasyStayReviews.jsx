@@ -110,8 +110,8 @@ if (isError) {
       
       {/* Section Header with Overall Rating */}
       <div className="text-center mb-12">
-        <h2 className="text-4xl font-extrabold text-gray-900 dark:text-neutral-300 mb-3">
-          What Our Guests Are Saying
+        <h2 className="text-4xl font-extrabold text-gray-900 mb-3">
+          What Our <span className='text-blue-400'>Guests Are Saying</span>
         </h2>
         <div className="flex items-center justify-center gap-3 text-xl text-gray-600">
           <span className="font-bold text-blue-600">{averageRating.toFixed(1)}</span>
