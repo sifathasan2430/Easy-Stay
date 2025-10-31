@@ -4,7 +4,7 @@
 
 **EasyStay** is a modern **Next.js 15** short-term rental marketplace where guests can browse, filter, and instantly book stays while hosts can list properties, set dynamic pricing, and chat with guests in real time.
 
-Live Demo: [https://easy-stay.vercel.app](https://easy-stay.vercel.app) *(replace with your URL)*
+Live Demo: [https://easy-stay.vercel.app](easy-stay-liart.vercel.app)
 
 ---
 
