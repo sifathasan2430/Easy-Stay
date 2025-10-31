@@ -6,11 +6,11 @@
 
 Live Demo: [https://easy-stay.vercel.app](easy-stay-liart.vercel.app)
 
-credentials:
---admin:email:admin1234@gamil.com pass:12345678 
---host:email:host1234@gmail.com pass:12345678
---user:Login with google
----
+credentials:<br>
+--admin:email:admin1234@gamil.com pass:12345678 <br>
+--host:email:host1234@gmail.com pass:12345678 <br>
+--user:Login with google <br>
+
 
 ## ✨ Key Features
 
